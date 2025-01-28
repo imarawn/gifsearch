@@ -1,4 +1,4 @@
-const darkModeToggleButtons = document.getElementsByClassName('darkmode-button') as HTMLCollectionOf<HTMLButtonElement>;
+const darkModeToggleButtons = document.getElementsByClassName('darkmode-button')
 
 // Loop through all the buttons and attach the event listener
 Array.from(darkModeToggleButtons).forEach((button) => {

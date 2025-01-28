@@ -1,26 +1,37 @@
-const predefinedGifs = [
-    { slug: 'def-hello', url: 'https://static-pub.highwebmedia.com/uploads/avatar/2016/04/19/21/53/2e4e2dfb9ba8e81c41a6a7380a696a4745903f2d.jpg' },
-    { slug: 'nsf-hello1', url: 'https://static-pub.highwebmedia.com/uploads/avatar/2024/01/06/09/29/679ccdd9dd74234927c44f8b0a785391d1a8251d.jpg' },
-    { slug: 'hellotherekenobi', url: 'https://static-pub.highwebmedia.com/uploads/avatar/2018/10/12/05/43/a61f11490a1cef6d8bcecf8e862bcaf3dfa35566.jpg' },
-    { slug: 'welcomew', url: 'https://static-pub.highwebmedia.com/uploads/avatar/2012/07/12/shHh1nX2jZ1A2.jpg' },
-    { slug: 'faintdomino-fixed', url: 'https://static-pub.highwebmedia.com/uploads/avatar/2021/01/19/08/04/7704228e0a7c6894cb6f2fef51128b2cb0a94dce.jpg' },
-    { slug: 'hgr-goodwhatever', url: 'https://static-pub.highwebmedia.com/uploads/avatar/2024/04/27/18/03/31504baebb8460c3cbc1e30929a4a720470a9bbf.jpg' },
-    { slug: 'Goal_2022z', url: 'https://static-pub.highwebmedia.com/uploads/avatar/2022/11/28/15/24/6edb67c5f6afa64907ae39214f534c2b58605d3a.jpg' },
-    { slug: 'nsf-headpat', url: 'https://static-pub.highwebmedia.com/uploads/avatar/2023/09/10/07/46/8eeaff3eaae80485659edda85ffc83706029a777.jpg' },
-    { slug: 'madmonkey', url: 'https://static-pub.highwebmedia.com/uploads/avatar/2015/08/29/20/28/762282b3810b273913dbdbadec278e85ecd6b865.jpg' },
-    { slug: 'madpanda23', url: 'https://static-pub.highwebmedia.com/uploads/avatar/2014/08/16/S1Xk1dyhdSlNfm0d.jpg' },
-    { slug: 'trollinginthedeep', url: 'https://static-pub.highwebmedia.com/uploads/avatar/2014/10/06/RJeEzrv7YsUI.jpg' },
-];
 
 /**
- * Render predefined GIFs in the results container.
+ * Render predefined GIFs in the results container by fetching them from Supabase.
  */
-function renderPredefinedGifs() {
+async function renderPredefinedGifs() {
+    // Get the container element
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = ''; // Clear existing content
-    predefinedGifs.forEach((gif) => {
-        displayEmote(gif, resultsDiv); // Use existing displayEmote function
-    });
+
+    try {
+        // Fetch GIFs from Supabase
+        const { data: gifs, error } = await supabase
+            .from('predefined_gifs')
+            .select('slug, url'); // Select the columns you need
+
+        // Handle errors
+        if (error) {
+            console.error('Error fetching GIFs:', error);
+            resultsDiv.innerHTML = `<p>Error fetching GIFs. Please try again later.</p>`;
+            return;
+        }
+
+        // Render each GIF
+        if (gifs && gifs.length > 0) {
+            gifs.forEach((gif) => {
+                displayEmote(gif, resultsDiv); // Use the existing displayEmote function
+            });
+        } else {
+            resultsDiv.innerHTML = `<p>No GIFs found.</p>`;
+        }
+    } catch (err) {
+        console.error('Unexpected error:', err);
+        resultsDiv.innerHTML = `<p>An unexpected error occurred. Please try again later.</p>`;
+    }
 }
 
 function copyToClipboard(text, gif) {
