@@ -1,0 +1,126 @@
+.button {
+    background-color: #e5793a;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    z-index: 100;
+}
+
+.button:hover {
+    background-color: #dd6f35;
+    scale: 1.1;
+}
+
+.iconbutton {
+    width: 40px; /* Button width */
+    height: 40px; /* Button height */
+    background-size: cover;
+    background-repeat: no-repeat; /* No repeating of background image */
+    background-position: center; /* Center the background image */
+    outline: none; /* Remove focus outline */
+}
+
+.darkmode-button {
+    top: 10px; /* Adjust the top position */
+    right: 130px; /* Adjust the right position */
+    background-image: url('../../public/icons/mode.svg'); /* Default icon image */
+    position: fixed; /* Fixed position for the button */
+}
+
+.upload-button {
+    background-image: url('../../public/icons/upload.svg'); /* Default icon image */
+}
+
+.random-button {
+    background-image: url('../../public/icons/skull.svg');
+}
+
+.mobile-history-button {
+    background-image: url('../../public/icons/history.svg');
+}
+
+.mobile-favorites-button {
+    background-image: url('../../public/icons/party.svg');
+}
+
+.mobile-close-button {
+    display: none; /* Hide the button by default */
+    opacity: 0;
+    top: 25px; /* Distance from the top */
+    right: 15px; /* Distance from the right edge */
+    background-image: url('../../public/icons/close.svg');
+}
+
+.download-favorites-button {
+    display: none;
+    background-image: url('../../public/icons/download.svg');
+}
+
+.show-file-button {
+    padding: 5px;
+}
+
+.info-button {
+    display: none; /* Hide the button by default */
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #007bff; /* Blue color for info icon */
+    margin-top: 5px;
+    transition: transform 0.2s ease;
+}
+
+.info-button:active {
+    transform: scale(1.1); /* Slightly shrink on click */
+}
+
+.favorite-button {
+    background: none; /* Remove default background */
+    border: none; /* Remove default border */
+    cursor: pointer; /* Pointer cursor */
+    font-size: 20px; /* Large star size */
+    color: #ffd700; /* Gold color for the star */
+    position: fixed; /* Fixed position for the button */
+    top: 5px; /* Adjust the top position */
+    right: 5px; /* Adjust the right position */
+}
+
+.favorites:hover .download-favorites-button {
+    display: block; /* Show the download button on hover */
+}
+
+.delete-history-button {
+    text-align: center; /* Center the text */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+    display: none; /* Hide the button by default */
+    background-image: url('../../public/icons/trash.svg');
+    position: fixed; /* Fixed position for the button */ 
+    bottom: 10px; /* Adjust the top position */
+    right: 10px; /* Adjust the right position */
+    z-index: 1000;
+    animation: fadeIn 300ms;
+}
+
+.history:hover .delete-history-button {
+    display: block; /* Show the download button on hover */
+}
+
+.tinybutton {
+    width: 20px; /* Button width */
+    height: 20px; /* Button height */
+    background-size: contain; /* Ensure the image fits within the button */
+    background-repeat: no-repeat; /* No repeating of background image */
+    background-position: center; /* Center the background image */
+    border: none; /* Remove border */
+    cursor: pointer; /* Pointer cursor for interactivity */
+    outline: none; /* Remove focus outline */
+    padding: 0px;
+}
+
+.search-button {
+    background-image: url('../../public/icons/compass.svg');
+}

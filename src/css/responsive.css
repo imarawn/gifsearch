@@ -1,0 +1,105 @@
+/* Mobile Header */
+.mobile-header {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .mobile-header {
+        position: sticky;
+        top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 15px;
+        height: 50px;
+        background-color: #275d7e;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 200;
+        width: auto;
+    }
+    .favorites {
+        position: fixed;
+        top: 50px;
+        left: -100%; /* Hide off-screen initially */
+        width: 290px;
+        height: 100%;
+        background-color: #fff;
+        z-index: 1000;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out, left 0.3s ease-in-out;
+    }
+
+    .favorites.mobile-favorites-open {
+        left: 0;
+    }
+
+    .favorites-content {
+        flex-direction: column;
+    }
+
+    #dark-mode-toggle,
+    #upload-file,
+    #desktop-show-button,
+    .history {
+        display: none;
+    }
+
+    #dark-mode-toggle-mobile,
+    .upload-button {
+        position: inherit;
+    }
+
+    .container {
+        margin: 0;
+        width: auto;
+        height: auto;
+    }
+
+    .mobile-buttons {
+        margin-left: auto;
+        display: flex;
+    }
+
+    .random-input-container {
+        position: sticky;
+        top: 70px;
+        z-index: 100;
+    }
+
+    .download-favorites-button {
+        display: block;
+        position: inherit;
+    }
+
+    .favorites-counter {
+        opacity: 1;
+    }
+
+    .favorites .emote-box {
+        width: 250px;
+    }
+
+    .mobile-close-button {
+        display: block;
+        opacity: 1;
+    }
+
+    .favorites {
+        .download-favorites-button {
+            display: block;
+        }
+        .favorites-counter {
+            opacity: 1;
+        }
+        .mobile-close-button {
+            display: block;
+            opacity: 1;
+        }
+    }
+
+    .favorite-button {
+        right: 0px; /* Adjust the right position */
+        top: 0px;
+        font-size: 40px;
+    }
+}

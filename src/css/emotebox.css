@@ -1,0 +1,65 @@
+.emote-box {
+    border: 1px solid #e5793a;
+    border-radius: 4px;
+    text-align: center;
+    background-color: #e5793a;
+    position: relative;
+    width: 220px;
+    height: 183px;
+    opacity: 0;
+    transform: scale(0.1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.emote-box.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.image-container {
+    width: 100%;
+    height: 108px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.details-container {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    line-height: 17px;
+    padding: 4px 7px 0px;
+}
+
+.emote-box img {
+    width: 100%; /* Füllt den verfügbaren Platz in der Breite */
+    height: 100%; /* Füllt den verfügbaren Platz in der Höhe */
+    object-fit: contain; /* Skaliert das Bild, um den Raum auszufüllen, ohne Verzerrung */
+    display: block; /* Vermeidet zusätzliche Abstände durch inline-Bilder */
+}
+
+.dimensions {
+    font-size: 10px;
+    background: none;
+}
+
+.dimensions:hover {
+    background-color: #c7afa2;
+}
+
+.emote-name {
+    font-size: 14px;
+    margin-bottom: 5px;
+    text-align: left;
+    border-bottom: 1px solid #030202;
+    overflow: hidden;
+}
+
+.button-container {
+    display: flex;
+    justify-content: left; /* Align buttons to the left */
+    flex-direction: row;
+    align-content: space-between;
+}

@@ -1,0 +1,51 @@
+/* global.css */
+
+body {
+    background-color: #275d7e;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: visible; /* Ensure nothing clips globally */
+}
+
+.container {
+    width: auto;
+    margin-left: 130px; /* Adjust to match the favorites' width and add extra space */
+    margin-right: 130px; /* Adjust to match the history' width and add extra space */
+
+    margin-bottom: 50px; /* Add space at the bottom */
+    padding: 20px; /* Add padding inside the content */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #0b5d81;
+}
+
+.random-input-container {
+    display: flex; /* Align children horizontally */
+    align-items: center; /* Center align input and button vertically */
+    gap: 10px; /* Space between input and button */
+}
+
+.results {
+    display: flex; /* Use CSS grid for layout */
+    flex-wrap: wrap; /* Wrap grid items to next line */
+    justify-content: center; /* Center grid items */
+    gap: 10px; /* Space between grid items */
+    margin-top: 20px; /* Space above the grid */
+    width: 100%; /* Full width of the parent container */
+}
+
+.hidden {
+    display: none;
+}

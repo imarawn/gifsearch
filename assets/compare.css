@@ -1,0 +1,21 @@
+@media screen and (max-width: 768px) {
+    .favorites {
+        position: fixed;
+        top: 0;
+        left: -100%; /* Hide off-screen initially */
+        width: 250px;
+        height: 100%;
+        background-color: #fff;
+        z-index: 1000;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out, left 0.3s ease-in-out;
+    }
+
+    .favorites.mobile-favorites-open {
+        transform: translateX(100%);
+    }
+
+    .favorites-content {
+        flex-direction: column;
+    }
+}
