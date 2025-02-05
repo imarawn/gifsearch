@@ -3,6 +3,10 @@
     display: none;
 }
 
+.mobile-close-button {
+    display: none;
+}
+
 @media screen and (max-width: 768px) {
     .mobile-header {
         position: sticky;
@@ -92,7 +96,6 @@
             opacity: 1;
         }
         .mobile-close-button {
-            display: block;
             opacity: 1;
         }
     }
@@ -101,5 +104,9 @@
         right: 0px; /* Adjust the right position */
         top: 0px;
         font-size: 40px;
+    }
+
+    #close-favorites-button {
+        display: block;
     }
 }

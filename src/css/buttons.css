@@ -47,11 +47,14 @@
 }
 
 .mobile-close-button {
-    display: none; /* Hide the button by default */
     opacity: 0;
     top: 25px; /* Distance from the top */
     right: 15px; /* Distance from the right edge */
     background-image: url('../../public/icons/close.svg');
+}
+
+#close-favorites-button {
+    display: none;
 }
 
 .download-favorites-button {
