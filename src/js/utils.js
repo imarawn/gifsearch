@@ -1,4 +1,3 @@
-
 /**
  * Render predefined GIFs in the results container by fetching them from Supabase.
  */
