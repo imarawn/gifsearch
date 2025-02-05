@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="src/css/global.css">
     <link rel="stylesheet" href="src/css/components.css">
     <link rel="stylesheet" href="src/css/darkmode.css">
-    
     <link rel="stylesheet" href="src/css/emotebox.css">
     <link rel="stylesheet" href="src/css/buttons.css">
     <link rel="stylesheet" href="src/css/responsive.css">
@@ -59,13 +58,14 @@
     <!-- Main Content -->
     <div class="container">
         <div id="filesection" class="main-button-container">
+            <button id="sync-favorites-button" class="button" onclick="syncFavorites()">Sync Favorites</button>
             <button id="desktop-show-button" class="button show-file-button" onclick="loadAndFetchEmoticons()">Show from
                 File</button>
             <input type="file" id="file-input" class="hidden" accept=".txt">
         </div>
         <div class="main-button-container  random-input-container">
             <input type="text" id="manual-slug-input" class="search-field" placeholder="Search as you type...">
-            <button class="button iconbutton random-button" onclick="generateRandomSlug()"></button>
+            <button id="random-button" class="button iconbutton random-button" onclick="generateRandomSlug()"></button>
         </div>
         <div id="results" class="results"></div>
     </div>
@@ -81,7 +81,7 @@
     <script src="src/js/drag-drop.js"></script>
     <script src="src/js/dark-mode.js"></script>
     <script src="src/js/emotes.js"></script>
-    <script src="src/js/favorites.js"></script>
+    <script src="src/js/favorites-supabase.js"></script>
     <script src="src/js/modal.js"></script>
 </body>
 
