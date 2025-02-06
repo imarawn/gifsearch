@@ -41,10 +41,14 @@
                 <span id="favorites-counter" class="favorites-counter">0</span>
             </button>
             <h2 class="header">Favorites</h2>
-            <button id="close-favorites-button" class="button iconbutton mobile-close-button"
+            <div>
+                <button id="close-favorites-button" class="button iconbutton mobile-close-button"
                 onclick="openmobilefavorites()"></button>
+            </div> 
         </div>
         <div id="favorite-emotes" class="favorites-content"></div>
+        <button id="sync-favorites-button" class="button" onclick="syncFavorites()">Sync Favorites</button>
+
     </div>
 
 
@@ -58,14 +62,13 @@
     <!-- Main Content -->
     <div class="container">
         <div id="filesection" class="main-button-container">
-            <button id="sync-favorites-button" class="button" onclick="syncFavorites()">Sync Favorites</button>
             <button id="desktop-show-button" class="button show-file-button" onclick="loadAndFetchEmoticons()">Show from
                 File</button>
             <input type="file" id="file-input" class="hidden" accept=".txt">
         </div>
         <div class="main-button-container  random-input-container">
             <input type="text" id="manual-slug-input" class="search-field" placeholder="Search as you type...">
-            <button id="random-button" class="button iconbutton random-button" onclick="generateRandomSlug()"></button>
+            <button id="random-button" class="button iconbutton random-button" onclick="generateRandomSlugAndScroll()"></button>
         </div>
         <div id="results" class="results"></div>
     </div>
