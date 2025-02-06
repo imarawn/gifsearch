@@ -1,42 +1,59 @@
-function displayEmote(emote, parentElement) {
-    const emoteBox = document.createElement('div'); // Create emote container
-    emoteBox.className = 'emote-box';
+async function syncFavorites() {
+    const localFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    const user = supabase.auth.user(); // Get the logged-in user
 
-    const img = document.createElement('img'); // Create image element
-    img.src = emote.url;
-    img.alt = emote.slug;
+    if (!user) {
+        console.error('User is not logged in');
+        return;
+    }
 
-    const label = document.createElement('div'); // Create label for emote name
-    label.textContent = `:${emote.slug}`;
-    label.className = 'emote-name';
+    // Fetch existing favorites from Supabase
+    const { data: supabaseFavorites, error } = await supabase
+        .from('favorites')
+        .select('*')
+        .eq('user_id', user.id); // Ensure to fetch only the user's favorites
 
-    const dimensionsButton = document.createElement('button'); // Create button for dimensions
-    dimensionsButton.className = 'dimensions';
-    dimensionsButton.textContent = 'View Fullsize';
-    dimensionsButton.onclick = () => openModal(emote.url);
+    console.log('Supabase Favorites:', supabaseFavorites);
+        
+    if (error) {
+        console.error('Error fetching favorites from Supabase:', error);
+        return;
+    }
 
-    const favoriteButton = document.createElement('button'); // Create "Favorite" button
-    favoriteButton.className = 'favorite-button';
-    favoriteButton.textContent = '☆';
-    favoriteButton.onclick = () => {
-        addToFavorites(emote);
-        favoriteButton.textContent = '★';
-    };
+    // Find favorites to delete
+    const favoritesToDelete = supabaseFavorites.filter(supabaseFavorite => 
+        !localFavorites.some(localFavorite => localFavorite.slug === supabaseFavorite.slug)
+    );
 
-    const searchButton = document.createElement('button'); // Create "Search Slug" button
-    searchButton.className = 'search-button';
-    searchButton.textContent = '🔍'; // Search icon
-    searchButton.title = `Search for :${emote.slug}`; // Tooltip for clarity
-    searchButton.onclick = () => {
-        const manualInput = document.getElementById('manual-slug-input'); // Input field for manual search
-        manualInput.value = emote.slug; // Set the input value to the slug
-        fetchManualSlug(); // Trigger a manual search
-    };
+    // Find favorites to add
+    const favoritesToAdd = localFavorites.filter(localFavorite => 
+        !supabaseFavorites.some(supabaseFavorite => supabaseFavorite.slug === localFavorite.slug)
+    ).map(fav => ({ ...fav, user_id: user.id })); // Add user_id to each favorite
 
-    emoteBox.append(img, label, dimensionsButton, favoriteButton, searchButton);
-    parentElement.appendChild(emoteBox);
+    // Delete favorites from Supabase
+    if (favoritesToDelete.length > 0) {
+        const { error: deleteError } = await supabase
+            .from('favorites')
+            .delete()
+            .in('slug', favoritesToDelete.map(fav => fav.slug));
 
-    requestAnimationFrame(() => {
-        emoteBox.classList.add('visible');
-    });
+        if (deleteError) {
+            console.error('Error deleting favorites from Supabase:', deleteError);
+            return;
+        }
+    }
+
+    // Add favorites to Supabase
+    if (favoritesToAdd.length > 0) {
+        const { error: insertError } = await supabase
+            .from('favorites')
+            .insert(favoritesToAdd);
+
+        if (insertError) {
+            console.error('Error adding favorites to Supabase:', insertError);
+            return;
+        }
+    }
+
+    console.log('Favorites synchronized successfully');
 }

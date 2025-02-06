@@ -48,6 +48,7 @@
         </div>
         <div id="favorite-emotes" class="favorites-content"></div>
         <button id="sync-favorites-button" class="button" onclick="syncFavorites()">Sync Favorites</button>
+        <button id="sync-favorites-button" class="button" onclick="logout()">Logout</button>
 
     </div>
 
@@ -78,6 +79,16 @@
         <span id="close-modal" class="close-modal">&times;</span>
         <img id="modal-image" class="modal-image" src="" alt="Full Resolution">
     </div>
+    <div id="login-modal" class="login-modal">
+        <span id="close-login-modal" class="close-modal" onclick="closeLoginModal()" >&times;</span>
+        <div class="login-modal-content">
+            <h2>Login</h2>
+            <input type="text" id="email" class="login-input" placeholder="Email">
+            <input type="password" id="password" class="login-input" placeholder="Password">
+            <button id="login-button" class="button" onclick="login()">Login</button>
+            <button id="signup-button" class="button" onclick="signup()">Sign Up</button>
+        </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="src/js/supabase.js"></script>
     <script src="src/js/utils.js"></script>

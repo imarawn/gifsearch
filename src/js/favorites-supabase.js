@@ -140,40 +140,41 @@ function downloadFavorites() {
 async function syncFavorites() {
     const localFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
-    // Fetch existing favorites from Supabase
-    const { data: supabaseFavorites, error } = await supabase
-        .from('favorites')
-        .select('*');
+    // ✅ Get the authenticated user
+    const { data: { user }, error } = await supabase.auth.getUser();
 
-    if (error) {
-        console.error('Error fetching favorites from Supabase:', error);
+    if (error || !user) {
+        openLoginModal();
+        console.error('User is not logged in:', error?.message || '');
         return;
     }
 
-    // Find favorites to delete (present in Supabase but not in local storage)
-    const favoritesToDelete = supabaseFavorites.filter(supabaseFavorite => 
-        !localFavorites.some(localFavorite => localFavorite.slug === supabaseFavorite.slug)
-    );
+    console.log('Authenticated user:', user.id);
 
-    // Find favorites to add (present in local storage but not in Supabase)
-    const favoritesToAdd = localFavorites.filter(localFavorite => 
-        !supabaseFavorites.some(supabaseFavorite => supabaseFavorite.slug === localFavorite.slug)
-    );
+    // ✅ Fetch existing favorites from Supabase for this user
+    const { data: supabaseFavorites, error: fetchError } = await supabase
+        .from('favorites')
+        .select('*')
+        .eq('user_id', user.id);
 
-    // Delete favorites from Supabase
-    if (favoritesToDelete.length > 0) {
-        const { error: deleteError } = await supabase
-            .from('favorites')
-            .delete()
-            .in('slug', favoritesToDelete.map(fav => fav.slug));
-
-        if (deleteError) {
-            console.error('Error deleting favorites from Supabase:', deleteError);
-            return;
-        }
+    if (fetchError) {
+        console.error('Error fetching favorites from Supabase:', fetchError);
+        return;
     }
 
-    // Add favorites to Supabase
+    console.log('Supabase Favorites:', supabaseFavorites);
+
+    // ✅ Find missing favorites to add
+    const favoritesToAdd = localFavorites
+        .filter(localFav => !supabaseFavorites.some(supabaseFav => supabaseFav.slug === localFav.slug))
+        .map(fav => ({
+            name: fav.name || 'Unknown', // ✅ Ensure the "name" field is not null
+            slug: fav.slug,
+            url: fav.url,
+            user_id: user.id, // ✅ Use authenticated user_id
+        }));
+
+    // ✅ Insert missing favorites
     if (favoritesToAdd.length > 0) {
         const { error: insertError } = await supabase
             .from('favorites')
