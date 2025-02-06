@@ -270,3 +270,13 @@ function navigateHistory(direction, inputField) {
     // Update the input field with the current slug
     inputField.value = slugHistory[currentSlugIndex];
 }
+
+function openLoginModal() {
+    const modal = document.getElementById('login-modal');
+    modal.style.display = 'block';
+}
+
+function closeLoginModal() {
+    const modal = document.getElementById('login-modal');
+    modal.style.display = 'none';
+}
