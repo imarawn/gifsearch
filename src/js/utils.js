@@ -64,7 +64,7 @@ function debounce(func, delay) {
  */
 function generateRandomSlug() {
     const manualInput = document.getElementById('manual-slug-input');
-    const length = Math.floor(Math.random() * 15) + 3; // Random length between 3 and 15
+    const length = Math.floor(Math.random() * 25) + 3; // Random length between 3 and 15
     const randomSlug = generateRandomString(length);
     manualInput.value = randomSlug;
     fetchManualSlug(); // Trigger search function
@@ -78,6 +78,11 @@ function generateRandomSlug() {
 function generateRandomString(length) {
     const characters = 'abcdefghijklmnopqrstuvwxyz-1234567890_';
     return Array.from({ length }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');
+}
+
+function generateRandomSlugAndScroll() {
+    generateRandomSlug(); // Deine bestehende Funktion zum Generieren eines zufälligen Slugs
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scrollt die Seite nach oben
 }
 
 /**

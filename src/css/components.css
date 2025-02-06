@@ -74,7 +74,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* Platz zwischen den Elementen */
     position: sticky;
     top: 0;
     background-color: #fff;
@@ -87,9 +86,7 @@
 
 .favorites-header .header {
     margin: 10;
-    /* Standardabstände entfernen */
     font-size: 20px;
-    /* Überschrift anpassen */
 }
 
 .favorites:hover {
