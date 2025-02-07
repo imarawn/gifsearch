@@ -131,3 +131,8 @@
 .home-button {
     background-image: url('../../public/icons/house.svg');
 }
+
+.juliamemes-button {
+    align-self: flex-start;
+    background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2024/07/22/18/07/3c5b1113aff45d941edef4f7bc127722d7213eba.jpg');
+}
