@@ -19,6 +19,9 @@ async function login() {
 
     console.log('Logged in successfully:', data);
     await checkSession();
+    closeLoginModal()
+    await syncFavorites();
+    await loadFavoritesFromSupabase();
 }
 
 async function logout() {
