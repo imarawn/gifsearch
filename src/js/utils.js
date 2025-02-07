@@ -32,7 +32,6 @@ async function renderPredefinedGifs() {
             resultsDiv.innerHTML = `<p>No GIFs found.</p>`;
         }
     } catch (err) {
-        console.error('Unexpected error:', err);
         resultsDiv.innerHTML = `<p>An unexpected error occurred. Please try again later.</p>`;
     }
 }
@@ -66,7 +65,6 @@ async function insertGifToDatabase(slug, gif) {
         .select('*', { count: 'exact', head: true });
 
     if (totalError) {
-        console.error('Error counting total GIFs:', totalError);
         return;
     }
 
@@ -81,12 +79,10 @@ async function insertGifToDatabase(slug, gif) {
             .single();
 
         if (globalDeleteError || !oldestGlobalGif) {
-            console.error('Error finding oldest user GIF to delete:', globalDeleteError);
             return;
         }
 
         await supabase.from('predefined_gifs').delete().eq('id', oldestGlobalGif.id);
-        console.log('Oldest user GIF deleted due to total limit:', oldestGlobalGif.id);
     }
 
     const { count: userCount, error: userCountError } = await supabase
@@ -95,7 +91,6 @@ async function insertGifToDatabase(slug, gif) {
         .eq('user_id', user.id);
 
     if (userCountError) {
-        console.error('Error counting user GIFs:', userCountError);
         return;
     }
 
@@ -109,7 +104,6 @@ async function insertGifToDatabase(slug, gif) {
             .single();
 
         if (userDeleteError || !oldestUserGif) {
-            console.error('Error finding oldest user GIF to delete:', userDeleteError);
             return;
         }
 
@@ -124,24 +118,16 @@ async function insertGifToDatabase(slug, gif) {
         .maybeSingle();
 
     if (selectError) {
-        console.error('Error checking existing GIF:', selectError);
         return;
     }
 
     if (existingGif) {
-        console.log('GIF already exists, not inserting again.');
         return;
     }
 
     const { data, error } = await supabase
         .from('predefined_gifs')
         .insert([{ slug: cleanedSlug, url: gif.url, user_id: user.id }]);
-
-    if (error) {
-        console.error('Error inserting GIF:', error);
-    } else {
-        console.log('GIF inserted:', data);
-    }
 }
 
 
@@ -206,12 +192,10 @@ async function fetchAndLogEmoteDetails(slug) {
     try {
         const response = await fetch(`https://emote.highwebmedia.com/autocomplete?slug=${slug}`);
         if (!response.ok) {
-            console.error(`Error fetching slug: ${slug}, Status: ${response.status}`);
             return null;
         }
         return await response.json();
     } catch (error) {
-        console.error('Error during fetch:', error);
         return null;
     }
 }
@@ -233,7 +217,6 @@ async function main(slug) {
     const emoteDetails = await fetchAndLogEmoteDetails(slug);
     if (emoteDetails) {
         const firstEmote = extractFirstEmote(emoteDetails);
-        console.log('First Emote:', firstEmote);
     }
 }
 
@@ -305,7 +288,6 @@ function deleteHistory() {
     const historyDiv = document.getElementById('history')?.querySelector('.history-content');
 
     if (!historyDiv) {
-        console.warn('History content not found.');
         return;
     }
 
