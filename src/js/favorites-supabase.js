@@ -137,18 +137,16 @@ async function syncFavorites() {
     const localFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
     const { data: { user }, error } = await supabase.auth.getUser();
-
     if (error || !user) {
-        openLoginModal();
-        console.error('User is not logged in:', error?.message || '');
+        console.error('User not logged in:', error?.message || '');
+        openLoginModal()
         return;
     }
 
-    console.log('Authenticated user:', user.id);
-
+    // Get existing favorites from Supabase
     const { data: supabaseFavorites, error: fetchError } = await supabase
         .from('favorites')
-        .select('*')
+        .select('slug')
         .eq('user_id', user.id);
 
     if (fetchError) {
@@ -156,13 +154,14 @@ async function syncFavorites() {
         return;
     }
 
+    const existingSlugs = new Set(supabaseFavorites.map(fav => fav.slug));
+
     const favoritesToAdd = localFavorites
-        .filter(localFav => !supabaseFavorites.some(supabaseFav => supabaseFav.slug === localFav.slug))
+        .filter(localFav => !existingSlugs.has(localFav.slug))
         .map(fav => ({
-            name: fav.name || 'Unknown',
+            user_id: user.id,
             slug: fav.slug,
             url: fav.url,
-            user_id: user.id,
         }));
 
     if (favoritesToAdd.length > 0) {
@@ -177,8 +176,9 @@ async function syncFavorites() {
     }
 
     console.log('Favorites synchronized successfully');
-    loadFavoritesFromSupabase();
+    localStorage.removeItem('favorites');
 }
+
 
 async function loadFavoritesFromSupabase() {
     const { data: { user }, error } = await supabase.auth.getUser();
@@ -188,11 +188,9 @@ async function loadFavoritesFromSupabase() {
         return;
     }
 
-    console.log('Loading favorites for user:', user.id);
-
     const { data: favorites, error: fetchError } = await supabase
         .from('favorites')
-        .select('*')
+        .select('slug, url')
         .eq('user_id', user.id);
 
     if (fetchError) {
@@ -201,9 +199,14 @@ async function loadFavoritesFromSupabase() {
     }
 
     console.log('Fetched favorites from Supabase:', favorites);
+    
+
     localStorage.setItem('favorites', JSON.stringify(favorites));
+    console.log('Favorites loaded from Supabase:', favorites);
+    console.log(localStorage.getItem('favorites'));
     showFavorites();
 }
+
 
 async function syncSingleFavorite(favorite) {
     const { data: { user }, error } = await supabase.auth.getUser();
@@ -215,35 +218,23 @@ async function syncSingleFavorite(favorite) {
 
     console.log('Syncing favorite:', favorite);
 
-    const { data: supabaseFavorite, error: fetchError } = await supabase
+    // Use upsert to avoid checking first
+    const { error: insertError } = await supabase
         .from('favorites')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('slug', favorite.slug);
+        .upsert({
+            user_id: user.id,
+            slug: favorite.slug,
+            url: favorite.url
+        }, { onConflict: ['user_id', 'slug'] });
 
-    if (fetchError) {
-        console.error('Error fetching favorite from Supabase:', fetchError);
+    if (insertError) {
+        console.error('Error adding favorite to Supabase:', insertError);
         return;
     }
 
-    if (!supabaseFavorite) {
-        const { error: insertError } = await supabase
-            .from('favorites')
-            .insert({
-                name: favorite.name || 'Unknown',
-                slug: favorite.slug,
-                url: favorite.url,
-                user_id: user.id,
-            });
-
-        if (insertError) {
-            console.error('Error adding favorite to Supabase:', insertError);
-            return;
-        }
-
-        console.log('Favorite synchronized successfully:', favorite);
-    }
+    console.log('Favorite synchronized successfully:', favorite);
 }
+
 
 async function removeSingleFavorite(favorite) {
     const { data: { user }, error } = await supabase.auth.getUser();
