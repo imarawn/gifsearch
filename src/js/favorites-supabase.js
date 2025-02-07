@@ -268,3 +268,34 @@ async function removeSingleFavorite(favorite) {
 
     console.log('Favorite removed successfully:', favorite);
 }
+
+async function renderUserGifs(table_name) {
+    const resultsDiv = document.getElementById('results'); // The div where the GIFs will be displayed
+
+    // Clear previous results
+    resultsDiv.innerHTML = '';
+    // Fetch the GIFs from the user_emoticons table for the authenticated user
+    try {
+        const { data: gifs, error } = await supabase
+            .from(table_name)
+            .select('slug, url') // Fetch the slug and URL of the GIFs
+
+        if (error) {
+            console.error('Error fetching GIFs:', error);
+            resultsDiv.innerHTML = '<p>Error fetching GIFs. Please try again later.</p>';
+            return;
+        }
+
+        // If GIFs exist, display them
+        if (gifs && gifs.length > 0) {
+            gifs.forEach((gif) => {
+                displayEmote(gif, resultsDiv); // Use the existing displayEmote function
+            });
+        } else {
+            resultsDiv.innerHTML = '<p>No GIFs found for this user.</p>';
+        }
+    } catch (err) {
+        console.error('Unexpected error fetching GIFs:', err);
+        resultsDiv.innerHTML = '<p>An unexpected error occurred. Please try again later.</p>';
+    }
+}
