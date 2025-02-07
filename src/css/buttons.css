@@ -137,3 +137,14 @@
     align-self: flex-start;
     background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2024/07/22/18/07/3c5b1113aff45d941edef4f7bc127722d7213eba.jpg');
 }
+
+.nsf-button {
+    z-index: 2;
+    align-self: flex-start;
+    background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2024/01/06/09/29/679ccdd9dd74234927c44f8b0a785391d1a8251d.jpg');
+}
+
+.list-buttons {
+    align-self: flex-start;
+    z-index: 2;
+}
