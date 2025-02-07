@@ -133,15 +133,28 @@
 }
 
 .juliamemes-button {
-    z-index: 2;
     align-self: flex-start;
     background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2024/07/22/18/07/3c5b1113aff45d941edef4f7bc127722d7213eba.jpg');
 }
 
 .nsf-button {
-    z-index: 2;
     align-self: flex-start;
-    background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2024/01/06/09/29/679ccdd9dd74234927c44f8b0a785391d1a8251d.jpg');
+    background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2023/09/04/10/41/108d14e6dace4e98a2eff60f8c9187de7dbc39d3.jpg');
+}
+
+.dec-button {
+    align-self: flex-start;
+    background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2023/09/24/11/22/ef1038c309a0f3d3b04474735214af6019b24b55.jpg');
+}
+
+.hgr-button {
+    align-self: flex-start;
+    background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2024/04/01/14/04/3372ad7ec867d362afe9d2df2c2c669bbbfa3d92.jpg');
+}
+
+.tsi-button {
+    align-self: flex-start;
+    background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2024/06/13/07/31/0476ec824d38dc1ddbb9b31289b6dd808a511e48.jpg');
 }
 
 .list-buttons {

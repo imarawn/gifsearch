@@ -1,11 +1,11 @@
-async function loadAndFetchEmoticons() {
-    const fileInput = document.getElementById('file-input'); // Referenz auf das versteckte Input-Feld
+async function loadAndFetchEmoticons(table_name) {
+    const fileInput = document.getElementById('file-input'); // Reference to the hidden input field
     const resultsDiv = document.getElementById('results'); // Results container
 
-    // Simuliere einen Klick auf das versteckte Datei-Input-Feld
+    // Simulate a click on the hidden file input field
     fileInput.click();
 
-    // Warte auf Dateiänderung (Benutzer wählt eine Datei aus)
+    // Wait for file selection (user selects a file)
     fileInput.onchange = async () => {
         if (fileInput.files.length === 0) {
             alert('No file selected.');
@@ -25,6 +25,22 @@ async function loadAndFetchEmoticons() {
         // Clear previous results
         resultsDiv.innerHTML = '';
 
+        // Initialize an array to hold slugs, URLs, and user_id for insertion into Supabase
+        const rowsToInsert = [];
+
+        // Get the current authenticated user
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError) {
+            console.error('Error fetching user data:', authError);
+            alert('Error fetching user data. Please try again.');
+            return;
+        }
+
+        if (!user) {
+            alert('User not authenticated. Please log in.');
+            return;
+        }
+
         // Fetch and display emoticons for each slug
         for (const slug of slugs) {
             try {
@@ -34,17 +50,49 @@ async function loadAndFetchEmoticons() {
                     continue;
                 }
 
-                const data = await response.json(); // Parse JSON response
+                const data = await response.json(); // Parse the JSON response
                 const exactEmote = data.emoticons.find((emote) => emote.slug === slug); // Find the exact emote
-                if (exactEmote) displayEmote(exactEmote, resultsDiv); // Display the emote if found
+
+                if (exactEmote) {
+                    displayEmote(exactEmote, resultsDiv); // Display the emote if found
+
+                    // Now, extract the URL (you can modify this based on how the URL is structured in the API response)
+                    const emoteUrl = exactEmote.url || `https://example.com/gif/${slug}`;  // Use a fallback URL if the API doesn't provide it
+
+                    // Push the slug, URL, and user_id into the rowsToInsert array
+                    rowsToInsert.push({
+                        slug: slug,
+                        url: emoteUrl,
+                        user_id: user.id, // Use the authenticated user's ID
+                    });
+                }
             } catch (error) {
                 console.error(`Error fetching ${slug}:`, error); // Handle errors
             }
 
-            await new Promise((resolve) => setTimeout(resolve, 50)); // Add a delay between API calls
+            // Add a delay between API calls to avoid rate-limiting
+            await new Promise((resolve) => setTimeout(resolve, 50));
+        }
+
+        // Insert the collected slugs and URLs into the user_emoticons table
+        if (rowsToInsert.length > 0) {
+            try {
+                const { data, error } = await supabase
+                    .from(table_name)  // Insert into the new table 'user_emoticons'
+                    .upsert(rowsToInsert, { onConflict: ['slug', 'user_id'] });  // Insert or update if slug already exists for the user
+
+                if (error) {
+                    console.error('Error inserting data into Supabase:', error);
+                } else {
+                    console.log('Data inserted successfully:', data);
+                }
+            } catch (error) {
+                console.error('Unexpected error inserting data into Supabase:', error);
+            }
         }
     };
 }
+
 
 
 function displayEmote(emote, parentElement) {
