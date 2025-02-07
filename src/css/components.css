@@ -23,10 +23,6 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.favorites:hover {
-    width: 1080px;
-}
-
 .favorites::-webkit-scrollbar {
     display: none;
     /* Hides scrollbar in Chrome, Safari, Edge */
