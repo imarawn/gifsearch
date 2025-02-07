@@ -32,6 +32,7 @@ async function showFavorites() {
         const img = document.createElement('img');
         img.src = emote.url;
         img.alt = emote.slug || 'Favorite Emote';
+        img.loading = 'lazy';
 
         const detailsContainer = document.createElement('div');
         detailsContainer.className = 'details-container';
@@ -90,6 +91,7 @@ function addToFavorites(emoteUrl) {
 
     favorites.push(emoteUrl); // Add the new favorite URL
     localStorage.setItem('favorites', JSON.stringify(favorites)); // Save to local storage
+    syncSingleFavorite(emoteUrl); // Sync the new favorite with Supabase
     updateFavoritesCounter(); // Update the favorites counter
     showFavorites(); // Display favorites when the page loads
 }
@@ -100,6 +102,7 @@ function removeFromFavorites(object) {
     localStorage.setItem('favorites', JSON.stringify(updatedFavorites)); // Save updated favorites to localStorage
     updateFavoritesCounter(); // Update the favorites counter
     showFavorites(); // Refresh the favorites list
+    removeSingleFavorite(object); // Remove the favorite from Supabase
 }
 
 function openmobilefavorites() {
@@ -110,7 +113,6 @@ function openmobilefavorites() {
 }
 
 function downloadFavorites() {
-    // Retrieve the favorites from localStorage
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
     if (favorites.length === 0) {
@@ -118,29 +120,22 @@ function downloadFavorites() {
         return;
     }
 
-    // Extract the URLs from the favorites
     const favoriteUrls = favorites.map(favorite => favorite.slug);
 
-    // Create a blob from the URLs
     const blob = new Blob([favoriteUrls.join('\n')], { type: 'text/plain' });
 
-    // Create a download link
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'favorites.txt';
     document.body.appendChild(a);
 
-    // Programmatically click the link to trigger the download
     a.click();
-
-    // Remove the link from the document
     document.body.removeChild(a);
 }
 
 async function syncFavorites() {
     const localFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
-    // ✅ Get the authenticated user
     const { data: { user }, error } = await supabase.auth.getUser();
 
     if (error || !user) {
@@ -151,7 +146,6 @@ async function syncFavorites() {
 
     console.log('Authenticated user:', user.id);
 
-    // ✅ Fetch existing favorites from Supabase for this user
     const { data: supabaseFavorites, error: fetchError } = await supabase
         .from('favorites')
         .select('*')
@@ -162,19 +156,15 @@ async function syncFavorites() {
         return;
     }
 
-    console.log('Supabase Favorites:', supabaseFavorites);
-
-    // ✅ Find missing favorites to add
     const favoritesToAdd = localFavorites
         .filter(localFav => !supabaseFavorites.some(supabaseFav => supabaseFav.slug === localFav.slug))
         .map(fav => ({
-            name: fav.name || 'Unknown', // ✅ Ensure the "name" field is not null
+            name: fav.name || 'Unknown',
             slug: fav.slug,
             url: fav.url,
-            user_id: user.id, // ✅ Use authenticated user_id
+            user_id: user.id,
         }));
 
-    // ✅ Insert missing favorites
     if (favoritesToAdd.length > 0) {
         const { error: insertError } = await supabase
             .from('favorites')
@@ -187,4 +177,94 @@ async function syncFavorites() {
     }
 
     console.log('Favorites synchronized successfully');
+    loadFavoritesFromSupabase();
+}
+
+async function loadFavoritesFromSupabase() {
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
+        console.error('User not authenticated:', error?.message || '');
+        return;
+    }
+
+    console.log('Loading favorites for user:', user.id);
+
+    const { data: favorites, error: fetchError } = await supabase
+        .from('favorites')
+        .select('*')
+        .eq('user_id', user.id);
+
+    if (fetchError) {
+        console.error('Error fetching favorites from Supabase:', fetchError);
+        return;
+    }
+
+    console.log('Fetched favorites from Supabase:', favorites);
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    showFavorites();
+}
+
+async function syncSingleFavorite(favorite) {
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
+        console.error('User not authenticated:', error?.message || '');
+        return;
+    }
+
+    console.log('Syncing favorite:', favorite);
+
+    const { data: supabaseFavorite, error: fetchError } = await supabase
+        .from('favorites')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('slug', favorite.slug);
+
+    if (fetchError) {
+        console.error('Error fetching favorite from Supabase:', fetchError);
+        return;
+    }
+
+    if (!supabaseFavorite) {
+        const { error: insertError } = await supabase
+            .from('favorites')
+            .insert({
+                name: favorite.name || 'Unknown',
+                slug: favorite.slug,
+                url: favorite.url,
+                user_id: user.id,
+            });
+
+        if (insertError) {
+            console.error('Error adding favorite to Supabase:', insertError);
+            return;
+        }
+
+        console.log('Favorite synchronized successfully:', favorite);
+    }
+}
+
+async function removeSingleFavorite(favorite) {
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
+        console.error('User not authenticated:', error?.message || '');
+        return;
+    }
+
+    console.log('Removing favorite:', favorite);
+
+    const { error: deleteError } = await supabase
+        .from('favorites')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('slug', favorite.slug);
+
+    if (deleteError) {
+        console.error('Error deleting favorite from Supabase:', deleteError);
+        return;
+    }
+
+    console.log('Favorite removed successfully:', favorite);
 }

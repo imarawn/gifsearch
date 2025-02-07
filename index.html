@@ -47,9 +47,6 @@
             </div> 
         </div>
         <div id="favorite-emotes" class="favorites-content"></div>
-        <button id="sync-favorites-button" class="button" onclick="syncFavorites()">Sync Favorites</button>
-        <button id="sync-favorites-button" class="button" onclick="logout()">Logout</button>
-
     </div>
 
 
@@ -63,6 +60,8 @@
     <!-- Main Content -->
     <div class="container">
         <div id="filesection" class="main-button-container">
+            <button id="sync-favorites-button" class="button" onclick="syncFavorites()">Sync Favorites</button>
+        <button id="sync-favorites-button" class="button" onclick="logout()">Logout</button>
             <button id="desktop-show-button" class="button show-file-button" onclick="loadAndFetchEmoticons()">Show from
                 File</button>
             <input type="file" id="file-input" class="hidden" accept=".txt">
@@ -70,6 +69,7 @@
         <div class="main-button-container  random-input-container">
             <input type="text" id="manual-slug-input" class="search-field" placeholder="Search as you type...">
             <button id="random-button" class="button iconbutton random-button" onclick="generateRandomSlugAndScroll()"></button>
+            <button id="home-button" class="button iconbutton home-button" onclick="restoreHome()"></button>
         </div>
         <div id="results" class="results"></div>
     </div>

@@ -127,3 +127,7 @@
 .search-button {
     background-image: url('../../public/icons/compass.svg');
 }
+
+.home-button {
+    background-image: url('../../public/icons/house.svg');
+}

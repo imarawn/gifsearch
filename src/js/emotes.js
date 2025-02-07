@@ -145,6 +145,8 @@ async function fetchManualSlug() {
         resultsDiv.innerHTML = ''; // Clear all results
         return;
     }
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     try {
         const response = await fetch(`https://emote.highwebmedia.com/autocomplete?slug=${slug}`); // Fetch API
