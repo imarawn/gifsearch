@@ -351,3 +351,19 @@ function restoreHome() {
     document.getElementById('manual-slug-input').value = '';
     renderPredefinedGifs();
 }
+
+const element = document.querySelector('.favorites');
+
+function adjustWidthOnHover() {
+    const availableWidth = window.innerWidth - 140;
+    const subtractionPerBlock = 18;
+    const numBlocks = Math.floor(availableWidth / 290);
+    const newWidth = (numBlocks * 290) - (numBlocks * subtractionPerBlock);
+    element.style.width = `${newWidth}px`;
+}
+
+element.addEventListener('mouseenter', adjustWidthOnHover); // Trigger when hover starts
+element.addEventListener('mouseleave', () => {
+    // Reset to the original width on hover out
+    element.style.width = '120px'; // Or any default width you want
+});
