@@ -24,7 +24,7 @@
 }
 
 .favorites:hover {
-    width: 580px;
+    width: 1080px;
 }
 
 .favorites::-webkit-scrollbar {
@@ -42,8 +42,9 @@
 }
 
 .favorites:hover .favorites-content {
-    flex-direction: row;
+    display: flex;
     flex-wrap: wrap;
+    flex-direction: row;
 }
 
 .favorites-content .emote-box {

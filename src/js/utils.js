@@ -47,7 +47,7 @@ async function copyToClipboard(text, gif) {
     addToHistory(gif); // Deine bestehende Funktion
 
     // Neuen GIF-Eintrag in die Datenbank einfügen
-    await insertGifToDatabase(text, gif);
+    //await insertGifToDatabase(text, gif);
 }
 
 async function insertGifToDatabase(slug, gif) {
