@@ -1,3 +1,6 @@
+const MAX_TOTAL_GIFS = 200;  // Gesamtlimit für die Tabelle
+const MAX_GIFS_PER_USER = 10; // Limit pro Nutzer
+
 /**
  * Render predefined GIFs in the results container by fetching them from Supabase.
  */
@@ -5,6 +8,7 @@ async function renderPredefinedGifs() {
     // Get the container element
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = ''; // Clear existing content
+    
 
     try {
         // Fetch GIFs from Supabase
@@ -33,7 +37,7 @@ async function renderPredefinedGifs() {
     }
 }
 
-function copyToClipboard(text, gif) {
+async function copyToClipboard(text, gif) {
     const textarea = document.createElement('textarea');
     textarea.value = text;
     document.body.appendChild(textarea);
@@ -41,8 +45,105 @@ function copyToClipboard(text, gif) {
     document.execCommand('copy');
     document.body.removeChild(textarea);
 
-    addToHistory(gif);
+    addToHistory(gif); // Deine bestehende Funktion
+
+    // Neuen GIF-Eintrag in die Datenbank einfügen
+    await insertGifToDatabase(text, gif);
 }
+
+async function insertGifToDatabase(slug, gif) {
+    const { data: { user }} = await supabase.auth.getUser();
+    if (!user) {
+        console.error('User is not authenticated!');
+        return;
+    }
+
+    const cleanedSlug = slug.slice(1);
+
+    // 🔹 1️⃣ Prüfen, wie viele GIFs insgesamt existieren
+    const { count: totalCount, error: totalError } = await supabase
+        .from('predefined_gifs')
+        .select('*', { count: 'exact', head: true });
+
+    if (totalError) {
+        console.error('Error counting total GIFs:', totalError);
+        return;
+    }
+
+    // 🔹 2️⃣ Falls das Gesamtlimit erreicht ist → ältestes GIF mit user_id ≠ null löschen
+    if (totalCount >= MAX_TOTAL_GIFS) {
+        const { data: oldestGlobalGif, error: globalDeleteError } = await supabase
+            .from('predefined_gifs')
+            .select('id')
+            .not('user_id', 'is', null)  // Nur GIFs löschen, die von Nutzern hochgeladen wurden
+            .order('created_at', { ascending: true }) // Ältestes zuerst
+            .limit(1)
+            .single();
+
+        if (globalDeleteError || !oldestGlobalGif) {
+            console.error('Error finding oldest user GIF to delete:', globalDeleteError);
+            return;
+        }
+
+        await supabase.from('predefined_gifs').delete().eq('id', oldestGlobalGif.id);
+        console.log('Oldest user GIF deleted due to total limit:', oldestGlobalGif.id);
+    }
+
+    const { count: userCount, error: userCountError } = await supabase
+        .from('predefined_gifs')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+
+    if (userCountError) {
+        console.error('Error counting user GIFs:', userCountError);
+        return;
+    }
+
+    if (userCount >= MAX_GIFS_PER_USER) {
+        const { data: oldestUserGif, error: userDeleteError } = await supabase
+            .from('predefined_gifs')
+            .select('id')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: true }) // Ältestes zuerst
+            .limit(1)
+            .single();
+
+        if (userDeleteError || !oldestUserGif) {
+            console.error('Error finding oldest user GIF to delete:', userDeleteError);
+            return;
+        }
+
+        await supabase.from('predefined_gifs').delete().eq('id', oldestUserGif.id);
+        console.log('Oldest GIF deleted for user:', oldestUserGif.id);
+    }
+
+    const { data: existingGif, error: selectError } = await supabase
+        .from('predefined_gifs')
+        .select('id')
+        .eq('slug', cleanedSlug)
+        .maybeSingle();
+
+    if (selectError) {
+        console.error('Error checking existing GIF:', selectError);
+        return;
+    }
+
+    if (existingGif) {
+        console.log('GIF already exists, not inserting again.');
+        return;
+    }
+
+    const { data, error } = await supabase
+        .from('predefined_gifs')
+        .insert([{ slug: cleanedSlug, url: gif.url, user_id: user.id }]);
+
+    if (error) {
+        console.error('Error inserting GIF:', error);
+    } else {
+        console.log('GIF inserted:', data);
+    }
+}
+
 
 
 /**
@@ -147,23 +248,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateFavoritesCounter();
     showFavorites();
     renderHistory();
-
-    /*/ Toggle mobile favorites
-    const favoritesToggle = document.getElementById('mobile-favorites-toggle'); // Open button
-    const mobileFavorites = document.getElementById('mobile-favorites'); // Mobile favorites section
-    const closeFavoritesButton = document.getElementById('close-mobile-favorites'); // Close button
-
-    // Toggle the favorites section
-    favoritesToggle.addEventListener('click', () => {
-        mobileFavorites.classList.add('open'); // Slide in
-    });
-
-    // Close the favorites section
-    closeFavoritesButton.addEventListener('click', () => {
-        mobileFavorites.classList.remove('open'); // Slide out
-    });*/
-
-    // Handle manual slug input with debounce
     const manualSlugInput = document.getElementById('manual-slug-input');
     const debouncedFetch = debounce(fetchManualSlug, 300);
     manualSlugInput?.addEventListener('input', debouncedFetch);
@@ -279,4 +363,9 @@ function openLoginModal() {
 function closeLoginModal() {
     const modal = document.getElementById('login-modal');
     modal.style.display = 'none';
+}
+
+function restoreHome() {
+    document.getElementById('manual-slug-input').value = '';
+    renderPredefinedGifs();
 }
