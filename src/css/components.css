@@ -74,7 +74,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* Platz zwischen den Elementen */
     position: sticky;
     top: 0;
     background-color: #fff;
@@ -87,9 +86,7 @@
 
 .favorites-header .header {
     margin: 10;
-    /* Standardabstände entfernen */
     font-size: 20px;
-    /* Überschrift anpassen */
 }
 
 .favorites:hover {
@@ -304,4 +301,27 @@
 .favorites-overlay.open {
     display: block; /* Make the element visible */
     opacity: 1; /* Fade in the overlay */
+}
+
+#login-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+#login-modal .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
 }

@@ -1,3 +1,6 @@
+const MAX_TOTAL_GIFS = 200;  // Gesamtlimit für die Tabelle
+const MAX_GIFS_PER_USER = 10; // Limit pro Nutzer
+
 /**
  * Render predefined GIFs in the results container by fetching them from Supabase.
  */
@@ -5,6 +8,7 @@ async function renderPredefinedGifs() {
     // Get the container element
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = ''; // Clear existing content
+    
 
     try {
         // Fetch GIFs from Supabase
@@ -28,12 +32,11 @@ async function renderPredefinedGifs() {
             resultsDiv.innerHTML = `<p>No GIFs found.</p>`;
         }
     } catch (err) {
-        console.error('Unexpected error:', err);
         resultsDiv.innerHTML = `<p>An unexpected error occurred. Please try again later.</p>`;
     }
 }
 
-function copyToClipboard(text, gif) {
+async function copyToClipboard(text, gif) {
     const textarea = document.createElement('textarea');
     textarea.value = text;
     document.body.appendChild(textarea);
@@ -41,8 +44,92 @@ function copyToClipboard(text, gif) {
     document.execCommand('copy');
     document.body.removeChild(textarea);
 
-    addToHistory(gif);
+    addToHistory(gif); // Deine bestehende Funktion
+
+    // Neuen GIF-Eintrag in die Datenbank einfügen
+    await insertGifToDatabase(text, gif);
 }
+
+async function insertGifToDatabase(slug, gif) {
+    const { data: { user }} = await supabase.auth.getUser();
+    if (!user) {
+        console.error('User is not authenticated!');
+        return;
+    }
+
+    const cleanedSlug = slug.slice(1);
+
+    // 🔹 1️⃣ Prüfen, wie viele GIFs insgesamt existieren
+    const { count: totalCount, error: totalError } = await supabase
+        .from('predefined_gifs')
+        .select('*', { count: 'exact', head: true });
+
+    if (totalError) {
+        return;
+    }
+
+    // 🔹 2️⃣ Falls das Gesamtlimit erreicht ist → ältestes GIF mit user_id ≠ null löschen
+    if (totalCount >= MAX_TOTAL_GIFS) {
+        const { data: oldestGlobalGif, error: globalDeleteError } = await supabase
+            .from('predefined_gifs')
+            .select('id')
+            .not('user_id', 'is', null)  // Nur GIFs löschen, die von Nutzern hochgeladen wurden
+            .order('created_at', { ascending: true }) // Ältestes zuerst
+            .limit(1)
+            .single();
+
+        if (globalDeleteError || !oldestGlobalGif) {
+            return;
+        }
+
+        await supabase.from('predefined_gifs').delete().eq('id', oldestGlobalGif.id);
+    }
+
+    const { count: userCount, error: userCountError } = await supabase
+        .from('predefined_gifs')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+
+    if (userCountError) {
+        return;
+    }
+
+    if (userCount >= MAX_GIFS_PER_USER) {
+        const { data: oldestUserGif, error: userDeleteError } = await supabase
+            .from('predefined_gifs')
+            .select('id')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: true }) // Ältestes zuerst
+            .limit(1)
+            .single();
+
+        if (userDeleteError || !oldestUserGif) {
+            return;
+        }
+
+        await supabase.from('predefined_gifs').delete().eq('id', oldestUserGif.id);
+        console.log('Oldest GIF deleted for user:', oldestUserGif.id);
+    }
+
+    const { data: existingGif, error: selectError } = await supabase
+        .from('predefined_gifs')
+        .select('id')
+        .eq('slug', cleanedSlug)
+        .maybeSingle();
+
+    if (selectError) {
+        return;
+    }
+
+    if (existingGif) {
+        return;
+    }
+
+    const { data, error } = await supabase
+        .from('predefined_gifs')
+        .insert([{ slug: cleanedSlug, url: gif.url, user_id: user.id }]);
+}
+
 
 
 /**
@@ -64,7 +151,7 @@ function debounce(func, delay) {
  */
 function generateRandomSlug() {
     const manualInput = document.getElementById('manual-slug-input');
-    const length = Math.floor(Math.random() * 15) + 3; // Random length between 3 and 15
+    const length = Math.floor(Math.random() * 25) + 3; // Random length between 3 and 15
     const randomSlug = generateRandomString(length);
     manualInput.value = randomSlug;
     fetchManualSlug(); // Trigger search function
@@ -78,6 +165,11 @@ function generateRandomSlug() {
 function generateRandomString(length) {
     const characters = 'abcdefghijklmnopqrstuvwxyz-1234567890_';
     return Array.from({ length }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');
+}
+
+function generateRandomSlugAndScroll() {
+    generateRandomSlug(); // Deine bestehende Funktion zum Generieren eines zufälligen Slugs
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scrollt die Seite nach oben
 }
 
 /**
@@ -100,12 +192,10 @@ async function fetchAndLogEmoteDetails(slug) {
     try {
         const response = await fetch(`https://emote.highwebmedia.com/autocomplete?slug=${slug}`);
         if (!response.ok) {
-            console.error(`Error fetching slug: ${slug}, Status: ${response.status}`);
             return null;
         }
         return await response.json();
     } catch (error) {
-        console.error('Error during fetch:', error);
         return null;
     }
 }
@@ -127,7 +217,6 @@ async function main(slug) {
     const emoteDetails = await fetchAndLogEmoteDetails(slug);
     if (emoteDetails) {
         const firstEmote = extractFirstEmote(emoteDetails);
-        console.log('First Emote:', firstEmote);
     }
 }
 
@@ -142,23 +231,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateFavoritesCounter();
     showFavorites();
     renderHistory();
-
-    /*/ Toggle mobile favorites
-    const favoritesToggle = document.getElementById('mobile-favorites-toggle'); // Open button
-    const mobileFavorites = document.getElementById('mobile-favorites'); // Mobile favorites section
-    const closeFavoritesButton = document.getElementById('close-mobile-favorites'); // Close button
-
-    // Toggle the favorites section
-    favoritesToggle.addEventListener('click', () => {
-        mobileFavorites.classList.add('open'); // Slide in
-    });
-
-    // Close the favorites section
-    closeFavoritesButton.addEventListener('click', () => {
-        mobileFavorites.classList.remove('open'); // Slide out
-    });*/
-
-    // Handle manual slug input with debounce
     const manualSlugInput = document.getElementById('manual-slug-input');
     const debouncedFetch = debounce(fetchManualSlug, 300);
     manualSlugInput?.addEventListener('input', debouncedFetch);
@@ -216,7 +288,6 @@ function deleteHistory() {
     const historyDiv = document.getElementById('history')?.querySelector('.history-content');
 
     if (!historyDiv) {
-        console.warn('History content not found.');
         return;
     }
 
@@ -264,4 +335,19 @@ function navigateHistory(direction, inputField) {
 
     // Update the input field with the current slug
     inputField.value = slugHistory[currentSlugIndex];
+}
+
+function openLoginModal() {
+    const modal = document.getElementById('login-modal');
+    modal.style.display = 'block';
+}
+
+function closeLoginModal() {
+    const modal = document.getElementById('login-modal');
+    modal.style.display = 'none';
+}
+
+function restoreHome() {
+    document.getElementById('manual-slug-input').value = '';
+    renderPredefinedGifs();
 }
