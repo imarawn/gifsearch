@@ -26,31 +26,31 @@
 .darkmode-button {
     top: 10px; /* Adjust the top position */
     right: 130px; /* Adjust the right position */
-    background-image: url('../../public/icons/mode.svg'); /* Default icon image */
+    background-image: url('../images/mode.svg'); /* Default icon image */
     position: fixed; /* Fixed position for the button */
 }
 
 .upload-button {
-    background-image: url('../../public/icons/upload.svg'); /* Default icon image */
+    background-image: url('../images/upload.svg'); /* Default icon image */
 }
 
 .random-button {
-    background-image: url('../../public/icons/skull.svg');
+    background-image: url('../images/skull.svg');
 }
 
 .mobile-history-button {
-    background-image: url('../../public/icons/history.svg');
+    background-image: url('../images/history.svg');
 }
 
 .mobile-favorites-button {
-    background-image: url('../../public/icons/party.svg');
+    background-image: url('../images/party.svg');
 }
 
 .mobile-close-button {
     opacity: 0;
     top: 25px; /* Distance from the top */
     right: 15px; /* Distance from the right edge */
-    background-image: url('../../public/icons/close.svg');
+    background-image: url('../images/icons/close.svg');
 }
 
 #close-favorites-button {
@@ -59,7 +59,7 @@
 
 .download-favorites-button {
     display: none;
-    background-image: url('../../public/icons/download.svg');
+    background-image: url('../images/download.svg');
 }
 
 .show-file-button {
@@ -100,7 +100,7 @@
     text-align: center; /* Center the text */
     transition: background-color 0.3s ease; /* Smooth background color transition */
     display: none; /* Hide the button by default */
-    background-image: url('../../public/icons/trash.svg');
+    background-image: url('../images/trash.svg');
     position: fixed; /* Fixed position for the button */ 
     bottom: 10px; /* Adjust the top position */
     right: 10px; /* Adjust the right position */
@@ -125,11 +125,11 @@
 }
 
 .search-button {
-    background-image: url('../../public/icons/compass.svg');
+    background-image: url('../images/compass.svg');
 }
 
 .home-button {
-    background-image: url('../../public/icons/house.svg');
+    background-image: url('../images/house.svg');
 }
 
 .juliamemes-button {
@@ -163,7 +163,7 @@
 }
 
 .visible-button {
-    background-image: url('../../public/icons/eye.svg');
+    background-image: url('../images/eye.svg');
     position: fixed; /* Fixed position for the button */
     top: 5px; /* Adjust the top position */
     left: 5px; /* Adjust the right position */
