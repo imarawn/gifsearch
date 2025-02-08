@@ -53,3 +53,21 @@ async function checkSession() {
         console.log('No user logged in');
     }
 }
+
+/*async function signUp() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+    });
+
+    if (error) {
+        alert(`Sign up failed: ${error.message}`);
+        return;
+    }
+
+    console.log('Signed up successfully:', data);
+    await login();
+}*/
