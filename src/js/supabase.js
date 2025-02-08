@@ -56,6 +56,7 @@ async function checkSession() {
 }
 
 async function signUp() {
+    return
     const captchaToken = await getCaptchaToken(); // Holt das hCaptcha-Token
     if (!captchaToken) {
         console.error("Captcha verification failed");
@@ -76,15 +77,14 @@ async function signUp() {
 }
 
 // Funktion zum Abrufen des hCaptcha-Tokens
-function getCaptchaToken() {
-    return new Promise((resolve, reject) => {
-        const widget = document.querySelector('.h-captcha');
-        if (!widget) return reject("hCaptcha not found");
-
-        hcaptcha.execute().then(token => {
-            resolve(token);
-        }).catch(err => {
-            reject(err);
-        });
-    });
+async function getCaptchaToken() {
+    try {
+        const response = await fetch('https://api.hcaptcha.com/siteverify');
+        const data = await response.json();
+        return data.token; // Gib das Token zurück
+    } catch (error) {
+        console.error("Fehler beim Abrufen des Captcha-Tokens:", error);
+        return null; // Stelle sicher, dass immer ein Wert zurückgegeben wird
+    }
 }
+

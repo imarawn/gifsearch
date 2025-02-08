@@ -161,3 +161,10 @@
     align-self: flex-start;
     z-index: 2;
 }
+
+.visible-button {
+    background-image: url('../../public/icons/eye.svg');
+    position: fixed; /* Fixed position for the button */
+    top: 5px; /* Adjust the top position */
+    left: 5px; /* Adjust the right position */
+}
