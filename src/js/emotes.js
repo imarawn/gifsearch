@@ -123,6 +123,22 @@ function displayEmote(emote, parentElement) {
         fetchManualSlug(); // Trigger a manual search
     };
 
+    const visiblebutton = document.createElement('button');
+    visiblebutton.className = 'visible-button tinybutton button';
+    visiblebutton.title = `Toggle visibility of :${emote.slug}`; // Tooltip for clarity
+    visiblebutton.onclick = () => {
+        //img.style.filter =  img.style.filter === 'none' ?  'blur(15px)' : 'none';
+        //img.style.display = img.style.display === 'none' ? 'block' : 'none';
+        img.src = img.src === emote.url ? 'https://media1.tenor.com/m/Qu21iBRCvNkAAAAC/finger-shake-babu.gif' : emote.url;
+        if (img.naturalWidth > 250 || img.naturalHeight > 80) {
+            emoteBox.style.backgroundColor = '#eb0c0c'; // Highlight oversized emotes
+            emoteBox.style.border = '1px solid #ff0000';
+        } else {
+            emoteBox.style.backgroundColor = '#e5793a';
+            emoteBox.style.border = '1px solid #e5793a';
+        }
+    };
+
     // Group the dimensions button and search button
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'button-container';
@@ -158,7 +174,7 @@ function displayEmote(emote, parentElement) {
     };
 
     // Append image container and details container to the emote box
-    emoteBox.append(imageContainer, detailsContainer, favoriteButton);
+    emoteBox.append(imageContainer, detailsContainer, favoriteButton, visiblebutton);
 
     // Append emote box to the parent element
     parentElement.appendChild(emoteBox);

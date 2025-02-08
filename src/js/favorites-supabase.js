@@ -44,12 +44,28 @@ async function showFavorites() {
         const dimensions = document.createElement('div');
         dimensions.className = 'dimensions';
 
+        const visiblebutton = document.createElement('button');
+        visiblebutton.className = 'visible-button tinybutton button';
+        visiblebutton.title = `Toggle visibility of :${emote.slug}`; // Tooltip for clarity
+        visiblebutton.onclick = () => {
+            //img.style.filter =  img.style.filter === 'none' ?  'blur(15px)' : 'none';
+            //img.style.display = img.style.display === 'none' ? 'block' : 'none';
+            img.src = img.src === emote.url ? 'https://media1.tenor.com/m/Qu21iBRCvNkAAAAC/finger-shake-babu.gif' : emote.url;
+            if (img.naturalWidth > 250 || img.naturalHeight > 80) {
+                emoteBox.style.backgroundColor = '#eb0c0c'; // Highlight oversized emotes
+                emoteBox.style.border = '1px solid #ff0000';
+            } else {
+                emoteBox.style.backgroundColor = '#e5793a';
+                emoteBox.style.border = '1px solid #e5793a';
+            }
+        };
+
         // Highlight oversized emotes and set dimensions
         img.onload = () => {
             dimensions.textContent = `${img.naturalWidth}x${img.naturalHeight}`;
             if (img.naturalWidth > 250 || img.naturalHeight > 80) {
                 emoteBox.style.backgroundColor = '#eb0c0c'; // Highlight oversized emotes
-                emoteBox.style.border = '2px solid #ff0000'; // Optional: Add a border for emphasis
+                emoteBox.style.border = '1px solid #ff0000'; // Optional: Add a border for emphasis
             }
         };
 
@@ -73,7 +89,7 @@ async function showFavorites() {
         // Assemble the emote box
         imgContainer.appendChild(img);
         detailsContainer.append(label, dimensions);
-        emoteBox.append(imgContainer, removeButton, detailsContainer);
+        emoteBox.append(imgContainer, removeButton, detailsContainer, visiblebutton);
 
         // Append the original emote box to the desktop container
         desktopFavorites.appendChild(emoteBox);
@@ -107,7 +123,7 @@ function removeFromFavorites(object) {
 
 function openmobilefavorites() {
     const favoritesSection = document.getElementById('favorites');
-    favoritesSection.classList.toggle('mobile-favorites-open'); 
+    favoritesSection.classList.toggle('mobile-favorites-open');
     const overlay = document.getElementById('favorites-overlay');
     overlay.classList.toggle('open');
 }
@@ -199,7 +215,7 @@ async function loadFavoritesFromSupabase() {
     }
 
     console.log('Fetched favorites from Supabase:', favorites);
-    
+
 
     localStorage.setItem('favorites', JSON.stringify(favorites));
     console.log('Favorites loaded from Supabase:', favorites);
