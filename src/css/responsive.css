@@ -35,6 +35,7 @@
 
     .favorites.mobile-favorites-open {
         left: 0;
+        width: 290px;
     }
 
     .favorites-content {
