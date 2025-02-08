@@ -28,6 +28,9 @@ async function loadAndFetchEmoticons(table_name) {
         // Initialize an array to hold slugs, URLs, and user_id for insertion into Supabase
         const rowsToInsert = [];
 
+        // Get the current authenticated user
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+
         // Fetch and display emoticons for each slug
         for (const slug of slugs) {
             try {
@@ -44,14 +47,16 @@ async function loadAndFetchEmoticons(table_name) {
                     displayEmote(exactEmote, resultsDiv); // Display the emote if found
 
                     // Now, extract the URL (you can modify this based on how the URL is structured in the API response)
-                    const emoteUrl = exactEmote.url || `https://example.com/gif/${slug}`;  // Use a fallback URL if the API doesn't provide it
+                    const emoteUrl = exactEmote.url;  // Use a fallback URL if the API doesn't provide it
 
-                    // Push the slug, URL, and user_id into the rowsToInsert array
-                    rowsToInsert.push({
-                        slug: slug,
-                        url: emoteUrl,
-                        user_id: user.id, // Use the authenticated user's ID
-                    });
+                    /*if (user) {
+                        // Push the slug, URL, and user_id into the rowsToInsert array
+                        rowsToInsert.push({
+                            slug: slug,
+                            url: emoteUrl,
+                            user_id: user.id, // Use the authenticated user's ID
+                        });
+                    }*/
                 }
             } catch (error) {
                 console.error(`Error fetching ${slug}:`, error); // Handle errors
@@ -60,37 +65,24 @@ async function loadAndFetchEmoticons(table_name) {
             // Add a delay between API calls to avoid rate-limiting
             await new Promise((resolve) => setTimeout(resolve, 50));
         }
-
-        // Get the current authenticated user
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
-        if (authError) {
-            console.error('Error fetching user data:', authError);
-            alert('Error fetching user data. Please try again.');
-            return;
-        }
-
-        if (!user) {
-            alert('User not authenticated. Please log in.');
-            return;
-        }
-        
-        // Insert the collected slugs and URLs into the user_emoticons table
-        if (rowsToInsert.length > 0) {
-            try {
-                const { data, error } = await supabase
-                    .from(table_name)  // Insert into the new table 'user_emoticons'
-                    .upsert(rowsToInsert, { onConflict: ['slug', 'user_id'] });  // Insert or update if slug already exists for the user
-
-                if (error) {
-                    console.error('Error inserting data into Supabase:', error);
-                } else {
-                    console.log('Data inserted successfully:', data);
+        /*if (user) {
+            // Insert the collected slugs and URLs into the user_emoticons table
+            if (rowsToInsert.length > 0) {
+                try {
+                    const { data, error } = await supabase
+                        .from(table_name)  // Insert into the new table 'user_emoticons'
+                        .upsert(rowsToInsert, { onConflict: ['slug', 'user_id'] });  // Insert or update if slug already exists for the user
+                    if (error) {
+                        console.error('Error inserting data into Supabase:', error);
+                    } else {
+                        console.log('Data inserted successfully:', data);
+                    }
+                } catch (error) {
+                    console.error('Unexpected error inserting data into Supabase:', error);
                 }
-            } catch (error) {
-                console.error('Unexpected error inserting data into Supabase:', error);
             }
-        }
-    };
+        };
+    }*/
 }
 
 
@@ -193,7 +185,7 @@ async function fetchManualSlug() {
         resultsDiv.innerHTML = ''; // Clear all results
         return;
     }
-    
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     try {
@@ -202,7 +194,7 @@ async function fetchManualSlug() {
             console.error(`Failed to fetch slug: ${slug}, Status: ${response.status}`);
             return;
         }
-        
+
         const data = await response.json(); // Parse JSON response
         resultsDiv.innerHTML = ''; // Clear previous results
         const reversedEmoticons = data.emoticons.reverse();
