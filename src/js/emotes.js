@@ -28,19 +28,6 @@ async function loadAndFetchEmoticons(table_name) {
         // Initialize an array to hold slugs, URLs, and user_id for insertion into Supabase
         const rowsToInsert = [];
 
-        // Get the current authenticated user
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
-        if (authError) {
-            console.error('Error fetching user data:', authError);
-            alert('Error fetching user data. Please try again.');
-            return;
-        }
-
-        if (!user) {
-            alert('User not authenticated. Please log in.');
-            return;
-        }
-
         // Fetch and display emoticons for each slug
         for (const slug of slugs) {
             try {
@@ -74,6 +61,19 @@ async function loadAndFetchEmoticons(table_name) {
             await new Promise((resolve) => setTimeout(resolve, 50));
         }
 
+        // Get the current authenticated user
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError) {
+            console.error('Error fetching user data:', authError);
+            alert('Error fetching user data. Please try again.');
+            return;
+        }
+
+        if (!user) {
+            alert('User not authenticated. Please log in.');
+            return;
+        }
+        
         // Insert the collected slugs and URLs into the user_emoticons table
         if (rowsToInsert.length > 0) {
             try {
