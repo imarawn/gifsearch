@@ -47,7 +47,7 @@ async function copyToClipboard(text, gif) {
     addToHistory(gif); // Deine bestehende Funktion
 
     // Neuen GIF-Eintrag in die Datenbank einfügen
-    await insertGifToDatabase(text, gif);
+    //await insertGifToDatabase(text, gif);
 }
 
 async function insertGifToDatabase(slug, gif) {
@@ -351,3 +351,19 @@ function restoreHome() {
     document.getElementById('manual-slug-input').value = '';
     renderPredefinedGifs();
 }
+
+const favorites = document.querySelector('.favorites');
+
+function adjustWidthOnHover() {
+    if (window.innerWidth <= 768) return;
+    const availableWidth = window.innerWidth - 140;
+    const subtractionPerBlock = 18;
+    const numBlocks = Math.floor(availableWidth / 290);
+    const newWidth = (numBlocks * 290) - (numBlocks * subtractionPerBlock);
+    favorites.style.width = `${newWidth}px`;
+}
+
+favorites.addEventListener('mouseenter', adjustWidthOnHover); // Trigger when hover starts
+favorites.addEventListener('mouseleave', () => {
+    window.innerWidth <= 768 ?  favorites.style.width = '290px' : favorites.style.width = '120px'; // Or any default width you want
+});

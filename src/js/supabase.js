@@ -19,6 +19,9 @@ async function login() {
 
     console.log('Logged in successfully:', data);
     await checkSession();
+    closeLoginModal()
+    await syncFavorites();
+    await loadFavoritesFromSupabase();
 }
 
 async function logout() {
@@ -50,3 +53,21 @@ async function checkSession() {
         console.log('No user logged in');
     }
 }
+
+/*async function signUp() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+    });
+
+    if (error) {
+        alert(`Sign up failed: ${error.message}`);
+        return;
+    }
+
+    console.log('Signed up successfully:', data);
+    await login();
+}*/
