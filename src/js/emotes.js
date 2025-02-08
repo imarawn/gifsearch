@@ -84,7 +84,7 @@ async function loadAndFetchEmoticons(table_name) {
         };
     }*/
 }
-
+}
 
 
 function displayEmote(emote, parentElement) {
