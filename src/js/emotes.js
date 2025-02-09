@@ -83,7 +83,7 @@ async function loadAndFetchEmoticons(table_name) {
             }
         };
     }*/
-}
+    }
 }
 
 

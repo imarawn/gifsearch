@@ -168,3 +168,8 @@
     top: 5px; /* Adjust the top position */
     left: 5px; /* Adjust the right position */
 }
+
+.ius-button {
+    align-self: flex-start;
+    background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2023/08/25/02/39/888bbc665f872291f8cc28385a7d66e90da51343.jpg');
+}
