@@ -21,6 +21,7 @@
         z-index: 200;
         width: auto;
     }
+    
     .favorites {
         position: fixed;
         top: 50px;
@@ -109,5 +110,22 @@
 
     #close-favorites-button {
         display: block;
+    }
+
+    .history {
+        position: fixed;
+        top: 50px;
+        left: -100%; /* Hide off-screen initially */
+        width: 290px;
+        height: 100%;
+        background-color: #fff;
+        z-index: 1000;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out, left 0.3s ease-in-out;
+    }
+
+    .history.mobile-history-open {
+        left: 0;
+        width: 290px;
     }
 }

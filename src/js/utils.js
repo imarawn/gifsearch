@@ -367,3 +367,10 @@ favorites.addEventListener('mouseenter', adjustWidthOnHover); // Trigger when ho
 favorites.addEventListener('mouseleave', () => {
     window.innerWidth <= 768 ?  favorites.style.width = '290px' : favorites.style.width = '120px'; // Or any default width you want
 });
+
+function openmobileHistory() {
+    const favoritesSection = document.getElementById('history');
+    favoritesSection.classList.toggle('mobile-history-open'); 
+    const overlay = document.getElementById('favorites-overlay');
+    overlay.classList.toggle('open');
+}

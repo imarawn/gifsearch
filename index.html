@@ -6,11 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GIF Search</title>
     <link rel="stylesheet" href="src/css/global.css">
-    <link rel="stylesheet" href="src/css/components.css">
+    <link rel="stylesheet" href="src/css/modal.css">
     <link rel="stylesheet" href="src/css/darkmode.css">
     <link rel="stylesheet" href="src/css/emotebox.css">
     <link rel="stylesheet" href="src/css/buttons.css">
     <link rel="stylesheet" href="src/css/responsive.css">
+    <link rel="stylesheet" href="src/css/favorite-content.css">
+    <link rel="stylesheet" href="src/css/history-content.css">
+    <link rel="stylesheet" href="src/css/input-fields.css">
 </head>
 
 <body>
@@ -18,7 +21,7 @@
     <div class="mobile-header">
         <button id="mobile-favorites-button" class="button iconbutton mobile-favorites-button"
             onclick="openmobilefavorites()"></button>
-        <button id="mobile-history-button" class="button iconbutton mobile-history-button"></button>
+        <button id="mobile-history-button" class="button iconbutton mobile-history-button" onclick="openmobileHistory()"></button>
         <div id="mobile-buttons" class="mobile-buttons">
             <button id="upload-file-mobile" class="button iconbutton upload-button"
                 onclick="loadAndFetchEmoticons()"></button>
@@ -100,7 +103,7 @@
         </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- <script src="https://js.hcaptcha.com/1/api.js" async defer></script> -->
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     <script src="src/js/supabase.js"></script>
     <script src="src/js/utils.js"></script>
     <script src="src/js/drag-drop.js"></script>
@@ -108,6 +111,7 @@
     <script src="src/js/emotes.js"></script>
     <script src="src/js/favorites-supabase.js"></script>
     <script src="src/js/modal.js"></script>
+    <!-- <script src="src/js/addtoblacklist.js"></script> -->
 </body>
 
 </html>
