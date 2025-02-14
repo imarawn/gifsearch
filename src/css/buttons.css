@@ -161,6 +161,7 @@
 }
 
 .visible-button {
+    display: none;
     background-image: url('../../public/icons/eye.svg');
     position: fixed; /* Fixed position for the button */
     top: 5px; /* Adjust the top position */
@@ -178,4 +179,8 @@
 
 .login-button {
     background-image: url('../../public/icons/login.svg');
+}
+
+.emote-box:hover .visible-button {
+    display: block;
 }

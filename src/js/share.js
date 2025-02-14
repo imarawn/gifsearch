@@ -5,9 +5,10 @@ function getUrlParams() {
 document.addEventListener('DOMContentLoaded', async () => {
     const gifSlug = getUrlParams().get('gifSlug');
     const unique = getUrlParams().get('unique');
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = '';
     if (gifSlug) {
-        const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = '';
+
         const manualInput = document.getElementById('manual-slug-input');
         manualInput.value = gifSlug;
         await fetchManualSlug();
@@ -28,8 +29,7 @@ function share(unique, gifSlug = null) {
         params = `?gifSlug=${manualInput.value}&unique=false`
     }
     navigator.share({
-        title: 'GIFs',
-        text: `Check out this ${gifSlug ? 'GIF' : 'Slug'}!`,
+        title: `Check out this ${gifSlug ? 'GIF' : 'Slug'}!`,
         url: window.location.href + params,
     }).then(() => {
         console.log('Successful share');

@@ -124,4 +124,8 @@
         left: 0;
         width: 290px;
     }
+
+    .visible-button {
+        display: block;
+    }
 }

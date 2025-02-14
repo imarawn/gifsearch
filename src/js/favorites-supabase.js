@@ -11,8 +11,11 @@ async function showFavorites() {
     const sortedFavorites = favorites.sort((a, b) => a.slug.localeCompare(b.slug));
 
     sortedFavorites.forEach(emote => {
-        const emoteBox = createEmoteBox(emote);
-        desktopFavorites.appendChild(emoteBox);
+        displayEmote(emote, desktopFavorites);
+        const star = document.querySelector('.favorite-button');
+        star.addEventListener('click', () => {
+            addToFavorites(emote);
+        });
     });
 }
 
@@ -152,4 +155,60 @@ async function renderUserGifs(table_name) {
         console.error('Unexpected error fetching GIFs:', err);
         resultsDiv.innerHTML = '<p>An unexpected error occurred. Please try again later.</p>';
     }
+}
+
+function toggleFavorite(emote) {
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+    // Check if the emote is already in favorites
+    const isAlreadyFavorited = favorites.some(favorite => favorite.slug === emote.slug);
+
+    if (isAlreadyFavorited) {
+        // If it is, remove it
+        const updatedFavorites = favorites.filter(favorite => favorite.slug !== emote.slug);
+        localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+    } else {
+        // If it's not, add it
+        favorites.push(emote);
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+    }
+
+    updateFavoritesCounter(); // Update the favorites counter
+    showFavorites(); // Refresh the favorites list
+}
+
+
+function openmobilefavorites() {
+    const favoritesSection = document.getElementById('favorites');
+    favoritesSection.classList.toggle('mobile-favorites-open');
+    const overlay = document.getElementById('favorites-overlay');
+    overlay.classList.toggle('open');
+}
+
+function downloadFavorites() {
+    // Retrieve the favorites from localStorage
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+    if (favorites.length === 0) {
+        alert('No favorites to download.');
+        return;
+    }
+
+    // Extract the URLs from the favorites
+    const favoriteUrls = favorites.map(favorite => favorite.slug);
+
+    // Create a blob from the URLs
+    const blob = new Blob([favoriteUrls.join('\n')], { type: 'text/plain' });
+
+    // Create a download link
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'favorites.txt';
+    document.body.appendChild(a);
+
+    // Programmatically click the link to trigger the download
+    a.click();
+
+    // Remove the link from the document
+    document.body.removeChild(a);
 }

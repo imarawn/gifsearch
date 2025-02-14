@@ -376,3 +376,14 @@ function openmobileHistory() {
     const overlay = document.getElementById('favorites-overlay');
     overlay.classList.toggle('open');
 }
+
+document.addEventListener('click', (event) => {
+    if (event.target.classList.contains('favorite-button') || event.target.classList.contains('favorite-button-mobile')) {
+        const parentDiv = event.target.closest('div'); // Find the closest parent div
+        if (parentDiv.id === 'favorite-emotes') {
+            alert('Button in div1 clicked!');
+        } else if (parentDiv.id === 'results') {
+            console.log('Button in div2 clicked!');
+        }
+    }
+});
