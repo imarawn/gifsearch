@@ -55,7 +55,7 @@ function displayEmote(emote, parentElement) {
     visiblebutton.className = 'visible-button tinybutton button';
     visiblebutton.title = `Toggle visibility of :${emote.slug}`;
     visiblebutton.onclick = () => {
-        img.src = img.src === emote.url ? "https://static-pub.highwebmedia.com/uploads/avatar/2023/08/09/22/55/5c168a79c10e42d53bbfb3918d822a7d022e4bf9.jpg" : emote.url
+        img.src = img.src === emote.url ? "https://static-pub.highwebmedia.com/uploads/avatar/2014/06/15/tOJg2O2TVM9h.jpg" : emote.url
     }
 
     const similarbutton = document.createElement('button');
