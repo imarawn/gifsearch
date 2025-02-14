@@ -1,4 +1,4 @@
-async function showFavorites() {
+/*async function showFavorites() {
     // Select both desktop and mobile favorites containers
     const desktopFavorites = document.getElementById('favorite-emotes');
 
@@ -77,7 +77,7 @@ async function showFavorites() {
         // Append the original emote box to the desktop container
         desktopFavorites.appendChild(emoteBox);
     });
-}
+}*/
 
 function addToFavorites(emoteUrl) {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || []; // Get existing favorites
