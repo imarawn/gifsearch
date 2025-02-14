@@ -226,8 +226,9 @@ async function main(slug) {
  * Set up event listeners and initialize the page.
  */
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize predefined GIFs
-    renderPredefinedGifs();
+    if (!window.location.search || new URLSearchParams(window.location.search).toString() === '') {
+        renderPredefinedGifs();
+    }
 
     // Update favorites counter
     updateFavoritesCounter();

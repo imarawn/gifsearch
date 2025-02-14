@@ -185,3 +185,8 @@
 .emote-box:hover .visible-button {
     display: block;
 }
+
+.mobile-buttons {
+    position: fixed;
+    left: 10px ;
+}

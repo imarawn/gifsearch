@@ -10,112 +10,122 @@
     <link rel="stylesheet" href="src/css/darkmode.css">
     <link rel="stylesheet" href="src/css/emotebox.css">
     <link rel="stylesheet" href="src/css/buttons.css">
-    <link rel="stylesheet" href="src/css/responsive.css">
     <link rel="stylesheet" href="src/css/favorite-content.css">
     <link rel="stylesheet" href="src/css/history-content.css">
+    <link rel="stylesheet" href="src/css/responsive.css">
     <link rel="stylesheet" href="src/css/input-fields.css">
 </head>
 
 <body>
-    <!-- Mobile Header -->
-    <div class="mobile-header">
-        <button id="mobile-favorites-button" class="button iconbutton mobile-favorites-button"
-            onclick="openmobilefavorites()"></button>
-        <button id="mobile-history-button" class="button iconbutton mobile-history-button" onclick="openmobileHistory()"></button>
-        <div id="mobile-buttons" class="mobile-buttons">
+<!-- Mobile Header -->
+<div class="mobile-header">
+    <div id="mobile-buttons" class="mobile-buttons">
+        <div id="collection">
+            <button id="mobile-favorites-button" class="button iconbutton mobile-favorites-button"
+                    onclick="openmobilefavorites()"></button>
+            <button id="mobile-history-button" class="button iconbutton mobile-history-button"
+                    onclick="openmobileHistory()"></button>
+        </div>
+        <div id="utility">
             <button id="upload-file-mobile" class="button iconbutton upload-button"
-                onclick="loadAndFetchEmoticons()"></button>
+                    onclick="loadAndFetchEmoticons()"></button>
             <button id="dark-mode-toggle-mobile" class="button iconbutton darkmode-button"></button>
         </div>
     </div>
+</div>
 
-    <!-- Desktop Buttons -->
-    <div class="desktop-buttons">
-        <button id="dark-mode-toggle" class="button iconbutton darkmode-button" aria-label="Toggle dark mode"></button>
-        <button id="upload-file" class="button iconbutton upload-button"
+<!-- Desktop Buttons -->
+<div class="desktop-buttons">
+    <button id="dark-mode-toggle" class="button iconbutton darkmode-button" aria-label="Toggle dark mode"></button>
+    <button id="upload-file" class="button iconbutton upload-button"
             aria-label="Upload and show from file"></button>
-    </div>
+</div>
 
-    <!-- Favorites Section -->
-    <div id="favorites-overlay" class="favorites-overlay" onclick="openmobilefavorites()"></div>
-    <div id="favorites" class="favorites">
-        <div id="favorites-header" class="favorites-header">
-            <div id="favorite buttonset" class="buttonset">
-                <button class="button iconbutton download-favorites-button" onclick="downloadFavorites()">
-                    <span id="favorites-counter" class="favorites-counter">0</span>
-                </button>
-                <button id="sync-favorites-button" class="button login-button iconbutton" onclick="syncFavorites()"></button>
-            </div>
-            <h2 class="header">Favorites</h2>
-            <div>
-                <button id="close-favorites-button" class="button iconbutton mobile-close-button"
-                onclick="openmobilefavorites()"></button>
-            </div> 
+<!-- Favorites Section -->
+<div id="favorites-overlay" class="favorites-overlay" onclick="openmobilefavorites()"></div>
+<div id="favorites" class="favorites">
+    <div id="favorites-header" class="favorites-header">
+        <div id="favorite buttonset" class="buttonset">
+            <button class="button iconbutton download-favorites-button" onclick="downloadFavorites()">
+                <span id="favorites-counter" class="favorites-counter">0</span>
+            </button>
+            <button id="sync-favorites-button" class="button login-button iconbutton"
+                    onclick="syncFavorites()"></button>
         </div>
-        <div id="favorite-emotes" class="favorites-content"></div>
+        <h2 class="header">Favorites</h2>
+        <div>
+            <button id="close-favorites-button" class="button iconbutton mobile-close-button"
+                    onclick="openmobilefavorites()"></button>
+        </div>
     </div>
+    <div id="favorite-emotes" class="favorites-content"></div>
+</div>
 
 
-    <!-- History Section -->
-    <div id="history" class="history">
-        <h2 class="header">History</h2>
-        <button class="button iconbutton delete-history-button" onclick="deleteHistory()"></button>
-        <div id="history-emotes" class="history-content"></div>
-    </div>
+<!-- History Section -->
+<div id="history" class="history">
+    <h2 class="header">History</h2>
+    <button class="button iconbutton delete-history-button" onclick="deleteHistory()"></button>
+    <div id="history-emotes" class="history-content"></div>
+</div>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div id="list-buttons" class="list-buttons">
-        <button id="juliamemes" class="button iconbutton juliamemes-button" onclick="renderUserGifs('juliamemes')" title="juliamemes"></button>
+<!-- Main Content -->
+<div class="container">
+    <div id="list-buttons" class="list-buttons">
+        <button id="juliamemes" class="button iconbutton juliamemes-button" onclick="renderUserGifs('juliamemes')"
+                title="juliamemes"></button>
         <button id="nsf" class="button iconbutton nsf-button" onclick="renderUserGifs('nsf')" title="nsf-"></button>
         <button id="tsi" class="button iconbutton tsi-button" onclick="renderUserGifs('tsi')" title="tsi_"></button>
         <button id="hgr" class="button iconbutton hgr-button" onclick="renderUserGifs('hgr')" title="hgr-"></button>
         <button id="dec" class="button iconbutton dec-button" onclick="renderUserGifs('dec')" title="dec-"></button>
         <button id="ius" class="button iconbutton ius-button" onclick="renderUserGifs('ius')" title="ius"></button>
 
-        </div>
-        <div id="filesection" class="main-button-container" style="display: none">
+    </div>
+    <div id="filesection" class="main-button-container" style="display: none">
         <button id="logout-button" class="button" onclick="logout()">Logout</button>
-            <input type="file" id="file-input" class="hidden" accept=".txt">
-        </div>
-        <div class="main-button-container  random-input-container">
-            <button id="desktop-show-button" class="button iconbutton upload-button" onclick="loadAndFetchEmoticons()"></button>
-            <button id="home-button" class="button iconbutton home-button" onclick="restoreHome()"></button>
-            <input type="text" id="manual-slug-input" class="search-field" placeholder="Search as you type..." autocomplete="off">
-            <button id="random-button" class="button iconbutton random-button" onclick="generateRandomSlugAndScroll()"></button>
-            <button id="share-button" class="button iconbutton share-button" onclick="share(false)"></button>
-        </div>
-        <div id="results" class="results"></div>
+        <input type="file" id="file-input" class="hidden" accept=".txt">
     </div>
+    <div class="main-button-container  random-input-container">
+        <button id="desktop-show-button" class="button iconbutton upload-button"
+                onclick="loadAndFetchEmoticons()"></button>
+        <button id="home-button" class="button iconbutton home-button" onclick="restoreHome()"></button>
+        <input type="text" id="manual-slug-input" class="search-field" placeholder="Search as you type..."
+               autocomplete="off">
+        <button id="random-button" class="button iconbutton random-button"
+                onclick="generateRandomSlugAndScroll()"></button>
+        <button id="share-button" class="button iconbutton share-button" onclick="share(false)"></button>
+    </div>
+    <div id="results" class="results"></div>
+</div>
 
-    <!-- Modal -->
-    <div id="image-modal" class="modal">
-        <span id="close-modal" class="close-modal">&times;</span>
-        <img id="modal-image" class="modal-image" src="" alt="Full Resolution">
+<!-- Modal -->
+<div id="image-modal" class="modal">
+    <span id="close-modal" class="close-modal">&times;</span>
+    <img id="modal-image" class="modal-image" src="" alt="Full Resolution">
+</div>
+<div id="login-modal" class="modal">
+    <span id="close-login-modal" class="close-modal" onclick="closeLoginModal()">&times;</span>
+    <div class="login-modal-content">
+        <h2>Login</h2>
+        <input type="text" id="email" class="login-input" placeholder="E-Mail">
+        <input type="password" id="password" class="login-input" placeholder="Password">
+        <button id="login-button" class="button" onclick="login()">Login</button>
+        <button id="signup-button" class="button" onclick="signUp()">Sign Up</button>
+        <div class="h-captcha" data-sitekey="091a109c-def0-41ca-a682-3b12bf02dd18"></div>
     </div>
-    <div id="login-modal" class="modal">
-        <span id="close-login-modal" class="close-modal" onclick="closeLoginModal()" >&times;</span>
-        <div class="login-modal-content">
-            <h2>Login</h2>
-            <input type="text" id="email" class="login-input" placeholder="E-Mail">
-            <input type="password" id="password" class="login-input" placeholder="Password">
-            <button id="login-button" class="button" onclick="login()">Login</button>
-            <button id="signup-button" class="button" onclick="signUp()">Sign Up</button>
-            <div class="h-captcha" data-sitekey="091a109c-def0-41ca-a682-3b12bf02dd18"></div>
-        </div>
-    </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
-    <script src="src/js/supabase.js"></script>
-    <script src="src/js/utils.js"></script>
-    <script src="src/js/drag-drop.js"></script>
-    <script src="src/js/dark-mode.js"></script>
-    <script src="src/js/emotes.js"></script>
-    <script src="src/js/favorites-supabase.js"></script>
-    <script src="src/js/modal.js"></script>
-    <!-- <script src="src/js/addtoblacklist.js"></script> -->
-    <script src="src/js/share.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+<script src="src/js/supabase.js"></script>
+<script src="src/js/utils.js"></script>
+<script src="src/js/drag-drop.js"></script>
+<script src="src/js/dark-mode.js"></script>
+<script src="src/js/emotes.js"></script>
+<script src="src/js/favorites-supabase.js"></script>
+<script src="src/js/modal.js"></script>
+<!-- <script src="src/js/addtoblacklist.js"></script> -->
+<script src="src/js/share.js"></script>
 </body>
 
 </html>

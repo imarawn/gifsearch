@@ -20,7 +20,7 @@
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         width: auto;
     }
-    
+
     .favorites {
         position: fixed;
         top: 50px;
@@ -125,7 +125,7 @@
         width: 290px;
     }
 
-    .visible-button {
+    .favorites .emote-box .details-container {
         display: block;
     }
 }
