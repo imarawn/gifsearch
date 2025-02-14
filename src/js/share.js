@@ -19,12 +19,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 });
 
-function share(unique, gifSlug) {
-    if (unique === 'true') {
-        window.history.pushState({}, '', `?gifSlug=${gifSlug}&unique=${unique}`);
-    } else if (unique === 'false') {
+function share(unique, gifSlug = null) {
+    if (gifSlug) {
+        window.history.pushState({}, '', `?gifSlug=${gifSlug}&unique=true`);
+    } else {
         const manualInput = document.getElementById('manual-slug-input');
-        window.history.pushState({}, '', `?gifSlug=${manualInput.value}&unique=${unique}`);
+        window.history.pushState({}, '', `?gifSlug=${manualInput.value}&unique=false`);
     }
     navigator.share({
         title: 'GIFs',
