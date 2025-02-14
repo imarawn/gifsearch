@@ -27,6 +27,7 @@
     right: 130px; /* Adjust the right position */
     background-image: url('../../public/icons/mode.svg'); /* Default icon image */
     position: fixed; /* Fixed position for the button */
+    z-index: 1;
 }
 
 .upload-button {

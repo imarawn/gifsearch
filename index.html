@@ -40,9 +40,12 @@
     <div id="favorites-overlay" class="favorites-overlay" onclick="openmobilefavorites()"></div>
     <div id="favorites" class="favorites">
         <div id="favorites-header" class="favorites-header">
-            <button class="button iconbutton download-favorites-button" onclick="downloadFavorites()">
-                <span id="favorites-counter" class="favorites-counter">0</span>
-            </button>
+            <div id="favorite buttonset" class="buttonset">
+                <button class="button iconbutton download-favorites-button" onclick="downloadFavorites()">
+                    <span id="favorites-counter" class="favorites-counter">0</span>
+                </button>
+                <button id="sync-favorites-button" class="button login-button iconbutton" onclick="syncFavorites()"></button>
+            </div>
             <h2 class="header">Favorites</h2>
             <div>
                 <button id="close-favorites-button" class="button iconbutton mobile-close-button"
@@ -72,7 +75,6 @@
 
         </div>
         <div id="filesection" class="main-button-container" style="display: none">
-            <button id="sync-favorites-button" class="button login-button iconbutton" onclick="syncFavorites()"></button>
         <button id="logout-button" class="button" onclick="logout()">Logout</button>
             <input type="file" id="file-input" class="hidden" accept=".txt">
         </div>

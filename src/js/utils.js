@@ -387,3 +387,13 @@ document.addEventListener('click', (event) => {
         }
     }
 });
+
+function hashParams(params) {
+    const jsonString = JSON.stringify(params);
+    return btoa(jsonString); // Base64 encode
+}
+
+function unhashParams(hashed) {
+    const jsonString = atob(hashed); // Base64 decode
+    return JSON.parse(jsonString);
+}

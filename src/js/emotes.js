@@ -12,7 +12,7 @@ async function fetchEmoteData(slug) {
             return null;
         }
         const data = await response.json();
-        return data.emoticons
+        return data.emoticons.reverse()
     } catch (error) {
         console.error(`Error fetching ${slug}:`, error);
         return null;
@@ -179,5 +179,5 @@ async function fetchManualSlug() {
 
 document.addEventListener('DOMContentLoaded', () => {
     const manualInput = document.getElementById('manual-slug-input');
-    manualInput.oninput = debounce(fetchManualSlug, 300);
+    manualInput.oninput = debounce(fetchManualSlug, 1000);
 });

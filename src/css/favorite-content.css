@@ -110,7 +110,6 @@
 
 .favorites-counter {
     opacity: 0;
-
 }
 
 .mobile-favorites {
@@ -155,3 +154,10 @@
     opacity: 1;
 }
 
+.buttonset {
+    display: none;
+}
+
+.favorites:hover .buttonset {
+    display: flex;
+}
