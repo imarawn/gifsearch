@@ -19,10 +19,6 @@
     z-index: 2;
 }
 
-/*.favorites::-webkit-scrollbar {
-    display: none;
-}*/
-
 .favorites-content {
     display: flex;
     flex-direction: column;
@@ -148,6 +144,7 @@
     background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
     transition: opacity 0.3s ease;
+    z-index: 2;
 }
 
 .favorites-overlay.open {

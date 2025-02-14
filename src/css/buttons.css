@@ -186,7 +186,7 @@
     display: block;
 }
 
-.mobile-buttons {
-    position: fixed;
-    left: 10px ;
+.collection {
+    position: sticky;
+    top: 10px ;
 }
