@@ -19,6 +19,7 @@
         background-color: #275d7e;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         width: auto;
+        z-index: 1;
     }
 
     .favorites {
@@ -128,4 +129,9 @@
     .favorites .emote-box .details-container {
         display: block;
     }
+
+    .emote-box .visible-button {
+        display: block;
+    }
+
 }
