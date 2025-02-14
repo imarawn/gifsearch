@@ -10,29 +10,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         resultsDiv.innerHTML = '';
         const manualInput = document.getElementById('manual-slug-input');
         manualInput.value = gifSlug;
-        fetchManualSlug();
+        await fetchManualSlug();
     }
     if (unique === 'true') {
         const emotedUrl = await getEmoteURL(gifSlug)
         openModal(emotedUrl);
     }
-
+    removeParams();
 });
 
 function share(unique, gifSlug = null) {
+    let params = ''
     if (gifSlug) {
-        window.history.pushState({}, '', `?gifSlug=${gifSlug}&unique=true`);
+        params = `?gifSlug=${gifSlug}&unique=true`;
     } else {
         const manualInput = document.getElementById('manual-slug-input');
-        window.history.pushState({}, '', `?gifSlug=${manualInput.value}&unique=false`);
+        params = `?gifSlug=${manualInput.value}&unique=false`
     }
     navigator.share({
         title: 'GIFs',
-        text: 'Check out this GIF!',
-        url: window.location.href,
+        text: `Check out this ${gifSlug ? 'GIF' : 'Slug'}!`,
+        url: window.location.href + params,
     }).then(() => {
         console.log('Successful share');
     }).catch((error) => {
         console.log('Error sharing', error);
     });
+    removeParams();
+}
+
+function removeParams() {
+    const url = new URL(window.location);
+    url.search = '';
+    window.history.replaceState({}, '', url);
 }
