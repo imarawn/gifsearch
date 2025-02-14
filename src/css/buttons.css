@@ -104,6 +104,7 @@
     bottom: 10px; /* Adjust the top position */
     right: 10px; /* Adjust the right position */
     animation: fadeIn 300ms;
+    z-index: 1;
 }
 
 .history:hover .delete-history-button {
