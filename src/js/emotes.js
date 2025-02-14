@@ -139,10 +139,17 @@ function displayEmote(emote, parentElement) {
         }
     };
 
+    const sharebutton = document.createElement('button');
+    sharebutton.className = 'share-button tinybutton button';
+    sharebutton.title = `Share :${emote.slug}`
+    sharebutton.onclick = () => {
+        share('true', emote.slug, emote.url);
+    }
+
     // Group the dimensions button and search button
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'button-container';
-    buttonContainer.append(dimensionsButton, searchButton);
+    buttonContainer.append(dimensionsButton, searchButton, sharebutton);
 
     // Append name and buttons to details container
     detailsContainer.append(label, buttonContainer);
@@ -225,6 +232,12 @@ async function fetchManualSlug() {
 
 document.addEventListener('DOMContentLoaded', () => {
     const manualInput = document.getElementById('manual-slug-input');
-    const debouncedFetchManualSlug = debounce(fetchManualSlug, 300);
-    manualInput.oninput = debouncedFetchManualSlug;
+    manualInput.oninput = debounce(fetchManualSlug, 300);
 });
+
+async function getEmoteURL(slug) {
+    const response = await fetch(`https://emote.highwebmedia.com/autocomplete?slug=${slug}`);
+    const data = await response.json();
+    const exactEmote = data.emoticons.find((emote) => emote.slug === slug); // Find the exact emote
+    return exactEmote.url
+}

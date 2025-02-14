@@ -6,7 +6,6 @@
     cursor: pointer;
     font-size: 16px;
     margin: 5px;
-    z-index: 100;
 }
 
 .button:hover {
@@ -104,7 +103,6 @@
     position: fixed; /* Fixed position for the button */ 
     bottom: 10px; /* Adjust the top position */
     right: 10px; /* Adjust the right position */
-    z-index: 1000;
     animation: fadeIn 300ms;
 }
 
@@ -159,7 +157,6 @@
 
 .list-buttons {
     align-self: flex-start;
-    z-index: 2;
 }
 
 .visible-button {
@@ -172,4 +169,12 @@
 .ius-button {
     align-self: flex-start;
     background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2023/08/25/02/39/888bbc665f872291f8cc28385a7d66e90da51343.jpg');
+}
+
+.share-button {
+    background-image: url('../../public/icons/share.svg');
+}
+
+.login-button {
+    background-image: url('../../public/icons/login.svg');
 }

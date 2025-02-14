@@ -163,7 +163,9 @@ function generateRandomSlug() {
  * @returns {string} - Generated random string.
  */
 function generateRandomString(length) {
-    const characters = 'abcdefghijklmnopqrstuvwxyz-1234567890_';
+    const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-1234567890_';
+    const cyrillicCharacters = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя-1234567890_';
+    const type = Math.floor(Math.random() * 2);
     return Array.from({ length }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');
 }
 

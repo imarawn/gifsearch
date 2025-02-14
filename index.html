@@ -71,36 +71,37 @@
         <button id="ius" class="button iconbutton ius-button" onclick="renderUserGifs('ius')" title="ius"></button>
 
         </div>
-        <div id="filesection" class="main-button-container">
-            <button id="sync-favorites-button" class="button" onclick="syncFavorites()">Sync Favorites</button>
-        <button id="sync-favorites-button" class="button" onclick="logout()">Logout</button>
-            <button id="desktop-show-button" class="button show-file-button" onclick="loadAndFetchEmoticons('ius')">Show from
-                File</button>
+        <div id="filesection" class="main-button-container" style="display: none">
+            <button id="sync-favorites-button" class="button login-button iconbutton" onclick="syncFavorites()"></button>
+        <button id="logout-button" class="button" onclick="logout()">Logout</button>
             <input type="file" id="file-input" class="hidden" accept=".txt">
         </div>
         <div class="main-button-container  random-input-container">
+            <button id="desktop-show-button" class="button iconbutton upload-button" onclick="loadAndFetchEmoticons()"></button>
             <button id="home-button" class="button iconbutton home-button" onclick="restoreHome()"></button>
             <input type="text" id="manual-slug-input" class="search-field" placeholder="Search as you type...">
             <button id="random-button" class="button iconbutton random-button" onclick="generateRandomSlugAndScroll()"></button>
+            <button id="share-button" class="button iconbutton share-button" onclick="share(false)"></button>
         </div>
         <div id="results" class="results"></div>
     </div>
 
     <!-- Modal -->
-    <div id="image-modal" class="image-modal">
+    <div id="image-modal" class="modal">
         <span id="close-modal" class="close-modal">&times;</span>
         <img id="modal-image" class="modal-image" src="" alt="Full Resolution">
     </div>
-    <div id="login-modal" class="login-modal">
+    <div id="login-modal" class="modal">
         <span id="close-login-modal" class="close-modal" onclick="closeLoginModal()" >&times;</span>
         <div class="login-modal-content">
             <h2>Login</h2>
-            <input type="text" id="email" class="login-input" placeholder="Email">
+            <input type="text" id="email" class="login-input" placeholder="E-Mail">
             <input type="password" id="password" class="login-input" placeholder="Password">
             <button id="login-button" class="button" onclick="login()">Login</button>
             <button id="signup-button" class="button" onclick="signUp()">Sign Up</button>
             <div class="h-captcha" data-sitekey="091a109c-def0-41ca-a682-3b12bf02dd18"></div>
         </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
@@ -112,6 +113,7 @@
     <script src="src/js/favorites-supabase.js"></script>
     <script src="src/js/modal.js"></script>
     <!-- <script src="src/js/addtoblacklist.js"></script> -->
+    <script src="src/js/share.js"></script>
 </body>
 
 </html>

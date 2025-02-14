@@ -18,7 +18,6 @@
         height: 50px;
         background-color: #275d7e;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        z-index: 200;
         width: auto;
     }
     
@@ -29,7 +28,6 @@
         width: 290px;
         height: 100%;
         background-color: #fff;
-        z-index: 1000;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
         transition: transform 0.3s ease-in-out, left 0.3s ease-in-out;
     }
@@ -69,7 +67,6 @@
     .random-input-container {
         position: sticky;
         top: 70px;
-        z-index: 100;
     }
 
     .download-favorites-button {
@@ -119,7 +116,6 @@
         width: 290px;
         height: 100%;
         background-color: #fff;
-        z-index: 1000;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
         transition: transform 0.3s ease-in-out, left 0.3s ease-in-out;
     }
