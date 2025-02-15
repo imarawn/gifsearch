@@ -409,3 +409,10 @@ function menuButton() {
         element.classList.toggle('hidden');
     });
 }
+
+function menuButtonMobile() {
+    const parentDiv = document.querySelector('.menu-container-mobile');
+    parentDiv.querySelectorAll(':not(.menu-button-mobile)').forEach(element => {
+        element.classList.toggle('hidden');
+    });
+}

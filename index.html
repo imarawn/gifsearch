@@ -27,17 +27,30 @@
                     onclick="openmobileHistory()" title="" data-translate-title="buttons.history"></button>
         </div>
         <div id="utility">
-            <button id="upload-file-mobile" class="button iconbutton upload-button"
-                    onclick="loadAndFetchEmoticons()" title="" data-translate-title="buttons.upload"></button>
+            <button id="menu-button-mobile" class="button iconbutton menu-button" title=""
+                    data-translate-title="buttons.menu"
+                    onclick="menuButtonMobile()"></button>
+            <div id="menu-container-mobile" class="menu-container-mobile">
+                <button id="darkmode-button-mobile" class="button iconbutton darkmode-button hidden" title=""
+                        data-translate-title="buttons.darkMode"></button>
+                <button id="language-button-mobile" class="button iconbutton language-button hidden" title=""
+                        data-translate-title="buttons.languageSelector"></button>
+                <button id="upload-file-mobile" class="button iconbutton upload-button hidden"
+                        onclick="loadAndFetchEmoticons()" title="" data-translate-title="buttons.upload"></button>
+                <button id="sync-favorites-button-mobile" class="button login-button iconbutton hidden"
+                        onclick="syncFavorites()" title="" data-translate-title="buttons.login"></button>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Desktop Buttons -->
 <div id="menu-container" class="menu-container">
-    <button id="menubutton" class="button iconbutton menu-button" title="" data-translate-title="buttons.menu" onclick="menuButton()"></button>
+    <button id="menubutton" class="button iconbutton menu-button" title="" data-translate-title="buttons.menu"
+            onclick="menuButton()"></button>
     <button class="button iconbutton darkmode-button hidden" title="" data-translate-title="buttons.darkMode"></button>
-    <button id="language-button" class="button iconbutton language-button hidden" title="" data-translate-title="buttons.languageSelector"></button>
+    <button id="language-button" class="button iconbutton language-button hidden" title=""
+            data-translate-title="buttons.languageSelector"></button>
     <button id="sync-favorites-button" class="button login-button iconbutton hidden"
             onclick="syncFavorites()" title="" data-translate-title="buttons.login"></button>
 </div>

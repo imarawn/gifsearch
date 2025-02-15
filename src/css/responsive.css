@@ -138,4 +138,11 @@
         display: flex;
     }
 
+    .menu-container {
+        right: 10px;
+    }
+
+    .menu-container {
+        display: none;
+    }
 }
