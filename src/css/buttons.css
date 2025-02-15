@@ -23,11 +23,7 @@
 }
 
 .darkmode-button {
-    top: 10px; /* Adjust the top position */
-    right: 130px; /* Adjust the right position */
     background-image: url('../../public/icons/mode.svg'); /* Default icon image */
-    position: fixed; /* Fixed position for the button */
-    z-index: 1;
 }
 
 .upload-button {
@@ -189,4 +185,12 @@
 .collection {
     position: sticky;
     top: 10px ;
+}
+
+.menu-button {
+    background-image: url('../../public/icons/menu.svg');
+}
+
+.language-button {
+    background-image: url('../../public/icons/globe.svg');
 }

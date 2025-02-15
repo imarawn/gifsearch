@@ -10,29 +10,7 @@ function getUrlParams() {
 }
 
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const gifSlug = getUrlParams().get('gifSlug');
-    const unique = getUrlParams().get('unique');
-    const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = '';
-    if (gifSlug) {
-        const manualInput = document.getElementById('manual-slug-input');
-        manualInput.value = gifSlug;
-        await fetchManualSlug();
-    }
-    if (unique === 'true') {
-        const emotedUrl = await getEmoteURL(gifSlug);
-        const img = new Image();
-        img.src = emotedUrl;
-        img.onload = () => {
-            openModal(emotedUrl);
-        };
-        img.onerror = () => {
-            console.error('Image failed to load:', emotedUrl);
-        };
-    }
-    removeParams();
-});
+
 
 function share(unique, gifSlug = null) {
     let params = {};

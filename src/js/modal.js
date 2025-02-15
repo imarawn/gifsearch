@@ -9,16 +9,4 @@ function openModal(imageUrl) {
     modal.style.display = 'flex'; // Show the modal
 }
 
-// Close the modal when the close button is clicked
-closeModal.addEventListener('click', () => {
-    modal.style.display = 'none';
-    modalImage.src = ''; // Clear the image source
-});
 
-// Close the modal when clicking outside the image
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-        modal.style.display = 'none';
-        modalImage.src = '';
-    }
-});

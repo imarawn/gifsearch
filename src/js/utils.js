@@ -41,7 +41,7 @@ async function copyToClipboard(text, gif) {
     textarea.value = text;
     document.body.appendChild(textarea);
     textarea.select();
-    document.execCommand('copy');
+    await navigator.clipboard.writeText(text);
     document.body.removeChild(textarea);
 
     addToHistory(gif); // Deine bestehende Funktion
@@ -155,6 +155,7 @@ function generateRandomSlug() {
     const randomSlug = generateRandomString(length);
     manualInput.value = randomSlug;
     fetchManualSlug(); // Trigger search function
+    addToHistory(randomSlug, false);
 }
 
 /**
@@ -222,33 +223,33 @@ async function main(slug) {
     }
 }
 
-/**
- * Set up event listeners and initialize the page.
- */
-document.addEventListener('DOMContentLoaded', () => {
-    if (!window.location.search || new URLSearchParams(window.location.search).toString() === '') {
-        renderPredefinedGifs();
-    }
-
-    // Update favorites counter
-    updateFavoritesCounter();
-    showFavorites();
-    renderHistory();
-    const manualSlugInput = document.getElementById('manual-slug-input');
-    const debouncedFetch = debounce(fetchManualSlug, 300);
-    manualSlugInput?.addEventListener('input', debouncedFetch);
-    
-});
-
-function addToHistory(gif) {
-    // Get existing history from localStorage
+function addToHistory(gifOrSlug, isGif = true) {
     const history = JSON.parse(localStorage.getItem('history')) || [];
 
-    // Add the new GIF to the beginning of the array
-    history.unshift(gif);
+    let historyEntry;
 
-    // Limit the array to the last 50 entries
-    if (history.length > 50) {
+    if (isGif) {
+        // If it's a GIF, structure the entry accordingly
+        const gifWithId = {
+            ...gifOrSlug, // Use the properties from the provided gif object
+        };
+
+        historyEntry = {
+            type: 'gif', // Indicate that this is a GIF
+            gif: gifWithId,
+        };
+    } else {
+        historyEntry = {
+            type: 'slug', // Indicate that this is just a slug
+            slug: gifOrSlug
+        };
+    }
+
+    // Add the history entry to the beginning of the array
+    history.unshift(historyEntry);
+
+    // Limit the array to the last 100 entries
+    if (history.length > 100) {
         history.pop();
     }
 
@@ -259,6 +260,7 @@ function addToHistory(gif) {
     renderHistory();
 }
 
+
 function renderHistory() {
     const historyDiv = document.getElementById('history').querySelector('.history-content');
     const history = JSON.parse(localStorage.getItem('history')) || [];
@@ -266,26 +268,44 @@ function renderHistory() {
     // Clear existing content
     historyDiv.innerHTML = '';
 
-    // Loop through the history and render each GIF
-    history.forEach((gif) => {
-        
-        const emoteBox = document.createElement('div');
-        emoteBox.className = 'emote-box';
+    // Loop through the history and render each entry
+    history.forEach((entry) => {
+        if (entry.type === 'gif') {
+            // Render GIF Container
+            const emoteBox = document.createElement('div');
+            emoteBox.className = 'emote-box';
 
-        // Add the title attribute to display the emote name as a tooltip
-        emoteBox.setAttribute('title', `:${gif.slug}`);
+            const displaySlug = entry.slug || `unknown-${entry.gif.id}`;
 
-        emoteBox.innerHTML = `
-            <img src="${gif.url}" alt="${gif.slug}">
-            <div class="emote-name">:${gif.slug}</div>
-        `;
-        emoteBox.addEventListener('click', () => {
-            copyToClipboard(`:${gif.slug}`, gif);
-        });
+            emoteBox.setAttribute('title', `:${displaySlug}`);
+            emoteBox.innerHTML = `
+                <img src="${entry.gif.url}" alt="${displaySlug}">
+                <div class="emote-name">:${displaySlug}</div>
+            `;
+            emoteBox.addEventListener('click', () => {
+                copyToClipboard(`:${displaySlug}`, entry.gif);
+            });
 
-        historyDiv.appendChild(emoteBox);
+            historyDiv.appendChild(emoteBox);
+
+        } else if (entry.type === 'slug') {
+            // Render Slug Container (without GIF image)
+            const slugBox = document.createElement('div');
+            slugBox.classList = 'slug-box emote-box';
+            slugBox.innerHTML = '';
+            slugBox.textContent = `${entry.slug}`;
+            slugBox.setAttribute('title', `:${entry.slug}`);
+
+            slugBox.addEventListener('click', () => {
+                navigator.clipboard.writeText(entry.slug);
+            });
+
+            historyDiv.appendChild(slugBox);
+        }
     });
 }
+
+
 
 function deleteHistory() {
     const historyDiv = document.getElementById('history')?.querySelector('.history-content');
@@ -366,28 +386,12 @@ function adjustWidthOnHover() {
     favorites.style.width = `${newWidth}px`;
 }
 
-favorites.addEventListener('mouseenter', adjustWidthOnHover); // Trigger when hover starts
-favorites.addEventListener('mouseleave', () => {
-    window.innerWidth <= 768 ?  favorites.style.width = '290px' : favorites.style.width = '120px'; // Or any default width you want
-});
-
 function openmobileHistory() {
     const favoritesSection = document.getElementById('history');
     favoritesSection.classList.toggle('mobile-history-open'); 
     const overlay = document.getElementById('favorites-overlay');
     overlay.classList.toggle('open');
 }
-
-document.addEventListener('click', (event) => {
-    if (event.target.classList.contains('favorite-button') || event.target.classList.contains('favorite-button-mobile')) {
-        const parentDiv = event.target.closest('div'); // Find the closest parent div
-        if (parentDiv.id === 'favorite-emotes') {
-            alert('Button in div1 clicked!');
-        } else if (parentDiv.id === 'results') {
-            console.log('Button in div2 clicked!');
-        }
-    }
-});
 
 function hashParams(params) {
     const jsonString = JSON.stringify(params);
@@ -397,4 +401,11 @@ function hashParams(params) {
 function unhashParams(hashed) {
     const jsonString = atob(hashed); // Base64 decode
     return JSON.parse(jsonString);
+}
+
+function menuButton() {
+    const parentDiv = document.querySelector('.menu-container');
+    parentDiv.querySelectorAll(':not(.menu-button)').forEach(element => {
+        element.classList.toggle('hidden');
+    });
 }

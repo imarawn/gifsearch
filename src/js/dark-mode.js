@@ -8,11 +8,3 @@ Array.from(darkModeToggleButtons).forEach((button) => {
         localStorage.setItem('dark-mode', mode);
     });
 });
-
-// Load dark mode on page load
-document.addEventListener('DOMContentLoaded', () => {
-    const currentMode = localStorage.getItem('dark-mode');
-    if (currentMode === 'enabled') {
-        document.body.classList.add('dark-mode');
-    }
-});

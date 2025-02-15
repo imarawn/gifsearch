@@ -43,24 +43,29 @@ function displayEmote(emote, parentElement) {
 
     const dimensionsButton = document.createElement('button');
     dimensionsButton.classList = 'button';
-    dimensionsButton.textContent = 'View Fullsize';
+    dimensionsButton.title = "_";
+    dimensionsButton.setAttribute("data-translate-title", "buttons.dimensionsButton");
     dimensionsButton.onclick = () => openModal(emote.url);
 
     const shareButton = document.createElement('button');
     shareButton.className = 'share-button tinybutton button';
-    shareButton.title = `Share :${emote.slug}`;
+    shareButton.title = "_";
+    shareButton.setAttribute("data-translate-title", "buttons.shareButtonGif");
     shareButton.onclick = () => share('true', emote.slug, emote.url);
 
     const visiblebutton = document.createElement('button');
     visiblebutton.className = 'visible-button tinybutton button';
-    visiblebutton.title = `Toggle visibility of :${emote.slug}`;
+    visiblebutton.title = "_";
+    visiblebutton.setAttribute("data-translate-title", "buttons.visibleButton");
     visiblebutton.onclick = () => {
         img.src = img.src === emote.url ? "https://static-pub.highwebmedia.com/uploads/avatar/2014/06/15/tOJg2O2TVM9h.jpg" : emote.url
+
     }
 
     const similarbutton = document.createElement('button');
     similarbutton.className = 'search-button tinybutton button';
-    similarbutton.title = `Search for similar emotes`;
+    similarbutton.title = "_";
+    similarbutton.setAttribute("data-translate-title", "buttons.similarButton");
     similarbutton.onclick = () => {
         const gifCode = `${emote.slug}`;
         const searchInput = document.getElementById('manual-slug-input');
@@ -70,7 +75,8 @@ function displayEmote(emote, parentElement) {
 
     const favoriteButton = document.createElement('button');
     favoriteButton.className = 'favorite-button';
-    favoriteButton.title = 'Toggle Favorite';
+    favoriteButton.title = "_";
+    favoriteButton.setAttribute("data-translate-title", "buttons.favoriteAdd");
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     const isFavorited = favorites.some(favorite => favorite.slug === emote.slug);
     favoriteButton.textContent = isFavorited ? '★' : '☆';
@@ -110,11 +116,14 @@ async function showFavorites() {
 
     if (favorites.length === 0) {
         const noFavoritesMessage = document.createElement('p');
-        noFavoritesMessage.textContent = 'No favorites added yet.';
+        noFavoritesMessage.setAttribute("data-translate-text", "favorites.noFavorites");
+        noFavoritesMessage.textContent = 'No favorites added yet.'; // Default fallback text
         noFavoritesMessage.className = 'no-favorites-message';
         desktopFavorites.appendChild(noFavoritesMessage);
+        translate();
         return;
     }
+
 
     const sortedFavorites = favorites.sort((a, b) => a.slug.localeCompare(b.slug));
 
@@ -131,21 +140,23 @@ async function loadAndFetchEmoticons() {
 
     fileInput.onchange = async () => {
         if (fileInput.files.length === 0) {
-            alert('No file selected.');
+            alert(getTranslation("alert.noFileSelected"));
             return;
         }
 
         const file = fileInput.files[0];
         const text = await file.text();
+        console.log(text);
         const slugs = text.split('\n').map(slug => slug.trim()).filter(slug => slug !== '');
 
         if (slugs.length === 0) {
-            alert('The file is empty or contains invalid data.');
+            alert(getTranslation("alert.fileError"));
             return;
         }
 
         resultsDiv.innerHTML = '';
         for (const slug of slugs) {
+            console.log(slug);
             const emote = await fetchEmoteData(slug);
             if (emote) {
                 displayEmote(emote, resultsDiv);
@@ -175,9 +186,7 @@ async function fetchManualSlug() {
             displayEmote(emote, resultsDiv);
         });
     }
+    translate()
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const manualInput = document.getElementById('manual-slug-input');
-    manualInput.oninput = debounce(fetchManualSlug, 1000);
-});
+

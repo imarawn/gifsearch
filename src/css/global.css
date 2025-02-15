@@ -12,7 +12,7 @@ body {
     width: auto;
     margin-left: 130px; /* Adjust to match the favorites' width and add extra space */
     margin-right: 130px; /* Adjust to match the history' width and add extra space */
-
+    margin-top: 50px;
     margin-bottom: 50px; /* Add space at the bottom */
     padding: 20px; /* Add padding inside the content */
     border: 1px solid #e0e0e0;
@@ -54,4 +54,18 @@ body {
 
 .hidden {
     display: none;
+}
+
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 10px;
+    right: 130px;
+    width: 50px;
+    height: auto;
+    text-align: center;
+    z-index: 1;
 }
