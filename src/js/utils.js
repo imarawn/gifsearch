@@ -410,9 +410,7 @@ function menuButton() {
     });
 }
 
-function menuButtonMobile() {
-    const parentDiv = document.querySelector('.menu-container-mobile');
-    parentDiv.querySelectorAll(':not(.menu-button-mobile)').forEach(element => {
-        element.classList.toggle('hidden');
-    });
+function toggleFlags() {
+    const flagContainer = document.getElementById("flag-container");
+    flagContainer.classList.toggle("hidden");
 }

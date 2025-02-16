@@ -152,10 +152,6 @@
     opacity: 1;
 }
 
-.buttonset {
-    display: none;
-}
-
 .favorites-content:hover .buttonset {
     display: block;
 }
