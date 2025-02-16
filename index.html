@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="src/css/history-content.css">
     <link rel="stylesheet" href="src/css/responsive.css">
     <link rel="stylesheet" href="src/css/input-fields.css">
+    <link rel="stylesheet" href="src/css/translate.css">
 </head>
 
 <body>
@@ -26,21 +27,21 @@
             <button id="mobile-history-button" class="button iconbutton mobile-history-button"
                     onclick="openmobileHistory()" title="" data-translate-title="buttons.history"></button>
         </div>
-        <div id="utility">
-            <button id="menu-button-mobile" class="button iconbutton menu-button" title=""
-                    data-translate-title="buttons.menu"
-                    onclick="menuButtonMobile()"></button>
-            <div id="menu-container-mobile" class="menu-container-mobile">
-                <button id="darkmode-button-mobile" class="button iconbutton darkmode-button hidden" title=""
-                        data-translate-title="buttons.darkMode"></button>
-                <button id="language-button-mobile" class="button iconbutton language-button hidden" title=""
-                        data-translate-title="buttons.languageSelector"></button>
-                <button id="upload-file-mobile" class="button iconbutton upload-button hidden"
-                        onclick="loadAndFetchEmoticons()" title="" data-translate-title="buttons.upload"></button>
-                <button id="sync-favorites-button-mobile" class="button login-button iconbutton hidden"
-                        onclick="syncFavorites()" title="" data-translate-title="buttons.login"></button>
-            </div>
-        </div>
+    </div>
+</div>
+<div id="utility" class="utility">
+    <button id="menu-button-mobile" class="button iconbutton menu-button" title=""
+            data-translate-title="buttons.menu"
+            onclick="menuButtonMobile()"></button>
+    <div id="menu-container-mobile" class="menu-container-mobile">
+        <button id="darkmode-button-mobile" class="button iconbutton darkmode-button hidden" title=""
+                data-translate-title="buttons.darkMode"></button>
+        <button id="language-button-mobile" class="button iconbutton language-button hidden" title=""
+                data-translate-title="buttons.languageSelector"></button>
+        <button id="upload-file-mobile" class="button iconbutton upload-button hidden"
+                onclick="loadAndFetchEmoticons()" title="" data-translate-title="buttons.upload"></button>
+        <button id="sync-favorites-button-mobile" class="button login-button iconbutton hidden"
+                onclick="syncFavorites()" title="" data-translate-title="buttons.login"></button>
     </div>
 </div>
 
@@ -51,8 +52,18 @@
     <button class="button iconbutton darkmode-button hidden" title="" data-translate-title="buttons.darkMode"></button>
     <button id="language-button" class="button iconbutton language-button hidden" title=""
             data-translate-title="buttons.languageSelector"></button>
+    <button id="share-button-mobile" class="button iconbutton share-button hidden"
+            onclick="share(false)" title="" data-translate-title="buttons.shareButtonSlug"></button>
     <button id="sync-favorites-button" class="button login-button iconbutton hidden"
             onclick="syncFavorites()" title="" data-translate-title="buttons.login"></button>
+    <div class="flag-container hidden" id="flag-container">
+        <img src="public/icons/locales/en.svg" alt="English" data-lang="en" class="hidden iconbutton button">
+        <img src="public/icons/locales/de.svg" alt="Deutsch" data-lang="de" class="hidden iconbutton button">
+        <img src="public/icons/locales/ru.svg" alt="Русский" data-lang="ru" class="hidden iconbutton button">
+        <img src="public/icons/locales/ro.svg" alt="Română" data-lang="ro" class="hidden iconbutton button">
+        <img src="public/icons/locales/it.svg" alt="Italiano" data-lang="it"class="hidden iconbutton button">
+        <img src="public/icons/locales/es.svg" alt="Español" data-lang="es"class="hidden iconbutton button">
+    </div>
 </div>
 
 <!-- Favorites Section -->
@@ -137,7 +148,7 @@
     </div>
 </div>
 <select id="language-selector" class="hidden">
-    <option value="en">English</option>
+    <option value="en" selected>English</option>
     <option value="de">Deutsch</option>
     <option value="ru">Русский</option>
     <option value="ro">Română</option>

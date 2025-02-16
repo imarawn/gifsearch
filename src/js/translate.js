@@ -87,11 +87,18 @@ function translate() {
     applyTranslations(getBrowserLanguage());
 }
 
-// Event Listener for Language Change
-document.getElementById('language-selector').addEventListener('change', (event) => {
-    const selectedLanguage = event.target.value;
-    translationsCache = {};  // Clear cache so the new language translations are fetched
-    applyTranslations(selectedLanguage);
+// JavaScript zum Ändern der Sprache basierend auf der ausgewählten Flagge
+const flags = document.querySelectorAll('.flag-container img');
+const languageSelector = document.getElementById('language-selector');
+
+flags.forEach(flag => {
+    flag.addEventListener('click', () => {
+        const selectedLang = flag.getAttribute('data-lang');
+        languageSelector.value = selectedLang;
+        applyTranslations(selectedLang);
+        // Hier könntest du eine Funktion einbauen, um die Sprache der Seite zu ändern
+        // z.B. location.href = `?lang=${selectedLang}`;
+    });
 });
 
 

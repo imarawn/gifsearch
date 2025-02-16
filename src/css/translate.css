@@ -1,0 +1,16 @@
+.flag-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+}
+.flag-container img:hover {
+    transform: scale(1.1);
+}
+
+.flag-container .button {
+    background: none;
+    border: none;
+}
+
