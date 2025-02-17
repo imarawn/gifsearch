@@ -8,11 +8,11 @@ async function renderPredefinedGifs() {
     // Get the container element
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = ''; // Clear existing content
-    
+
 
     try {
         // Fetch GIFs from Supabase
-        const { data: gifs, error } = await supabase
+        const {data: gifs, error} = await supabase
             .from('predefined_gifs')
             .select('slug, url'); // Select the columns you need
 
@@ -51,7 +51,7 @@ async function copyToClipboard(text, gif) {
 }
 
 async function insertGifToDatabase(slug, gif) {
-    const { data: { user }} = await supabase.auth.getUser();
+    const {data: {user}} = await supabase.auth.getUser();
     if (!user) {
         console.error('User is not authenticated!');
         return;
@@ -60,9 +60,9 @@ async function insertGifToDatabase(slug, gif) {
     const cleanedSlug = slug.slice(1);
 
     // 🔹 1️⃣ Prüfen, wie viele GIFs insgesamt existieren
-    const { count: totalCount, error: totalError } = await supabase
+    const {count: totalCount, error: totalError} = await supabase
         .from('predefined_gifs')
-        .select('*', { count: 'exact', head: true });
+        .select('*', {count: 'exact', head: true});
 
     if (totalError) {
         return;
@@ -70,11 +70,11 @@ async function insertGifToDatabase(slug, gif) {
 
     // 🔹 2️⃣ Falls das Gesamtlimit erreicht ist → ältestes GIF mit user_id ≠ null löschen
     if (totalCount >= MAX_TOTAL_GIFS) {
-        const { data: oldestGlobalGif, error: globalDeleteError } = await supabase
+        const {data: oldestGlobalGif, error: globalDeleteError} = await supabase
             .from('predefined_gifs')
             .select('id')
             .not('user_id', 'is', null)  // Nur GIFs löschen, die von Nutzern hochgeladen wurden
-            .order('created_at', { ascending: true }) // Ältestes zuerst
+            .order('created_at', {ascending: true}) // Ältestes zuerst
             .limit(1)
             .single();
 
@@ -85,9 +85,9 @@ async function insertGifToDatabase(slug, gif) {
         await supabase.from('predefined_gifs').delete().eq('id', oldestGlobalGif.id);
     }
 
-    const { count: userCount, error: userCountError } = await supabase
+    const {count: userCount, error: userCountError} = await supabase
         .from('predefined_gifs')
-        .select('*', { count: 'exact', head: true })
+        .select('*', {count: 'exact', head: true})
         .eq('user_id', user.id);
 
     if (userCountError) {
@@ -95,11 +95,11 @@ async function insertGifToDatabase(slug, gif) {
     }
 
     if (userCount >= MAX_GIFS_PER_USER) {
-        const { data: oldestUserGif, error: userDeleteError } = await supabase
+        const {data: oldestUserGif, error: userDeleteError} = await supabase
             .from('predefined_gifs')
             .select('id')
             .eq('user_id', user.id)
-            .order('created_at', { ascending: true }) // Ältestes zuerst
+            .order('created_at', {ascending: true}) // Ältestes zuerst
             .limit(1)
             .single();
 
@@ -111,7 +111,7 @@ async function insertGifToDatabase(slug, gif) {
         console.log('Oldest GIF deleted for user:', oldestUserGif.id);
     }
 
-    const { data: existingGif, error: selectError } = await supabase
+    const {data: existingGif, error: selectError} = await supabase
         .from('predefined_gifs')
         .select('id')
         .eq('slug', cleanedSlug)
@@ -125,11 +125,10 @@ async function insertGifToDatabase(slug, gif) {
         return;
     }
 
-    const { data, error } = await supabase
+    const {data, error} = await supabase
         .from('predefined_gifs')
-        .insert([{ slug: cleanedSlug, url: gif.url, user_id: user.id }]);
+        .insert([{slug: cleanedSlug, url: gif.url, user_id: user.id}]);
 }
-
 
 
 /**
@@ -167,12 +166,12 @@ function generateRandomString(length) {
     const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-1234567890_';
     const cyrillicCharacters = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя-1234567890_';
     const type = Math.floor(Math.random() * 2);
-    return Array.from({ length }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');
+    return Array.from({length}, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');
 }
 
 function generateRandomSlugAndScroll() {
     generateRandomSlug(); // Deine bestehende Funktion zum Generieren eines zufälligen Slugs
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scrollt die Seite nach oben
+    window.scrollTo({top: 0, behavior: 'smooth'}); // Scrollt die Seite nach oben
 }
 
 /**
@@ -182,8 +181,8 @@ function updateFavoritesCounter() {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     const counter1 = document.getElementById('favorites-counter');
     const counter2 = document.getElementById('mobile-favorites-counter');
-        counter1.textContent = `${favorites.length}`;
-        //counter2.textContent = `${favorites.length}`;
+    counter1.textContent = `${favorites.length}`;
+    //counter2.textContent = `${favorites.length}`;
 }
 
 /**
@@ -306,7 +305,6 @@ function renderHistory() {
 }
 
 
-
 function deleteHistory() {
     const historyDiv = document.getElementById('history')?.querySelector('.history-content');
 
@@ -360,16 +358,6 @@ function navigateHistory(direction, inputField) {
     inputField.value = slugHistory[currentSlugIndex];
 }
 
-function openLoginModal() {
-    const modal = document.getElementById('login-modal');
-    modal.style.display = 'block';
-}
-
-function closeLoginModal() {
-    const modal = document.getElementById('login-modal');
-    modal.style.display = 'none';
-}
-
 function restoreHome() {
     document.getElementById('manual-slug-input').value = '';
     renderPredefinedGifs();
@@ -388,7 +376,7 @@ function adjustWidthOnHover() {
 
 function openmobileHistory() {
     const favoritesSection = document.getElementById('history');
-    favoritesSection.classList.toggle('mobile-history-open'); 
+    favoritesSection.classList.toggle('mobile-history-open');
     const overlay = document.getElementById('favorites-overlay');
     overlay.classList.toggle('open');
 }
@@ -414,3 +402,85 @@ function toggleFlags() {
     const flagContainer = document.getElementById("flag-container");
     flagContainer.classList.toggle("hidden");
 }
+
+// Generator Function for Slugs
+function* generateSlugs(prefix, maxLength) {
+    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+
+    function nextString(str) {
+        let carry = true;
+        let result = "";
+
+        for (let i = str.length - 1; i >= 0; i--) {
+            if (carry) {
+                let nextCharIndex = alphabet.indexOf(str[i]) + 1;
+                if (nextCharIndex === alphabet.length) {
+                    result = alphabet[0] + result;
+                } else {
+                    result = alphabet[nextCharIndex] + result;
+                    carry = false;
+                }
+            } else {
+                result = str[i] + result;
+            }
+        }
+        if (carry) {
+            result = "a" + result;
+        }
+        return result;
+    }
+
+    let suffix = "a";
+    while ((prefix + suffix).length <= maxLength) {
+        yield prefix + suffix;
+        suffix = nextString(suffix);
+    }
+}
+
+
+async function automateSlugSearch() {
+    const slugGenerator = generateSlugs("w1-", 4); // Adjust prefix and length as needed
+    const manualInput = document.getElementById('manual-slug-input');
+
+    // Wait for the DOMContentLoaded event to ensure the page is fully loaded
+    await new Promise(resolve => {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', resolve);
+        } else {
+            resolve(); // If DOM is already ready, resolve immediately
+        }
+    });
+
+    for (let slug of slugGenerator) {
+        // Input Slug and Trigger Fetch
+        manualInput.value = slug;
+        manualInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+        // Wait for the results to appear
+        await waitForElement('.favorite-button');  // Wait for the favorite-button to appear
+
+        const parentElement = document.getElementById('results');
+        const elements = parentElement.querySelectorAll('.favorite-button');
+
+        for (let element of elements) {
+            element.click(); // Perform the click action for each button
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+
+        // Wait before the next slug
+        await new Promise(resolve => setTimeout(resolve, 2000));  // Adjust as necessary
+    }
+}
+
+// Helper function to wait for a specific element to appear in the DOM
+function waitForElement(selector) {
+    return new Promise(resolve => {
+        const interval = setInterval(() => {
+            if (document.querySelector(selector)) {
+                clearInterval(interval);
+                resolve();
+            }
+        }, 100); // Check every 100ms
+    });
+}
+

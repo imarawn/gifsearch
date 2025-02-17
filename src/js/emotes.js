@@ -45,11 +45,11 @@ function displayEmote(emote, parentElement) {
     dimensionsButton.classList = 'button';
     dimensionsButton.title = "_";
     dimensionsButton.setAttribute("data-translate-title", "buttons.dimensionsButton");
-    dimensionsButton.onclick = () => openModal(emote.url);
+    dimensionsButton.onclick = () => openImageModal(emote.url);
 
     const shareButton = document.createElement('button');
     shareButton.className = 'share-button tinybutton button';
-    shareButton.title = "_";
+    shareButton.title = "";
     shareButton.setAttribute("data-translate-title", "buttons.shareButtonGif");
     shareButton.onclick = () => share('true', emote.slug, emote.url);
 

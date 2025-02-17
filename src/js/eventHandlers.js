@@ -14,20 +14,6 @@ function setupManualSlugInput() {
     }
 }
 
-function setupCloseModal() {
-    closeModal.addEventListener('click', () => {
-        modal.style.display = 'none';
-        modalImage.src = '';
-    });
-
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-            modalImage.src = '';
-        }
-    });
-}
-
 async function initializePage() {
     const gifSlug = getUrlParams().get('gifSlug');
     const unique = getUrlParams().get('unique');

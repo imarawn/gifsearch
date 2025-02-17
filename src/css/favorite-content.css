@@ -28,7 +28,6 @@
 }
 
 .favorites:hover .favorites-content {
-    display: flex;
     flex-wrap: wrap;
     flex-direction: row;
 }
@@ -57,11 +56,6 @@
 .favorites-content .emote-name {
     overflow: hidden;
 }
-
-.favorites-content .emote-box .details-container {
-    display: none;
-}
-
 
 .favorites-content:hover .details-container {
     display: block;

@@ -26,106 +26,6 @@ function displayNoFavoritesMessage(container) {
     container.appendChild(noFavoritesMessage);
 }
 
-function createEmoteBox(emote) {
-    const emoteBox = document.createElement('div');
-    emoteBox.className = 'emote-box';
-
-    const imgContainer = createImgContainer(emote, emoteBox);
-    const detailsContainer = createDetailsContainer(emote);
-    const removeButton = createRemoveButton(emote);
-    const visiblebutton = createVisibilityButton(emote, emoteBox, imgContainer.querySelector('img'));
-    const buttonContainer = createButtonContainer(emote);
-
-    emoteBox.append(imgContainer, removeButton, detailsContainer, visiblebutton, buttonContainer);
-    return emoteBox;
-}
-
-function createImgContainer(emote, emoteBox) {
-    const imgContainer = document.createElement('div');
-    imgContainer.className = 'img-container';
-
-    const img = document.createElement('img');
-    img.src = emote.url;
-    img.alt = emote.slug || 'Favorite Emote';
-    img.loading = 'lazy';
-
-    img.onload = () => checkEmoteSize(img, emoteBox);
-    img.addEventListener('click', () => {
-        const gifCode = `:${emote.slug}`;
-        console.log(`Copied: ${gifCode}`);
-        copyToClipboard(gifCode, emote);
-    });
-
-    imgContainer.appendChild(img);
-    return imgContainer;
-}
-
-function createDetailsContainer(emote) {
-    const detailsContainer = document.createElement('div');
-    detailsContainer.className = 'details-container';
-
-    const label = document.createElement('div');
-    label.textContent = `:${emote.slug}`;
-    label.className = 'emote-name';
-
-    const dimensions = document.createElement('div');
-    dimensions.className = 'dimensions';
-
-    detailsContainer.append(label, dimensions);
-    return detailsContainer;
-}
-
-function createVisibilityButton(emote, emoteBox, img) {
-    const visiblebutton = document.createElement('button');
-    visiblebutton.className = 'visible-button tinybutton button';
-    visiblebutton.title = `Toggle visibility of :${emote.slug}`;
-    visiblebutton.onclick = () => {
-        img.src = img.src === emote.url
-            ? 'https://media1.tenor.com/m/Qu21iBRCvNkAAAAC/finger-shake-babu.gif'
-            : emote.url;
-        checkEmoteSize(img, emoteBox);
-    };
-    return visiblebutton;
-}
-
-function createButtonContainer(emote) {
-    const dimensions = document.createElement('div');
-    dimensions.className = 'dimensions';
-
-    const sharebutton = document.createElement('button');
-    sharebutton.className = 'share-button tinybutton button';
-    sharebutton.title = `Share :${emote.slug}`;
-    sharebutton.onclick = () => {
-        share('true', emote.slug, emote.url);
-    }
-
-    const buttonContainer = document.createElement('div');
-    buttonContainer.className = 'button-container';
-    buttonContainer.append(dimensions, sharebutton);
-    return buttonContainer;
-}
-
-function createRemoveButton(emote) {
-    const removeButton = document.createElement('button');
-    removeButton.className = 'favorite-button';
-    removeButton.textContent = '★';
-    removeButton.addEventListener('click', () => {
-        removeFromFavorites(emote);
-    });
-    return removeButton;
-}
-
-function checkEmoteSize(img, emoteBox) {
-    if (img.naturalWidth > 250 || img.naturalHeight > 80) {
-        emoteBox.style.backgroundColor = '#eb0c0c';
-        emoteBox.style.border = '1px solid #ff0000';
-    } else {
-        emoteBox.style.backgroundColor = '#e5793a';
-        emoteBox.style.border = '1px solid #e5793a';
-    }
-}
-
-
 async function renderUserGifs(table_name) {
     const resultsDiv = document.getElementById('results'); // The div where the GIFs will be displayed
 
@@ -167,10 +67,12 @@ function toggleFavorite(emote) {
         // If it is, remove it
         const updatedFavorites = favorites.filter(favorite => favorite.slug !== emote.slug);
         localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+        removeSingleFavorite(emote);
     } else {
         // If it's not, add it
         favorites.push(emote);
         localStorage.setItem('favorites', JSON.stringify(favorites));
+        syncSingleFavorite(emote);
     }
 
     updateFavoritesCounter(); // Update the favorites counter
@@ -211,4 +113,133 @@ function downloadFavorites() {
 
     // Remove the link from the document
     document.body.removeChild(a);
+}
+
+function deleteFavorites() {
+    localStorage.removeItem('favorites');
+    showFavorites();
+}
+
+async function syncSingleFavorite(favorite) {
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
+        console.error('User not authenticated:', error?.message || '');
+        return;
+    }
+
+    console.log('Syncing favorite:', favorite);
+
+    // Use upsert to avoid checking first
+    const { error: insertError } = await supabase
+        .from('favorites')
+        .upsert({
+            user_id: user.id,
+            slug: favorite.slug,
+            url: favorite.url
+        }, { onConflict: ['user_id', 'slug'] });
+
+    if (insertError) {
+        console.error('Error adding favorite to Supabase:', insertError);
+        return;
+    }
+
+    console.log('Favorite synchronized successfully:', favorite);
+}
+
+async function removeSingleFavorite(favorite) {
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
+        console.error('User not authenticated:', error?.message || '');
+        return;
+    }
+
+    console.log('Removing favorite:', favorite);
+
+    const { error: deleteError } = await supabase
+        .from('favorites')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('slug', favorite.slug);
+
+    if (deleteError) {
+        console.error('Error deleting favorite from Supabase:', deleteError);
+        return;
+    }
+
+    console.log('Favorite removed successfully:', favorite);
+}
+
+async function loadFavoritesFromSupabase() {
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
+        console.error('User not authenticated:', error?.message || '');
+        return;
+    }
+
+    const { data: favorites, error: fetchError } = await supabase
+        .from('favorites')
+        .select('slug, url')
+        .eq('user_id', user.id);
+
+    if (fetchError) {
+        console.error('Error fetching favorites from Supabase:', fetchError);
+        return;
+    }
+
+    console.log('Fetched favorites from Supabase:', favorites);
+
+
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    console.log('Favorites loaded from Supabase:', favorites);
+    console.log(localStorage.getItem('favorites'));
+    showFavorites();
+}
+
+async function syncFavorites() {
+    const localFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) {
+        console.error('User not logged in:', error?.message || '');
+        openLoginModal()
+        return;
+    }
+
+    // Get existing favorites from Supabase
+    const { data: supabaseFavorites, error: fetchError } = await supabase
+        .from('favorites')
+        .select('slug')
+        .eq('user_id', user.id);
+
+    if (fetchError) {
+        console.error('Error fetching favorites from Supabase:', fetchError);
+        return;
+    }
+
+    const existingSlugs = new Set(supabaseFavorites.map(fav => fav.slug));
+
+    const favoritesToAdd = localFavorites
+        .filter(localFav => !existingSlugs.has(localFav.slug))
+        .map(fav => ({
+            user_id: user.id,
+            slug: fav.slug,
+            url: fav.url,
+        }));
+
+    if (favoritesToAdd.length > 0) {
+        const { error: insertError } = await supabase
+            .from('favorites')
+            .insert(favoritesToAdd);
+
+        if (insertError) {
+            console.error('Error adding favorites to Supabase:', insertError);
+            return;
+        }
+    }
+
+    console.log('Favorites synchronized successfully');
+    localStorage.removeItem('favorites');
 }

@@ -4,6 +4,8 @@
     gap: 10px;
     align-items: center;
     cursor: pointer;
+    right: 180px;
+    top: 80px;
 }
 .flag-container img:hover {
     transform: scale(1.1);

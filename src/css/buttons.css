@@ -195,3 +195,16 @@
     background-image: url('../../public/icons/globe.svg');
 }
 
+.delete-favorites-button {
+    background-image: url('../../public/icons/trash.svg');
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 1;
+    animation: fadeIn 300ms;
+    display: none;
+}
+
+.favorites:hover .delete-favorites-button {
+    display: block;
+}
