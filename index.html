@@ -41,12 +41,17 @@
     <button id="share-buttonm" class="button iconbutton share-button hidden mobile"
             onclick="share(false)" title="" data-translate-title="buttons.shareButtonSlug"></button>
     <div class="flag-container hidden" id="flag-container">
-        <img src="public/icons/locales/en.svg" alt="English" data-lang="en" class=" iconbutton button flag-button hidden">
-        <img src="public/icons/locales/de.svg" alt="Deutsch" data-lang="de" class="iconbutton button flag-button hidden">
-        <img src="public/icons/locales/ru.svg" alt="Русский" data-lang="ru" class="iconbutton button flag-button hidden">
+        <img src="public/icons/locales/en.svg" alt="English" data-lang="en"
+             class=" iconbutton button flag-button hidden">
+        <img src="public/icons/locales/de.svg" alt="Deutsch" data-lang="de"
+             class="iconbutton button flag-button hidden">
+        <img src="public/icons/locales/ru.svg" alt="Русский" data-lang="ru"
+             class="iconbutton button flag-button hidden">
         <img src="public/icons/locales/ro.svg" alt="Română" data-lang="ro" class="iconbutton button flag-button hidden">
-        <img src="public/icons/locales/it.svg" alt="Italiano" data-lang="it" class="iconbutton button flag-button hidden">
-        <img src="public/icons/locales/es.svg" alt="Español" data-lang="es" class="iconbutton button flag-button hidden">
+        <img src="public/icons/locales/it.svg" alt="Italiano" data-lang="it"
+             class="iconbutton button flag-button hidden">
+        <img src="public/icons/locales/es.svg" alt="Español" data-lang="es"
+             class="iconbutton button flag-button hidden">
     </div>
 </nav>
 
@@ -58,7 +63,8 @@
                     title="" data-translate-title="buttons.download">
                 <span id="favorites-counter" class="favorites-counter">0</span>
             </button>
-            <button id="sync-favorites" class="button iconbutton sync-favorites-button" onclick="syncFavorites()"></button>
+            <button id="sync-favorites" class="button iconbutton sync-favorites-button"
+                    onclick="syncFavorites()"></button>
         </div>
         <h2 class="header" data-translate-text="favorites.title">Favorites</h2>
         <div>
@@ -66,6 +72,9 @@
                     onclick="openmobilefavorites()" title="" data-translate-title="buttons.closeFavorites"></button>
         </div>
     </header>
+    <select id="list-picker" onchange="showListEmotes()">
+        <option value="">-- Select a List --</option>
+    </select>
     <button class="button iconbutton delete-favorites-button"
             onclick="deleteFavorites()" title="" data-translate-title="buttons.deletefavs"></button>
     <div id="favorite-emotes" class="favorites-content"></div>
@@ -119,6 +128,17 @@
 <!-- Login Modal -->
 <dialog id="login-modal" class="modal">
     <div id="modal-content">
+    </div>
+</dialog>
+
+<!-- Dialog for list selection -->
+<dialog id="list-selection-dialog" class="modal">
+    <div class="list-modal-content">
+        <h3 class="header">Select a List or Create a New One</h3>
+        <div id="list-options-container"></div>
+        <input type="text" id="new-list-name" placeholder="Enter new list name"/>
+        <button id="create-new-list-button">Create New List</button>
+        <button id="close-dialog-button">Close</button>
     </div>
 </dialog>
 

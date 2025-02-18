@@ -8,4 +8,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initializePageContent();
     setupFavoritesHover();
     setupFavoriteButtonClick();
+    populateListPicker(); // Populate the list picker dropdown
 });

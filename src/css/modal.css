@@ -45,6 +45,14 @@
     position: relative;
 }
 
+.list-modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+}
+
 /* Keyframes for Pop-In Animation */
 @keyframes popIn {
     from {
