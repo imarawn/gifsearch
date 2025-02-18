@@ -51,9 +51,10 @@ async function checkSession() {
 
     const user = session?.user || null;
 
-    if (user) {
+    if (user) {document.getElementById('sync-favorites').classList.remove('hidden')
         return user
     } else {
+        document.getElementById('sync-favorites').classList.add('hidden')
         return false
     }
 }

@@ -88,9 +88,7 @@
     right: 5px; /* Adjust the right position */
 }
 
-.favorites:hover .download-favorites-button {
-    display: block; /* Show the download button on hover */
-}
+
 
 .delete-history-button {
     text-align: center; /* Center the text */
@@ -206,5 +204,21 @@
 }
 
 .favorites:hover .delete-favorites-button {
+    display: block;
+}
+
+.menu-container .button {
+    border: 2px solid white;
+}
+
+.sync-favorites-button {
+    display: none;
+}
+
+.change-list-button {
+    display: none;
+}
+
+.favorites .change-list-button {
     display: block;
 }

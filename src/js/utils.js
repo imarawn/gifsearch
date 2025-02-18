@@ -274,7 +274,7 @@ function renderHistory() {
             const emoteBox = document.createElement('div');
             emoteBox.className = 'emote-box';
 
-            const displaySlug = entry.slug || `unknown-${entry.gif.id}`;
+            const displaySlug = entry.gif.slug;
 
             emoteBox.setAttribute('title', `:${displaySlug}`);
             emoteBox.innerHTML = `

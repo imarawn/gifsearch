@@ -57,7 +57,7 @@ async function renderUserGifs(table_name) {
     }
 }
 
-function toggleFavorite(emote) {
+function toggleFavorite(emote, list = null) {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
     // Check if the emote is already in favorites
@@ -72,7 +72,11 @@ function toggleFavorite(emote) {
         // If it's not, add it
         favorites.push(emote);
         localStorage.setItem('favorites', JSON.stringify(favorites));
-        syncSingleFavorite(emote);
+        if (checkSession()) {
+            syncSingleFavorite(emote, list);  // Pass the list
+        } else {
+            syncSingleFavorite(emote);
+        }
     }
 
     updateFavoritesCounter(); // Update the favorites counter
@@ -115,12 +119,36 @@ function downloadFavorites() {
     document.body.removeChild(a);
 }
 
-function deleteFavorites() {
+async function deleteFavorites() {
+    // Retrieve the current authenticated user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+        console.error('User not authenticated:', authError?.message || '');
+        return;
+    }
+
+    // Remove the favorites from Supabase
+    const { error: deleteError } = await supabase
+        .from('favorites')
+        .delete()
+        .eq('user_id', user.id);
+
+    if (deleteError) {
+        console.error('Error deleting favorites from Supabase:', deleteError);
+        return;
+    }
+
+    console.log('Favorites deleted from Supabase successfully');
+
+    // Remove the favorites from localStorage
     localStorage.removeItem('favorites');
-    showFavorites();
+    updateFavoritesCounter();
+    showFavorites(); // Refresh the UI after deletion
 }
 
-async function syncSingleFavorite(favorite) {
+
+async function syncSingleFavorite(favorite, list) {
     const { data: { user }, error } = await supabase.auth.getUser();
 
     if (error || !user) {
@@ -136,7 +164,8 @@ async function syncSingleFavorite(favorite) {
         .upsert({
             user_id: user.id,
             slug: favorite.slug,
-            url: favorite.url
+            url: favorite.url,
+            list: list.id,
         }, { onConflict: ['user_id', 'slug'] });
 
     if (insertError) {
@@ -243,3 +272,161 @@ async function syncFavorites() {
     console.log('Favorites synchronized successfully');
     localStorage.removeItem('favorites');
 }
+
+async function getUserLists() {
+    const user = await checkSession(); // Check if user is logged in
+    if (!user) return []; // If not logged in, return empty array
+
+    const { data: lists, error } = await supabase
+        .from('lists')
+        .select('*')
+        .eq('user_id', user.id);
+
+    if (error) {
+        console.error('Error fetching lists:', error);
+        return [];
+    }
+    console.log('Lists:', lists);
+    return lists;
+}
+
+async function createNewList(listName) {
+    const user = await checkSession();
+    if (!user) {
+        console.error('User not logged in');
+        return null;
+    }
+
+    const { data: newList, error } = await supabase
+        .from('lists')
+        .insert([{ user_id: user.id, name: listName }])
+        .select();
+
+    if (error) {
+        console.error('Error creating new list:', error);
+        return null;
+    }
+    console.log(newList.id);
+    return newList[0];
+}
+
+async function promptListSelection(emote) {
+    const user = await checkSession();
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    const isAlreadyFavorited = favorites.some(favorite => favorite.slug === emote.slug);
+
+    if (!user || isAlreadyFavorited) {
+        // User is not logged in, save locally
+        toggleFavorite(emote);
+        return;
+    }
+
+
+    // Get user lists from Supabase
+    const lists = await getUserLists();
+
+    // Prepare list options
+    let listOptions = lists.map(list => list.name).join('\n');
+    listOptions += lists.length > 0 ? '\nOr enter a new name to create a list' : 'No lists found. Enter a name to create a new list.';
+
+    // Prompt user for list selection or new list name
+    let selectedListName = prompt(
+        'Choose a list or enter a new name:\n' + listOptions
+    );
+
+    if (!selectedListName) return; // User cancelled the prompt
+
+    // Check if the list already exists
+    let selectedList = lists.find(list => list.name === selectedListName);
+
+    if (!selectedList) {
+        // If the list is new, create it
+        selectedList = await createNewList(selectedListName);
+
+        if (!selectedList) {
+            console.error('Failed to create new list');
+            return;
+        }
+    }
+
+    // Now that we have a list, toggle the favorite
+    toggleFavorite(emote, selectedList);
+}
+
+async function changeFavoriteList(emote) {
+    const user = await checkSession();
+
+    if (!user) {
+        console.error('User not logged in');
+        return;
+    }
+
+    // Get user lists from Supabase
+    const lists = await getUserLists();
+
+    // Prepare list options
+    let listOptions = lists.map(list => list.name).join('\n');
+    listOptions += lists.length > 0
+        ? '\nOr enter a new name to create a list\nOr leave blank to remove from all lists'
+        : 'No lists found. Enter a name to create a new list.\nOr leave blank to remove from all lists.';
+
+    // Prompt user for list selection or new list name
+    let selectedListName = prompt(
+        'Choose a list or enter a new name:\n' + listOptions
+    );
+
+    // If user cancels or leaves input blank, remove from all lists
+    if (selectedListName === null || selectedListName.trim() === '') {
+        console.log('No list selected. Removing from all lists.');
+        await updateFavoriteList(emote, null, user);  // Remove from all lists
+        return;
+    }
+
+    // Check if the list already exists
+    let selectedList = lists.find(list => list.name === selectedListName);
+
+    if (!selectedList) {
+        // If the list is new, create it
+        selectedList = await createNewList(selectedListName);
+
+        if (!selectedList) {
+            console.error('Failed to create new list');
+            return;
+        }
+    }
+
+    // Now that we have a list, update the favorite
+    console.log('Selected list:', selectedList);
+    await updateFavoriteList(emote, selectedList, user);
+}
+
+
+async function updateFavoriteList(emote, list = null, user) {
+    console.log('Updating favorite list:', emote);
+
+    // If list is null or undefined, we exit early
+    if (!list) {
+        console.log('No valid list selected. Skipping update.');
+        return;
+    }
+
+    // Update the favorite with the new list
+    const { error: updateError } = await supabase
+        .from('favorites')
+        .update({
+            list: list.id  // Ensure list.id is being passed
+        })
+        .eq('user_id', user.id)
+        .eq('slug', emote.slug);
+
+    if (updateError) {
+        console.error('Error updating favorite list in Supabase:', updateError);
+        return;
+    }
+
+    console.log('Favorite list updated successfully:', emote);
+
+    // Refresh the favorites view
+    showFavorites();
+}
+

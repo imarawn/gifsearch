@@ -19,6 +19,33 @@ async function fetchEmoteData(slug) {
     }
 }
 
+async function fetchSingleEmote(slug) {
+    try {
+        // Fetch the data from the API
+        const response = await fetch(`https://emote.highwebmedia.com/autocomplete?slug=${slug}`);
+        if (!response.ok) {
+            console.error(`Failed to fetch slug: ${slug}, Status: ${response.status}`);
+            return null;
+        }
+
+        const data = await response.json();
+
+        // Find the emote matching the provided slug
+        const emote = data.emoticons.find(emote => emote.slug === slug);
+
+        if (emote) {
+            return emote;
+        } else {
+            console.error(`No emote found with slug: ${slug}`);
+            return null;
+        }
+    } catch (error) {
+        console.error(`Error fetching ${slug}:`, error);
+        return null;
+    }
+}
+
+
 // Helper Function: Displays a single emote
 function displayEmote(emote, parentElement) {
     const emoteBox = document.createElement('div');
@@ -81,15 +108,24 @@ function displayEmote(emote, parentElement) {
     const isFavorited = favorites.some(favorite => favorite.slug === emote.slug);
     favoriteButton.textContent = isFavorited ? '★' : '☆';
     favoriteButton.onclick = () => {
-        toggleFavorite(emote);
+        promptListSelection(emote);
         const updatedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
         const isNowFavorited = updatedFavorites.some(favorite => favorite.slug === emote.slug);
         favoriteButton.textContent = isNowFavorited ? '★' : '☆';
     };
 
+    const changeListButton = document.createElement('button');
+    changeListButton.className = 'change-list-button';
+    changeListButton.classList.add('button');
+    changeListButton.classList.add('tinybutton');
+    changeListButton.title = "_";
+    changeListButton.setAttribute("data-translate-title", "buttons.change-list-button");
+    changeListButton.onclick = () => changeFavoriteList(emote);
+
+
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'button-container';
-    buttonContainer.append(dimensionsButton, shareButton, similarbutton);
+    buttonContainer.append(dimensionsButton, shareButton, similarbutton, changeListButton);
 
     detailsContainer.append(label, buttonContainer);
     emoteBox.append(imageContainer, detailsContainer, visiblebutton, favoriteButton);
@@ -157,7 +193,7 @@ async function loadAndFetchEmoticons() {
         resultsDiv.innerHTML = '';
         for (const slug of slugs) {
             console.log(slug);
-            const emote = await fetchEmoteData(slug);
+            const emote = await fetchSingleEmote(slug);
             if (emote) {
                 displayEmote(emote, resultsDiv);
             }

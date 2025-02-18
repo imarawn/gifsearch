@@ -38,13 +38,15 @@
             data-translate-title="buttons.languageSelector" onclick="toggleFlags()"></button>
     <button id="sync-favorites-button" class="button login-button iconbutton hidden" onclick="openLoginModal()" title=""
             data-translate-title="buttons.login"></button>
+    <button id="share-buttonm" class="button iconbutton share-button hidden mobile"
+            onclick="share(false)" title="" data-translate-title="buttons.shareButtonSlug"></button>
     <div class="flag-container hidden" id="flag-container">
-        <img src="public/icons/locales/en.svg" alt="English" data-lang="en" class=" iconbutton button flag-button">
-        <img src="public/icons/locales/de.svg" alt="Deutsch" data-lang="de" class="iconbutton button flag-button">
-        <img src="public/icons/locales/ru.svg" alt="Русский" data-lang="ru" class="iconbutton button flag-button">
-        <img src="public/icons/locales/ro.svg" alt="Română" data-lang="ro" class="iconbutton button flag-button">
-        <img src="public/icons/locales/it.svg" alt="Italiano" data-lang="it" class="iconbutton button flag-button">
-        <img src="public/icons/locales/es.svg" alt="Español" data-lang="es" class="iconbutton button flag-button">
+        <img src="public/icons/locales/en.svg" alt="English" data-lang="en" class=" iconbutton button flag-button hidden">
+        <img src="public/icons/locales/de.svg" alt="Deutsch" data-lang="de" class="iconbutton button flag-button hidden">
+        <img src="public/icons/locales/ru.svg" alt="Русский" data-lang="ru" class="iconbutton button flag-button hidden">
+        <img src="public/icons/locales/ro.svg" alt="Română" data-lang="ro" class="iconbutton button flag-button hidden">
+        <img src="public/icons/locales/it.svg" alt="Italiano" data-lang="it" class="iconbutton button flag-button hidden">
+        <img src="public/icons/locales/es.svg" alt="Español" data-lang="es" class="iconbutton button flag-button hidden">
     </div>
 </nav>
 
@@ -56,6 +58,7 @@
                     title="" data-translate-title="buttons.download">
                 <span id="favorites-counter" class="favorites-counter">0</span>
             </button>
+            <button id="sync-favorites" class="button iconbutton sync-favorites-button" onclick="syncFavorites()"></button>
         </div>
         <h2 class="header" data-translate-text="favorites.title">Favorites</h2>
         <div>

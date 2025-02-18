@@ -88,8 +88,23 @@
         display: block;
         opacity: 1;
     }
+    .buttonset {
+        display: flex;
+    }
+    .download-favorites-button {
+        display: block;
+    }
+    .mobile-favorites-open {
+        width: 250px;
+    }
+    .mobile-favorites-close {
+        width: 120px;
+    }
 }
 
+.favorites:hover .sync-favorites-button {
+    display: block; /* Show the download button on hover */
+}
 .favorites .dimensions:hover {
     background-color: #e5793a;
 }
@@ -144,8 +159,4 @@
 .favorites-overlay.open {
     display: block;
     opacity: 1;
-}
-
-.favorites-content:hover .buttonset {
-    display: block;
 }
