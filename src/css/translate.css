@@ -1,8 +1,7 @@
 .flag-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
-    align-items: center;
     cursor: pointer;
     right: 180px;
     top: 80px;
@@ -11,8 +10,12 @@
     transform: scale(1.1);
 }
 
-.flag-button {
-    background-color: transparent;
-    border: none;
+.flag-button img {
+    max-width: 50%;
 }
 
+.language-picker {
+    display: flex;
+    height: 50px;
+    flex-direction: row-reverse;
+}

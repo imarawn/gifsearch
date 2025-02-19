@@ -34,25 +34,27 @@
     <button id="menubutton" class="button iconbutton menu-button" title="" data-translate-title="buttons.menu"
             onclick="menuButton()"></button>
     <button class="button iconbutton darkmode-button hidden" title="" data-translate-title="buttons.darkMode"></button>
-    <button id="language-button" class="button iconbutton language-button hidden" title=""
-            data-translate-title="buttons.languageSelector" onclick="toggleFlags()"></button>
+    <div class="hidden language-picker">
+        <button id="language-button" class="button iconbutton language-button hidden" title=""
+                data-translate-title="buttons.languageSelector" onclick="toggleFlags()"></button>
+        <div class="flag-container" id="flag-container">
+            <img src="public/icons/locales/en.svg" alt="English" data-lang="en"
+                 class="iconbutton button flag-button hidden">
+            <img src="public/icons/locales/de.svg" alt="Deutsch" data-lang="de"
+                 class="iconbutton button flag-button hidden">
+            <img src="public/icons/locales/ru.svg" alt="Русский" data-lang="ru"
+                 class="iconbutton button flag-button hidden">
+            <img src="public/icons/locales/ro.svg" alt="Română" data-lang="ro" class="iconbutton button flag-button hidden">
+            <img src="public/icons/locales/it.svg" alt="Italiano" data-lang="it"
+                 class="iconbutton button flag-button hidden">
+            <img src="public/icons/locales/es.svg" alt="Español" data-lang="es"
+                 class="iconbutton button flag-button hidden">
+        </div>
+    </div>
     <button id="sync-favorites-button" class="button login-button iconbutton hidden" onclick="openLoginModal()" title=""
             data-translate-title="buttons.login"></button>
     <button id="share-buttonm" class="button iconbutton share-button hidden mobile"
             onclick="share(false)" title="" data-translate-title="buttons.shareButtonSlug"></button>
-    <div class="flag-container hidden" id="flag-container">
-        <img src="public/icons/locales/en.svg" alt="English" data-lang="en"
-             class=" iconbutton button flag-button hidden">
-        <img src="public/icons/locales/de.svg" alt="Deutsch" data-lang="de"
-             class="iconbutton button flag-button hidden">
-        <img src="public/icons/locales/ru.svg" alt="Русский" data-lang="ru"
-             class="iconbutton button flag-button hidden">
-        <img src="public/icons/locales/ro.svg" alt="Română" data-lang="ro" class="iconbutton button flag-button hidden">
-        <img src="public/icons/locales/it.svg" alt="Italiano" data-lang="it"
-             class="iconbutton button flag-button hidden">
-        <img src="public/icons/locales/es.svg" alt="Español" data-lang="es"
-             class="iconbutton button flag-button hidden">
-    </div>
 </nav>
 
 <!-- Favorites Section -->
@@ -72,7 +74,7 @@
                     onclick="openmobilefavorites()" title="" data-translate-title="buttons.closeFavorites"></button>
         </div>
     </header>
-    <select id="list-picker" onchange="showListEmotes()">
+    <select aria-label="" id="list-picker" onfocus="populateListPicker()" onchange="showListEmotes()">
         <option value="">-- Select a List --</option>
     </select>
     <button class="button iconbutton delete-favorites-button"
@@ -110,7 +112,7 @@
                 onclick="loadAndFetchEmoticons()" title="" data-translate-title="buttons.upload"></button>
         <button id="home-button" class="button iconbutton home-button"
                 onclick="restoreHome()" title="" data-translate-title="buttons.home"></button>
-        <input type="text" id="manual-slug-input" class="search-field"
+        <input aria-label="" type="text" id="manual-slug-input" class="search-field"
                placeholder="" data-translate-placeholder="placeholders.searchField" autocomplete="off">
         <button id="random-button" class="button iconbutton random-button"
                 onclick="generateRandomSlugAndScroll()" title="" data-translate-title="buttons.random"></button>
@@ -136,14 +138,14 @@
     <div class="list-modal-content">
         <h3 class="header">Select a List or Create a New One</h3>
         <div id="list-options-container"></div>
-        <input type="text" id="new-list-name" placeholder="Enter new list name"/>
-        <button id="create-new-list-button">Create New List</button>
-        <button id="close-dialog-button">Close</button>
+        <input aria-label="" type="text" id="new-list-name" placeholder="Enter new list name"/>
+        <button id="create-new-list-button" class="button">Create New List</button>
+        <button id="close-dialog-button" class="button">Close</button>
     </div>
 </dialog>
 
 
-<select id="language-selector" class="hidden">
+<select aria-label="" id="language-selector" class="hidden">
     <option value="en">English</option>
     <option value="de">Deutsch</option>
     <option value="ru">Русский</option>

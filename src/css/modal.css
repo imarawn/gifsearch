@@ -46,11 +46,15 @@
 }
 
 .list-modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 300px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
     text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    max-width: 90%;
+    width: 400px;
+    animation: slideDown 0.4s ease;
+    position: relative;
 }
 
 /* Keyframes for Pop-In Animation */

@@ -146,4 +146,9 @@
         right: 60px;
         bottom: 80px;
     }
+
+    .language-picker {
+        display: flex;
+        flex-direction: row-reverse;
+    }
 }
