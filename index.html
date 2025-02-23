@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="src/css/responsive.css">
     <link rel="stylesheet" href="src/css/input-fields.css">
     <link rel="stylesheet" href="src/css/translate.css">
+    <link rel="stylesheet" href="src/css/list-modal.css">
 </head>
 
 <body>
@@ -74,7 +75,7 @@
                     onclick="openmobilefavorites()" title="" data-translate-title="buttons.closeFavorites"></button>
         </div>
     </header>
-    <select aria-label="" id="list-picker" onfocus="populateListPicker()" onchange="showListEmotes()">
+    <select aria-label="" id="list-picker" onmouseover="populateListPicker()" onchange="showListEmotes()" class="list-picker">
         <option value="">-- Select a List --</option>
     </select>
     <button class="button iconbutton delete-favorites-button"
@@ -138,11 +139,13 @@
     <div class="list-modal-content">
         <h3 class="header">Select a List or Create a New One</h3>
         <div id="list-options-container"></div>
-        <input aria-label="" type="text" id="new-list-name" placeholder="Enter new list name"/>
+        <input aria-label="" type="text" id="new-list-name1" placeholder="Enter new list name"/>
         <button id="create-new-list-button" class="button">Create New List</button>
-        <button id="close-dialog-button" class="button">Close</button>
+        <button id="close-dialog-button1" class="button">Close</button>
     </div>
 </dialog>
+
+
 
 
 <select aria-label="" id="language-selector" class="hidden">
@@ -159,7 +162,7 @@
 <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 <script src="src/js/translate.js"></script>
-<script src="src/js/supabase.js"></script>
+<script src="src/js/helper/supabase.js"></script>
 <script src="src/js/utils.js"></script>
 <script src="src/js/drag-drop.js"></script>
 <script src="src/js/dark-mode.js"></script>
@@ -169,6 +172,7 @@
 <script src="src/js/emotes.js"></script>
 <script src="src/js/eventHandlers.js"></script>
 <script src="src/js/main.js"></script>
+
 </body>
 
 </html>

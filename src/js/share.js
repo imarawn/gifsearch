@@ -22,9 +22,13 @@ function share(unique, gifSlug = null) {
     }
     const hashedParams = hashParams(params);
 
+    const baseURL = window.location.hostname === "localhost"
+        ? "https://imarawn.github.io"
+        : window.location.origin;
+
     navigator.share({
-        title: `Check out this ${gifSlug ? 'GIF' : 'Slug'}!`,
-        url: window.location.origin + window.location.pathname + '?data=' + hashedParams,
+        title: `Check out this ${gifSlug ? `Gif: :${gifSlug}` : 'Slug'}`,
+        url: baseURL + window.location.pathname + '?data=' + hashedParams,
     }).then(() => {
         console.log('Successful share');
     }).catch((error) => {

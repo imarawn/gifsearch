@@ -45,91 +45,7 @@ async function copyToClipboard(text, gif) {
     document.body.removeChild(textarea);
 
     addToHistory(gif); // Deine bestehende Funktion
-
-    // Neuen GIF-Eintrag in die Datenbank einfügen
-    //await insertGifToDatabase(text, gif);
 }
-
-async function insertGifToDatabase(slug, gif) {
-    const {data: {user}} = await supabase.auth.getUser();
-    if (!user) {
-        console.error('User is not authenticated!');
-        return;
-    }
-
-    const cleanedSlug = slug.slice(1);
-
-    // 🔹 1️⃣ Prüfen, wie viele GIFs insgesamt existieren
-    const {count: totalCount, error: totalError} = await supabase
-        .from('predefined_gifs')
-        .select('*', {count: 'exact', head: true});
-
-    if (totalError) {
-        return;
-    }
-
-    // 🔹 2️⃣ Falls das Gesamtlimit erreicht ist → ältestes GIF mit user_id ≠ null löschen
-    if (totalCount >= MAX_TOTAL_GIFS) {
-        const {data: oldestGlobalGif, error: globalDeleteError} = await supabase
-            .from('predefined_gifs')
-            .select('id')
-            .not('user_id', 'is', null)  // Nur GIFs löschen, die von Nutzern hochgeladen wurden
-            .order('created_at', {ascending: true}) // Ältestes zuerst
-            .limit(1)
-            .single();
-
-        if (globalDeleteError || !oldestGlobalGif) {
-            return;
-        }
-
-        await supabase.from('predefined_gifs').delete().eq('id', oldestGlobalGif.id);
-    }
-
-    const {count: userCount, error: userCountError} = await supabase
-        .from('predefined_gifs')
-        .select('*', {count: 'exact', head: true})
-        .eq('user_id', user.id);
-
-    if (userCountError) {
-        return;
-    }
-
-    if (userCount >= MAX_GIFS_PER_USER) {
-        const {data: oldestUserGif, error: userDeleteError} = await supabase
-            .from('predefined_gifs')
-            .select('id')
-            .eq('user_id', user.id)
-            .order('created_at', {ascending: true}) // Ältestes zuerst
-            .limit(1)
-            .single();
-
-        if (userDeleteError || !oldestUserGif) {
-            return;
-        }
-
-        await supabase.from('predefined_gifs').delete().eq('id', oldestUserGif.id);
-        console.log('Oldest GIF deleted for user:', oldestUserGif.id);
-    }
-
-    const {data: existingGif, error: selectError} = await supabase
-        .from('predefined_gifs')
-        .select('id')
-        .eq('slug', cleanedSlug)
-        .maybeSingle();
-
-    if (selectError) {
-        return;
-    }
-
-    if (existingGif) {
-        return;
-    }
-
-    const {data, error} = await supabase
-        .from('predefined_gifs')
-        .insert([{slug: cleanedSlug, url: gif.url, user_id: user.id}]);
-}
-
 
 /**
  * Debounce a function to reduce frequent calls.
@@ -222,141 +138,10 @@ async function main(slug) {
     }
 }
 
-function addToHistory(gifOrSlug, isGif = true) {
-    const history = JSON.parse(localStorage.getItem('history')) || [];
-
-    let historyEntry;
-
-    if (isGif) {
-        // If it's a GIF, structure the entry accordingly
-        const gifWithId = {
-            ...gifOrSlug, // Use the properties from the provided gif object
-        };
-
-        historyEntry = {
-            type: 'gif', // Indicate that this is a GIF
-            gif: gifWithId,
-        };
-    } else {
-        historyEntry = {
-            type: 'slug', // Indicate that this is just a slug
-            slug: gifOrSlug
-        };
-    }
-
-    // Add the history entry to the beginning of the array
-    history.unshift(historyEntry);
-
-    // Limit the array to the last 100 entries
-    if (history.length > 100) {
-        history.pop();
-    }
-
-    // Save updated history to localStorage
-    localStorage.setItem('history', JSON.stringify(history));
-
-    // Update the UI
-    renderHistory();
-}
 
 
-function renderHistory() {
-    const historyDiv = document.getElementById('history').querySelector('.history-content');
-    const history = JSON.parse(localStorage.getItem('history')) || [];
-
-    // Clear existing content
-    historyDiv.innerHTML = '';
-
-    // Loop through the history and render each entry
-    history.forEach((entry) => {
-        if (entry.type === 'gif') {
-            // Render GIF Container
-            const emoteBox = document.createElement('div');
-            emoteBox.className = 'emote-box';
-
-            const displaySlug = entry.gif.slug;
-
-            emoteBox.setAttribute('title', `:${displaySlug}`);
-            emoteBox.innerHTML = `
-                <img src="${entry.gif.url}" alt="${displaySlug}">
-                <div class="emote-name">:${displaySlug}</div>
-            `;
-            emoteBox.addEventListener('click', () => {
-                copyToClipboard(`:${displaySlug}`, entry.gif);
-            });
-
-            historyDiv.appendChild(emoteBox);
-
-        } else if (entry.type === 'slug') {
-            // Render Slug Container (without GIF image)
-            const slugBox = document.createElement('div');
-            slugBox.classList = 'slug-box emote-box';
-            slugBox.innerHTML = '';
-            slugBox.textContent = `${entry.slug}`;
-            slugBox.setAttribute('title', `:${entry.slug}`);
-
-            slugBox.addEventListener('click', () => {
-                navigator.clipboard.writeText(entry.slug);
-            });
-
-            historyDiv.appendChild(slugBox);
-        }
-    });
-}
 
 
-function deleteHistory() {
-    const historyDiv = document.getElementById('history')?.querySelector('.history-content');
-
-    if (!historyDiv) {
-        return;
-    }
-
-    // Schritt 1: Boxen verkleinern
-    historyDiv.classList.add('shrink');
-
-    // Warte, bis die Verkleinerung abgeschlossen ist
-    historyDiv.addEventListener('transitionend', function handleShrink(event) {
-        if (event.propertyName === 'transform') {
-            // Schritt 2: Event Listener entfernen, um Mehrfachausführung zu vermeiden
-            historyDiv.removeEventListener('transitionend', handleShrink);
-            localStorage.removeItem('history');
-            historyDiv.classList.remove('shrink');
-            renderHistory();
-        }
-    });
-}
-
-let slugHistory = []; // Array to store the last 10 slugs
-let currentSlugIndex = -1; // Index of the current slug in the history
-
-function addSlugToHistory(slug) {
-    // Add slug to history
-    if (slugHistory[slugHistory.length - 1] !== slug) {
-        slugHistory.push(slug);
-        if (slugHistory.length > 10) {
-            slugHistory.shift(); // Keep only the last 10 slugs
-        }
-    }
-    currentSlugIndex = slugHistory.length - 1; // Update the current index to the newest slug
-}
-
-function navigateHistory(direction, inputField) {
-    currentSlugIndex += direction;
-
-    // Prevent going out of bounds
-    if (currentSlugIndex < 0) {
-        currentSlugIndex = 0;
-        return;
-    }
-    if (currentSlugIndex >= slugHistory.length) {
-        currentSlugIndex = slugHistory.length - 1;
-        return;
-    }
-
-    // Update the input field with the current slug
-    inputField.value = slugHistory[currentSlugIndex];
-}
 
 function restoreHome() {
     document.getElementById('manual-slug-input').value = '';
@@ -398,10 +183,7 @@ function menuButton() {
     });
 }
 
-function toggleFlags() {
-    const flagContainer = document.getElementById("flag-container");
-    flagContainer.classList.toggle("hidden");
-}
+
 
 // Generator Function for Slugs
 function* generateSlugs(prefix, maxLength) {

@@ -13,6 +13,13 @@
     scale: 1.1;
 }
 
+.tinybutton {
+    width: 20px; /* Button width */
+    height: 20px; /* Button height */
+    padding: 0;
+    background-size: contain;
+}
+
 .iconbutton {
     width: 40px; /* Button width */
     height: 40px; /* Button height */
@@ -79,20 +86,18 @@
 
 .favorite-button {
     background: none; /* Remove default background */
-    border: none; /* Remove default border */
-    cursor: pointer; /* Pointer cursor */
     font-size: 20px; /* Large star size */
     color: #ffd700; /* Gold color for the star */
     position: fixed; /* Fixed position for the button */
     top: 5px; /* Adjust the top position */
     right: 5px; /* Adjust the right position */
+    border: none;
 }
 
 
 
 .delete-history-button {
     text-align: center; /* Center the text */
-    transition: background-color 0.3s ease; /* Smooth background color transition */
     display: none; /* Hide the button by default */
     background-image: url('../../public/icons/trash.svg');
     position: fixed; /* Fixed position for the button */ 
@@ -106,18 +111,6 @@
     display: block; /* Show the download button on hover */
 }
 
-.tinybutton {
-    width: 20px; /* Button width */
-    height: 20px; /* Button height */
-    background-size: contain; /* Ensure the image fits within the button */
-    background-repeat: no-repeat; /* No repeating of background image */
-    background-position: center; /* Center the background image */
-    border: none; /* Remove border */
-    cursor: pointer; /* Pointer cursor for interactivity */
-    outline: none; /* Remove focus outline */
-    padding: 0px;
-}
-
 .search-button {
     background-image: url('../../public/icons/compass.svg');
 }
@@ -127,27 +120,22 @@
 }
 
 .juliamemes-button {
-    align-self: flex-start;
     background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2024/07/22/18/07/3c5b1113aff45d941edef4f7bc127722d7213eba.jpg');
 }
 
 .nsf-button {
-    align-self: flex-start;
     background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2023/09/04/10/41/108d14e6dace4e98a2eff60f8c9187de7dbc39d3.jpg');
 }
 
 .dec-button {
-    align-self: flex-start;
     background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2023/09/24/11/22/ef1038c309a0f3d3b04474735214af6019b24b55.jpg');
 }
 
 .hgr-button {
-    align-self: flex-start;
     background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2024/04/01/14/04/3372ad7ec867d362afe9d2df2c2c669bbbfa3d92.jpg');
 }
 
 .tsi-button {
-    align-self: flex-start;
     background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2024/06/13/07/31/0476ec824d38dc1ddbb9b31289b6dd808a511e48.jpg');
 }
 
@@ -164,7 +152,6 @@
 }
 
 .ius-button {
-    align-self: flex-start;
     background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2023/08/25/02/39/888bbc665f872291f8cc28385a7d66e90da51343.jpg');
 }
 

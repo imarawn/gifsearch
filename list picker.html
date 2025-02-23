@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="title">GIF Search</title>
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/global.css">
+    <link rel="stylesheet" href="src/css/modal.css">
+    <link rel="stylesheet" href="src/css/darkmode.css">
+    <link rel="stylesheet" href="src/css/emotebox.css">
+    <link rel="stylesheet" href="src/css/buttons.css">
+    <link rel="stylesheet" href="src/css/favorite-content.css">
+    <link rel="stylesheet" href="src/css/history-content.css">
+    <link rel="stylesheet" href="src/css/responsive.css">
+    <link rel="stylesheet" href="src/css/input-fields.css">
+    <link rel="stylesheet" href="src/css/translate.css">
+    <link rel="stylesheet" href="src/css/list-modal.css">
+</head>
+<body>
+<button id="show" onclick="document.getElementById('list-selection-dialog').classList.toggle('visible'); populateListPicker()">Show</button>
+<!-- Bottom Sheet Modal -->
+<div id="list-selection-dialog" class="list-selection-modal">
+    <div id="list-options-container"></div>
+    <img src="public/icons/skull.svg" alt="">
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+<script src="src/js/translate.js"></script>
+<script src="src/js/helper/supabase.js"></script>
+<script src="src/js/utils.js"></script>
+<script src="src/js/drag-drop.js"></script>
+<script src="src/js/dark-mode.js"></script>
+<script src="src/js/favorites-supabase.js"></script>
+<script src="src/js/modal.js"></script>
+<script src="src/js/share.js"></script>
+<script src="src/js/emotes.js"></script>
+<script src="src/js/eventHandlers.js"></script>
+<script src="src/js/main.js"></script>
+</body>
+</html>
+
+
+<div id="list-picker-selection" class="list-selection-modal">
+    <h3 class="header">Select a List or Create a New One</h3>
+    <div id="list-options-container"></div>
+    <input aria-label="" type="text" id="new-list-name" placeholder="Enter new list name"/>
+    <button id="create-new-list-button" class="button">Create New List</button>
+    <button id="close-dialog-button" class="button">Close</button>
+</div>

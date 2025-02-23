@@ -1,39 +1,24 @@
 async function showFavorites() {
     const desktopFavorites = document.getElementById('favorite-emotes');
     const listPicker = document.getElementById('list-picker');
-    const selectedListId = listPicker.value; // Get the selected list ID
+    const selectedListId = listPicker.value;
 
-    desktopFavorites.innerHTML = ''; // Clear the current favorites
-
+    desktopFavorites.innerHTML = '';
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
     if (favorites.length === 0) {
         displayNoFavoritesMessage(desktopFavorites);
         return;
     }
-
-    // Filter the favorites based on the selected list (if any)
+    console.log(selectedListId);
     const filteredFavorites = selectedListId
-        ? favorites.filter(favorite => favorite.list === selectedListId)
+        ? favorites.filter(fav => fav.list === selectedListId)
         : favorites;
-
-    // If no favorites for the selected list, show the "No favorites" message
-    if (filteredFavorites.length === 0) {
-        const noFavoritesMessage = document.createElement('p');
-        noFavoritesMessage.textContent = selectedListId ? 'No favorites in this list.' : 'No favorites added yet.';
-        noFavoritesMessage.className = 'no-favorites-message';
-        desktopFavorites.appendChild(noFavoritesMessage);
-        return;
-    }
 
     const sortedFavorites = filteredFavorites.sort((a, b) => a.slug.localeCompare(b.slug));
 
-    // Display the sorted favorites
     sortedFavorites.forEach(emote => {
         displayEmote(emote, desktopFavorites);
-        const star = document.querySelector('.favorite-button');
-        star.addEventListener('click', () => {
-            addToFavorites(emote);
-        });
     });
 }
 
@@ -45,27 +30,20 @@ function displayNoFavoritesMessage(container) {
 }
 
 async function renderUserGifs(table_name) {
-    const resultsDiv = document.getElementById('results'); // The div where the GIFs will be displayed
-
-    // Clear previous results
+    const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = '';
-    // Fetch the GIFs from the user_emoticons table for the authenticated user
     try {
         const { data: gifs, error } = await supabase
             .from(table_name)
-            .select('slug, url') // Fetch the slug and URL of the GIFs
+            .select('slug, url');
 
         if (error) {
-            console.error('Error fetching GIFs:', error);
-            resultsDiv.innerHTML = '<p>Error fetching GIFs. Please try again later.</p>';
-            return;
+            resultsDiv.innerHTML = '<p>Failed to fetch GIFs. Please try again later.</p>';
+            throw new Error('Error fetching GIFs');
         }
 
-        // If GIFs exist, display them
         if (gifs && gifs.length > 0) {
-            gifs.forEach((gif) => {
-                displayEmote(gif, resultsDiv); // Use the existing displayEmote function
-            });
+            gifs.forEach(gif => displayEmote(gif, resultsDiv));
         } else {
             resultsDiv.innerHTML = '<p>No GIFs found for this user.</p>';
         }
@@ -191,7 +169,6 @@ async function syncSingleFavorite(favorite, list) {
         return;
     }
 
-    console.log('Favorite synchronized successfully:', favorite);
 }
 
 async function removeSingleFavorite(favorite) {
@@ -236,12 +213,9 @@ async function loadFavoritesFromSupabase() {
         return;
     }
 
-    console.log('Fetched favorites from Supabase:', favorites);
 
 
     localStorage.setItem('favorites', JSON.stringify(favorites));
-    console.log('Favorites loaded from Supabase:', favorites);
-    console.log(localStorage.getItem('favorites'));
     showFavorites();
 }
 
@@ -304,7 +278,6 @@ async function getUserLists() {
         console.error('Error fetching lists:', error);
         return [];
     }
-    console.log('Lists:', lists);
     return lists;
 }
 
@@ -334,12 +307,10 @@ async function promptListSelection(emote) {
     const isAlreadyFavorited = favorites.some(favorite => favorite.slug === emote.slug);
 
     if (!user || isAlreadyFavorited) {
-        // User is not logged in or emote already favorited, toggle favorite
         toggleFavorite(emote);
         return;
     }
 
-    // Fetch user lists from Supabase
     const lists = await getUserLists();
 
     // Get the dialog and list container elements
@@ -459,7 +430,7 @@ async function updateFavoriteList(emote, list = null, user) {
     console.log('Favorite list updated successfully:', emote);
 
     // Refresh the favorites view
-    showFavorites();
+    await showFavorites();
 }
 
 async function getUserListsPicker() {
@@ -501,19 +472,16 @@ async function populateListPicker() {
 
 async function showListEmotes() {
     const listId = document.getElementById('list-picker').value;
-    const emotesDiv = document.getElementById('results');
+    const emotesDiv = document.getElementById('favorite-emotes');
 
     if (!listId) {
-        // If no list is selected, prompt the user to select a list
         emotesDiv.innerHTML = '<p>Please select a list to see the emotes.</p>';
         return;
     }
 
-    // Clear the current emotes displayed
     emotesDiv.innerHTML = '';
 
     try {
-        // Fetch the emotes associated with the selected list
         const { data: emotes, error } = await supabase
             .from('favorites') // Assuming you have a table for emotes
             .select('slug, url') // Fields we need (slug and URL of the emotes)
@@ -521,18 +489,15 @@ async function showListEmotes() {
 
         if (error) {
             console.error('Error fetching emotes for list:', error);
-            emotesDiv.innerHTML = '<p>Failed to load emotes. Please try again later.</p>';
+            await showFavorites()
             return;
         }
 
-        // If emotes are found, display them
         if (emotes.length > 0) {
             emotes.forEach((emote) => {
-                // Use the existing `displayEmote` function to show each emote
                 displayEmote(emote, emotesDiv);
             });
         } else {
-            // If no emotes are found for the selected list, display a message
             emotesDiv.innerHTML = '<p>No emotes found in this list.</p>';
         }
     } catch (error) {

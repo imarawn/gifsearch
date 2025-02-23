@@ -101,4 +101,7 @@ flags.forEach(flag => {
     });
 });
 
-
+function toggleFlags() {
+    const flagContainer = document.getElementById("flag-container");
+    flagContainer.classList.toggle("hidden");
+}

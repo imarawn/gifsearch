@@ -53,3 +53,7 @@ body.dark-mode .menu-container .button {
 body.dark-mode .list-modal-content {
     background-color: #2b2b2b;
 }
+
+body.dark-mode .list-selection-modal {
+    background-color: #2b2b2b;
+}

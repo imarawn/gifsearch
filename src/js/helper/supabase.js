@@ -19,7 +19,6 @@ async function login() {
         return;
     }
 
-    console.log('Logged in successfully:', data);
     await checkSession();
     closeLoginModal()
     await syncFavorites();
@@ -77,18 +76,6 @@ async function signUp() {
         console.error("Error signing in anonymously:", error.message);
     } else {
         console.log("Anonymous user signed in:", data);
-    }
-}
-
-// Funktion zum Abrufen des hCaptcha-Tokens
-async function getCaptchaToken() {
-    try {
-        const response = await fetch('https://api.hcaptcha.com/siteverify');
-        const data = await response.json();
-        return data.token; // Gib das Token zurück
-    } catch (error) {
-        console.error("Fehler beim Abrufen des Captcha-Tokens:", error);
-        return null; // Stelle sicher, dass immer ein Wert zurückgegeben wird
     }
 }
 

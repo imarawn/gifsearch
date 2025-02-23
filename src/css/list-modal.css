@@ -1,0 +1,26 @@
+.list-selection-modal {
+    position: fixed;
+    width: 60%;
+    height: 80%;
+    max-width: 60%;
+    max-height: 80%;
+    background: white;
+    left: 20%;
+    align-content: center;
+    bottom: -100%;
+    transition: bottom .7s ease;
+    z-index: 99;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.visible {
+    bottom: 0;
+}
+
+.list-button {
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 100px;
+}
