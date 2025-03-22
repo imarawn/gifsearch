@@ -23,7 +23,7 @@
 }
 
 .darkmode-button {
-    background-image: url('../../public/icons/mode.svg'); /* Default icon image */
+    background-image: url('public/icons/mode.svg'); /* Default icon image */
 }
 
 .upload-button {
