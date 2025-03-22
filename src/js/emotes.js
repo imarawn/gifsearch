@@ -6,7 +6,8 @@ async function fetchEmoteData(slug) {
         spinner.className = 'spinner';
         resultsDiv.innerHTML = '';
         resultsDiv.appendChild(spinner);
-        const response = await fetch(`https://emote.highwebmedia.com/autocomplete?slug=${slug}`);
+        const response = await fetch(`https://chaturbate.com/api/ts/emoticons/autocomplete/?slug=${slug}`);
+        console.log(response);
         if (!response.ok) {
             console.error(`Failed to fetch slug: ${slug}, Status: ${response.status}`);
             return null;
@@ -22,7 +23,7 @@ async function fetchEmoteData(slug) {
 async function fetchSingleEmote(slug) {
     try {
         // Fetch the data from the API
-        const response = await fetch(`https://emote.highwebmedia.com/autocomplete?slug=${slug}`);
+        const response = await fetch(`https://chaturbate.com/api/ts/emoticons/autocomplete/?slug=${slug}`);
         if (!response.ok) {
             console.error(`Failed to fetch slug: ${slug}, Status: ${response.status}`);
             return null;

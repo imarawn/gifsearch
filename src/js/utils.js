@@ -192,7 +192,7 @@ function updateFavoritesCounter() {
  */
 async function fetchAndLogEmoteDetails(slug) {
     try {
-        const response = await fetch(`https://emote.highwebmedia.com/autocomplete?slug=${slug}`);
+        const response = await fetch(`https://chaturbate.com/api/ts/emoticons/autocomplete/?slug=${slug}`);
         if (!response.ok) {
             return null;
         }

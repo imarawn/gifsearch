@@ -42,7 +42,7 @@ function removeParams() {
 }
 
 async function getEmoteURL(slug) {
-    const results = `https://emote.highwebmedia.com/autocomplete?slug=${slug}`
+    const results = `https://chaturbate.com/api/ts/emoticons/autocomplete/?slug=${slug}`
     const response = await fetch(results);
     const data = await response.json();
     return data.emoticons.reverse()[0].url;
