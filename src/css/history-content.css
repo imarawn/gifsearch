@@ -1,0 +1,86 @@
+.history {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 120px;
+    height: 100%;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: width 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.history-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.3s ease, gap 0.3s ease, scale 0.3s ease;
+    padding: 10px;
+    position: relative;
+}
+
+.history-content.shrink {
+    gap: 5px;
+    transform: scale(0.8);
+}
+
+.history-content .emote-box {
+    position: relative;
+    width: 80px;
+    height: 102px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.history-content .emote-box img {
+    max-width: 100%;
+    max-height: 100%;
+    transition: opacity 0.3s ease;
+}
+
+.history-content .emote-name {
+    opacity: 0;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.removing {
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.history-content .slug-box {
+    position: relative;
+    width: 80px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    opacity: 1;
+    transform: scale(1);
+    cursor: pointer;
+}

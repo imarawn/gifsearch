@@ -1,0 +1,82 @@
+/* Modal Overlay */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Modal Active State */
+.modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+/* Modal Image */
+.modal-image {
+    max-width: 90%;
+    max-height: 90%;
+    border: 3px solid #d4682d;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: popIn 0.3s ease;
+    transform-origin: center;
+}
+
+/* Login Modal Content */
+.login-modal-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    max-width: 90%;
+    width: 400px;
+    animation: slideDown 0.4s ease;
+    position: relative;
+}
+
+.list-modal-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    max-width: 90%;
+    width: 400px;
+    animation: slideDown 0.4s ease;
+    position: relative;
+}
+
+/* Keyframes for Pop-In Animation */
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Keyframes for Slide-Down Animation */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

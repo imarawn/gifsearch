@@ -4,8 +4,10 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 async function login() {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const form = document.getElementById('login-form');
+    const formData = new FormData(form);
+    const email = formData.get('email');
+    const password = formData.get('password');
 
     const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -22,6 +24,7 @@ async function login() {
     closeLoginModal()
     await syncFavorites();
     await loadFavoritesFromSupabase();
+    updateFavoritesCounter();
 }
 
 async function logout() {
@@ -48,10 +51,11 @@ async function checkSession() {
 
     const user = session?.user || null;
 
-    if (user) {
-        console.log('User is logged in:', user);
+    if (user) {document.getElementById('sync-favorites').classList.remove('hidden')
+        return user
     } else {
-        console.log('No user logged in');
+        document.getElementById('sync-favorites').classList.add('hidden')
+        return false
     }
 }
 

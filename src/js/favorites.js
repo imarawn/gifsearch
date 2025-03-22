@@ -1,14 +1,8 @@
-async function showFavorites() {
-    // Select both desktop and mobile favorites containers
+/*async function showFavorites() {
     const desktopFavorites = document.getElementById('favorite-emotes');
-
-    // Clear existing content
     desktopFavorites.innerHTML = '';
 
-    // Retrieve favorites from localStorage
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-
-    // Check if there are no favorites
     if (favorites.length === 0) {
         const noFavoritesMessage = document.createElement('p');
         noFavoritesMessage.textContent = 'No favorites added yet.';
@@ -77,7 +71,7 @@ async function showFavorites() {
         // Append the original emote box to the desktop container
         desktopFavorites.appendChild(emoteBox);
     });
-}
+}*/
 
 function addToFavorites(emoteUrl) {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || []; // Get existing favorites

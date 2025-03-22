@@ -12,7 +12,7 @@ body {
     width: auto;
     margin-left: 130px; /* Adjust to match the favorites' width and add extra space */
     margin-right: 130px; /* Adjust to match the history' width and add extra space */
-
+    margin-top: 50px;
     margin-bottom: 50px; /* Add space at the bottom */
     padding: 20px; /* Add padding inside the content */
     border: 1px solid #e0e0e0;
@@ -38,9 +38,9 @@ body {
     gap: 10px; /* Space between input and button */
     position: sticky;
     top: 10px;
-    z-index: 9;
     background-color: #fff;
     border-radius: 4px;
+    z-index: 1;
 }
 
 .results {
@@ -53,5 +53,22 @@ body {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
+}
+
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 10px;
+    right: 130px;
+    height: auto;
+    z-index: 4;
+    align-items: end;
+}
+
+.utility {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
 }

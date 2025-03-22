@@ -4,108 +4,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIF Search</title>
+    <title data-translate="title">GIF Search</title>
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="src/css/global.css">
-    <link rel="stylesheet" href="src/css/components.css">
+    <link rel="stylesheet" href="src/css/modal.css">
     <link rel="stylesheet" href="src/css/darkmode.css">
     <link rel="stylesheet" href="src/css/emotebox.css">
     <link rel="stylesheet" href="src/css/buttons.css">
+    <link rel="stylesheet" href="src/css/favorite-content.css">
+    <link rel="stylesheet" href="src/css/history-content.css">
     <link rel="stylesheet" href="src/css/responsive.css">
+    <link rel="stylesheet" href="src/css/input-fields.css">
+    <link rel="stylesheet" href="src/css/translate.css">
 </head>
 
 <body>
-    <!-- Mobile Header -->
-    <div class="mobile-header">
+<!-- Mobile Header -->
+<header class="mobile-header">
+    <nav id="mobile-buttons" class="mobile-buttons mobile">
         <button id="mobile-favorites-button" class="button iconbutton mobile-favorites-button"
-            onclick="openmobilefavorites()"></button>
-        <button id="mobile-history-button" class="button iconbutton mobile-history-button"></button>
-        <div id="mobile-buttons" class="mobile-buttons">
-            <button id="upload-file-mobile" class="button iconbutton upload-button"
-                onclick="loadAndFetchEmoticons()"></button>
-            <button id="dark-mode-toggle-mobile" class="button iconbutton darkmode-button"></button>
+                onclick="openmobilefavorites()" title="" data-translate-title="buttons.favorites"></button>
+        <button id="mobile-history-button" class="button iconbutton mobile-history-button" onclick="openmobileHistory()"
+                title="" data-translate-title="buttons.history"></button>
+    </nav>
+</header>
+
+<!-- Desktop Buttons -->
+<nav id="menu-container" class="menu-container">
+    <button id="menubutton" class="button iconbutton menu-button" title="" data-translate-title="buttons.menu"
+            onclick="menuButton()"></button>
+    <button class="button iconbutton darkmode-button hidden" title="" data-translate-title="buttons.darkMode"></button>
+    <div class="hidden language-picker">
+        <button id="language-button" class="button iconbutton language-button hidden" title=""
+                data-translate-title="buttons.languageSelector" onclick="toggleFlags()"></button>
+        <div class="flag-container" id="flag-container">
+            <img src="public/icons/locales/en.svg" alt="English" data-lang="en"
+                 class="iconbutton button flag-button hidden">
+            <img src="public/icons/locales/de.svg" alt="Deutsch" data-lang="de"
+                 class="iconbutton button flag-button hidden">
+            <img src="public/icons/locales/ru.svg" alt="Русский" data-lang="ru"
+                 class="iconbutton button flag-button hidden">
+            <img src="public/icons/locales/ro.svg" alt="Română" data-lang="ro" class="iconbutton button flag-button hidden">
+            <img src="public/icons/locales/it.svg" alt="Italiano" data-lang="it"
+                 class="iconbutton button flag-button hidden">
+            <img src="public/icons/locales/es.svg" alt="Español" data-lang="es"
+                 class="iconbutton button flag-button hidden">
         </div>
     </div>
+    <button id="sync-favorites-button" class="button login-button iconbutton hidden" onclick="openLoginModal()" title=""
+            data-translate-title="buttons.login"></button>
+    <button id="share-buttonm" class="button iconbutton share-button hidden mobile"
+            onclick="share(false)" title="" data-translate-title="buttons.shareButtonSlug"></button>
+</nav>
 
-    <!-- Desktop Buttons -->
-    <div class="desktop-buttons">
-        <button id="dark-mode-toggle" class="button iconbutton darkmode-button" aria-label="Toggle dark mode"></button>
-        <button id="upload-file" class="button iconbutton upload-button"
-            aria-label="Upload and show from file"></button>
-    </div>
-
-    <!-- Favorites Section -->
-    <div id="favorites-overlay" class="favorites-overlay" onclick="openmobilefavorites()"></div>
-    <div id="favorites" class="favorites">
-        <div id="favorites-header" class="favorites-header">
-            <button class="button iconbutton download-favorites-button" onclick="downloadFavorites()">
+<!-- Favorites Section -->
+<section id="favorites" class="favorites">
+    <header id="favorites-header" class="favorites-header">
+        <div id="favorite-buttonset" class="buttonset">
+            <button class="button iconbutton download-favorites-button" onclick="downloadFavorites()"
+                    title="" data-translate-title="buttons.download">
                 <span id="favorites-counter" class="favorites-counter">0</span>
             </button>
-            <h2 class="header">Favorites</h2>
-            <div>
-                <button id="close-favorites-button" class="button iconbutton mobile-close-button"
-                onclick="openmobilefavorites()"></button>
-            </div> 
+            <button id="sync-favorites" class="button iconbutton sync-favorites-button"
+                    onclick="syncFavorites()"></button>
         </div>
-        <div id="favorite-emotes" class="favorites-content"></div>
+        <h2 class="header" data-translate-text="favorites.title">Favorites</h2>
+        <div>
+            <button id="close-favorites-button" class="button iconbutton mobile-close-button mobile"
+                    onclick="openmobilefavorites()" title="" data-translate-title="buttons.closeFavorites"></button>
+        </div>
+    </header>
+    <select aria-label="" id="list-picker" onfocus="populateListPicker()" onchange="showListEmotes()">
+        <option value="">-- Select a List --</option>
+    </select>
+    <button class="button iconbutton delete-favorites-button"
+            onclick="deleteFavorites()" title="" data-translate-title="buttons.deletefavs"></button>
+    <div id="favorite-emotes" class="favorites-content"></div>
+</section>
+
+<!-- History Section -->
+<section id="history" class="history">
+    <h2 class="header" data-translate-text="history.title">History</h2>
+    <button class="button iconbutton delete-history-button"
+            onclick="deleteHistory()" title="" data-translate-title="buttons.deletehist"></button>
+    <div id="history-emotes" class="history-content"></div>
+</section>
+
+<!-- Main Content -->
+<main class="container">
+    <section class="list-buttons">
+        <button id="juliamemes" class="button iconbutton juliamemes-button"
+                onclick="renderUserGifs('juliamemes')" title=""
+                data-translate-title="buttons.juliamemes"></button>
+        <button id="nsf" class="button iconbutton nsf-button" onclick="renderUserGifs('nsf')"
+                title="" data-translate-title="buttons.nsf"></button>
+        <button id="tsi" class="button iconbutton tsi-button" onclick="renderUserGifs('tsi')"
+                title="" data-translate-title="buttons.tsi"></button>
+        <button id="hgr" class="button iconbutton hgr-button" onclick="renderUserGifs('hgr')"
+                title="" data-translate-title="buttons.hgr"></button>
+        <button id="dec" class="button iconbutton dec-button" onclick="renderUserGifs('dec')"
+                title="" data-translate-title="buttons.dec"></button>
+        <button id="ius" class="button iconbutton ius-button" onclick="renderUserGifs('ius')"
+                title="" data-translate-title="buttons.ius"></button>
+    </section>
+    <section class="random-input-container">
+        <button id="desktop-show-button" class="button iconbutton upload-button desktop"
+                onclick="loadAndFetchEmoticons()" title="" data-translate-title="buttons.upload"></button>
+        <button id="home-button" class="button iconbutton home-button"
+                onclick="restoreHome()" title="" data-translate-title="buttons.home"></button>
+        <input aria-label="" type="text" id="manual-slug-input" class="search-field"
+               placeholder="" data-translate-placeholder="placeholders.searchField" autocomplete="off">
+        <button id="random-button" class="button iconbutton random-button"
+                onclick="generateRandomSlugAndScroll()" title="" data-translate-title="buttons.random"></button>
+        <button id="share-button" class="button iconbutton share-button desktop"
+                onclick="share(false)" title="" data-translate-title="buttons.shareButtonSlug"></button>
+    </section>
+    <section id="results" class="results"></section>
+</main>
+
+<!-- Image Modal -->
+<dialog id="image-modal" class="modal" aria-modal="true" aria-labelledby="modal-image" aria-hidden="true">
+    <img id="modal-image" class="modal-image" src="" alt="Full Resolution">
+</dialog>
+
+<!-- Login Modal -->
+<dialog id="login-modal" class="modal">
+    <div id="modal-content">
     </div>
+</dialog>
 
-
-    <!-- History Section -->
-    <div id="history" class="history">
-        <h2 class="header">History</h2>
-        <button class="button iconbutton delete-history-button" onclick="deleteHistory()"></button>
-        <div id="history-emotes" class="history-content"></div>
+<!-- Dialog for list selection -->
+<dialog id="list-selection-dialog" class="modal">
+    <div class="list-modal-content">
+        <h3 class="header">Select a List or Create a New One</h3>
+        <div id="list-options-container"></div>
+        <input aria-label="" type="text" id="new-list-name" placeholder="Enter new list name"/>
+        <button id="create-new-list-button" class="button">Create New List</button>
+        <button id="close-dialog-button" class="button">Close</button>
     </div>
+</dialog>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div id="list-buttons" class="list-buttons">
-        <button id="juliamemes" class="button iconbutton juliamemes-button" onclick="renderUserGifs('juliamemes')" title="juliamemes"></button>
-        <button id="nsf" class="button iconbutton nsf-button" onclick="renderUserGifs('nsf')" title="nsf-"></button>
-        <button id="tsi" class="button iconbutton tsi-button" onclick="renderUserGifs('tsi')" title="tsi_"></button>
-        <button id="hgr" class="button iconbutton hgr-button" onclick="renderUserGifs('hgr')" title="hgr-"></button>
-        <button id="nsf" class="button iconbutton dec-button" onclick="renderUserGifs('dec')" title="dec-"></button>
-        </div>
-        <div id="filesection" class="main-button-container">
-            <button id="sync-favorites-button" class="button" onclick="syncFavorites()">Sync Favorites</button>
-        <button id="sync-favorites-button" class="button" onclick="logout()">Logout</button>
-            <button id="desktop-show-button" class="button show-file-button" onclick="loadAndFetchEmoticons('dec')">Show from
-                File</button>
-            <input type="file" id="file-input" class="hidden" accept=".txt">
-        </div>
-        <div class="main-button-container  random-input-container">
-            <button id="home-button" class="button iconbutton home-button" onclick="restoreHome()"></button>
-            <input type="text" id="manual-slug-input" class="search-field" placeholder="Search as you type...">
-            <button id="random-button" class="button iconbutton random-button" onclick="generateRandomSlugAndScroll()"></button>
-        </div>
-        <div id="results" class="results"></div>
-    </div>
 
-    <!-- Modal -->
-    <div id="image-modal" class="image-modal">
-        <span id="close-modal" class="close-modal">&times;</span>
-        <img id="modal-image" class="modal-image" src="" alt="Full Resolution">
-    </div>
-    <div id="login-modal" class="login-modal">
-        <span id="close-login-modal" class="close-modal" onclick="closeLoginModal()" >&times;</span>
-        <div class="login-modal-content">
-            <h2>Login</h2>
-            <input type="text" id="email" class="login-input" placeholder="Email">
-            <input type="password" id="password" class="login-input" placeholder="Password">
-            <button id="login-button" class="button" onclick="login()">Login</button>
-            <button id="signup-button" class="button" onclick="signUp()">Sign Up</button>
-            <div class="h-captcha" data-sitekey="091a109c-def0-41ca-a682-3b12bf02dd18"></div>
-        </div>
+<select aria-label="" id="language-selector" class="hidden">
+    <option value="en">English</option>
+    <option value="de">Deutsch</option>
+    <option value="ru">Русский</option>
+    <option value="ro">Română</option>
+    <option value="it">Italiano</option>
+    <option value="es">Español</option>
+</select>
+<input type="file" id="file-input" class="file-input" style="display: none">
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- <script src="https://js.hcaptcha.com/1/api.js" async defer></script> -->
-    <script src="src/js/supabase.js"></script>
-    <script src="src/js/utils.js"></script>
-    <script src="src/js/drag-drop.js"></script>
-    <script src="src/js/dark-mode.js"></script>
-    <script src="src/js/emotes.js"></script>
-    <script src="src/js/favorites-supabase.js"></script>
-    <script src="src/js/modal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+<script src="src/js/translate.js"></script>
+<script src="src/js/supabase.js"></script>
+<script src="src/js/utils.js"></script>
+<script src="src/js/drag-drop.js"></script>
+<script src="src/js/dark-mode.js"></script>
+<script src="src/js/favorites-supabase.js"></script>
+<script src="src/js/modal.js"></script>
+<script src="src/js/share.js"></script>
+<script src="src/js/emotes.js"></script>
+<script src="src/js/eventHandlers.js"></script>
+<script src="src/js/main.js"></script>
 </body>
 
 </html>

@@ -6,7 +6,6 @@
     cursor: pointer;
     font-size: 16px;
     margin: 5px;
-    z-index: 100;
 }
 
 .button:hover {
@@ -24,10 +23,7 @@
 }
 
 .darkmode-button {
-    top: 10px; /* Adjust the top position */
-    right: 130px; /* Adjust the right position */
     background-image: url('../../public/icons/mode.svg'); /* Default icon image */
-    position: fixed; /* Fixed position for the button */
 }
 
 .upload-button {
@@ -92,9 +88,7 @@
     right: 5px; /* Adjust the right position */
 }
 
-.favorites:hover .download-favorites-button {
-    display: block; /* Show the download button on hover */
-}
+
 
 .delete-history-button {
     text-align: center; /* Center the text */
@@ -104,8 +98,8 @@
     position: fixed; /* Fixed position for the button */ 
     bottom: 10px; /* Adjust the top position */
     right: 10px; /* Adjust the right position */
-    z-index: 1000;
     animation: fadeIn 300ms;
+    z-index: 1;
 }
 
 .history:hover .delete-history-button {
@@ -159,12 +153,73 @@
 
 .list-buttons {
     align-self: flex-start;
-    z-index: 2;
 }
 
 .visible-button {
+    display: none;
     background-image: url('../../public/icons/eye.svg');
     position: fixed; /* Fixed position for the button */
     top: 5px; /* Adjust the top position */
     left: 5px; /* Adjust the right position */
 }
+
+.ius-button {
+    align-self: flex-start;
+    background-image: url('https://static-pub.highwebmedia.com/uploads/avatar/2023/08/25/02/39/888bbc665f872291f8cc28385a7d66e90da51343.jpg');
+}
+
+.share-button {
+    background-image: url('../../public/icons/share.svg');
+}
+
+.login-button {
+    background-image: url('../../public/icons/login.svg');
+}
+
+.emote-box:hover .visible-button {
+    display: block;
+}
+
+.collection {
+    position: sticky;
+    top: 10px ;
+}
+
+.menu-button {
+    background-image: url('../../public/icons/menu.svg');
+}
+
+.language-button {
+    background-image: url('../../public/icons/globe.svg');
+}
+
+.delete-favorites-button {
+    background-image: url('../../public/icons/trash.svg');
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 1;
+    animation: fadeIn 300ms;
+    display: none;
+}
+
+.favorites:hover .delete-favorites-button {
+    display: block;
+}
+
+.menu-container .button {
+    border: 2px solid white;
+}
+
+.sync-favorites-button {
+    display: none;
+}
+
+.change-list-button {
+    display: none;
+}
+
+.favorites .change-list-button {
+    display: block;
+}
+
