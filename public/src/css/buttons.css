@@ -23,30 +23,30 @@
 }
 
 .darkmode-button {
-    background-image: url('public/icons/mode.svg'); /* Default icon image */
+    background-image: url('../../icons/mode.svg'); /* Default icon image */
 }
 
 .upload-button {
-    background-image: url('../../public/icons/upload.svg'); /* Default icon image */
+    background-image: url('../../icons/upload.svg'); /* Default icon image */
 }
 
 .random-button {
-    background-image: url('../../public/icons/skull.svg');
+    background-image: url('../../icons/skull.svg');
 }
 
 .mobile-history-button {
-    background-image: url('../../public/icons/history.svg');
+    background-image: url('../../icons/history.svg');
 }
 
 .mobile-favorites-button {
-    background-image: url('../../public/icons/party.svg');
+    background-image: url('../../icons/party.svg');
 }
 
 .mobile-close-button {
     opacity: 0;
     top: 25px; /* Distance from the top */
     right: 15px; /* Distance from the right edge */
-    background-image: url('../../public/icons/close.svg');
+    background-image: url('../../icons/close.svg');
 }
 
 #close-favorites-button {
@@ -55,7 +55,7 @@
 
 .download-favorites-button {
     display: none;
-    background-image: url('../../public/icons/download.svg');
+    background-image: url('../../icons/download.svg');
 }
 
 .show-file-button {
@@ -94,7 +94,7 @@
     text-align: center; /* Center the text */
     transition: background-color 0.3s ease; /* Smooth background color transition */
     display: none; /* Hide the button by default */
-    background-image: url('../../public/icons/trash.svg');
+    background-image: url('../../icons/trash.svg');
     position: fixed; /* Fixed position for the button */ 
     bottom: 10px; /* Adjust the top position */
     right: 10px; /* Adjust the right position */
@@ -119,11 +119,11 @@
 }
 
 .search-button {
-    background-image: url('../../public/icons/compass.svg');
+    background-image: url('../../icons/compass.svg');
 }
 
 .home-button {
-    background-image: url('../../public/icons/house.svg');
+    background-image: url('../../icons/house.svg');
 }
 
 .juliamemes-button {
@@ -157,7 +157,7 @@
 
 .visible-button {
     display: none;
-    background-image: url('../../public/icons/eye.svg');
+    background-image: url('../../icons/eye.svg');
     position: fixed; /* Fixed position for the button */
     top: 5px; /* Adjust the top position */
     left: 5px; /* Adjust the right position */
@@ -169,11 +169,11 @@
 }
 
 .share-button {
-    background-image: url('../../public/icons/share.svg');
+    background-image: url('../../icons/share.svg');
 }
 
 .login-button {
-    background-image: url('../../public/icons/login.svg');
+    background-image: url('../../icons/login.svg');
 }
 
 .emote-box:hover .visible-button {
@@ -186,15 +186,15 @@
 }
 
 .menu-button {
-    background-image: url('../../public/icons/menu.svg');
+    background-image: url('../../icons/menu.svg');
 }
 
 .language-button {
-    background-image: url('../../public/icons/globe.svg');
+    background-image: url('../../icons/globe.svg');
 }
 
 .delete-favorites-button {
-    background-image: url('../../public/icons/trash.svg');
+    background-image: url('../../icons/trash.svg');
     position: fixed;
     bottom: 10px;
     left: 10px;

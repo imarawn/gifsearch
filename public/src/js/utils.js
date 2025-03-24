@@ -359,7 +359,7 @@ function navigateHistory(direction, inputField) {
 }
 
 function restoreHome() {
-    document.getElementById('manual-slug-input').value = '';
+    document.getElementById('manual-slug-input2').value = '';
     renderPredefinedGifs();
 }
 

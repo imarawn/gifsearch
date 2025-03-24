@@ -6,10 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+/*document.addEventListener('DOMContentLoaded', () => {
     const manualInput = document.getElementById('manual-slug-input');
     manualInput.oninput = debounce(fetchManualSlug, 1000);
-});
+});*/
 
 // Close the modal when the close button is clicked
 closeModal.addEventListener('click', () => {
