@@ -92,21 +92,4 @@ async function getCaptchaToken() {
     }
 }
 
-async function markAsVisible(slug) {
-    if (!slug || !supabase) {
-        console.warn('❌ Kein gültiger Slug oder Supabase nicht initialisiert');
-        return;
-    }
-
-    const { error } = await supabase.rpc('set_emote_visible', {
-        search_slug_input: slug
-    });
-
-    if (error) {
-        console.error(`❌ Fehler beim Setzen von is_visible für ${slug}:`, error);
-    } else {
-        console.log(`✅ Sichtbarkeit für ${slug} gesetzt`);
-    }
-}
-
 

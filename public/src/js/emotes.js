@@ -88,7 +88,6 @@ function displayEmote(emote, parentElement) {
     visiblebutton.setAttribute("data-translate-title", "buttons.visibleButton");
     visiblebutton.onclick = () => {
         img.src = img.src === emote.url ? "https://static-pub.highwebmedia.com/uploads/avatar/2014/06/15/tOJg2O2TVM9h.jpg" : emote.url
-        markAsVisible(emote.slug);
     }
 
     const similarbutton = document.createElement('button');
