@@ -84,10 +84,11 @@ function displayEmote(emote, parentElement) {
     const visiblebutton = document.createElement('button');
     visiblebutton.className = 'visible-button tinybutton button';
     visiblebutton.title = "_";
+    visiblebutton.dataset.slug = emote.slug
     visiblebutton.setAttribute("data-translate-title", "buttons.visibleButton");
     visiblebutton.onclick = () => {
         img.src = img.src === emote.url ? "https://static-pub.highwebmedia.com/uploads/avatar/2014/06/15/tOJg2O2TVM9h.jpg" : emote.url
-
+        markAsVisible(emote.slug);
     }
 
     const similarbutton = document.createElement('button');
