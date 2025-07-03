@@ -1,13 +1,13 @@
 function renderFavoritesView() {
     const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = '📦 Lade Favoriten...';
+    resultsDiv.innerHTML = '📦 Load Favorites...';
 
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-
+    console.log(favorites);
     resultsDiv.innerHTML = '';
 
     if (!favorites.length) {
-        resultsDiv.textContent = '🕳️ No Favorites saved...';
+        resultsDiv.textContent = '🕳️ No Favorites saved.';
         return;
     }
 
