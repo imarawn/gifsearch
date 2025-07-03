@@ -7,7 +7,7 @@ function renderFavoritesView() {
     resultsDiv.innerHTML = '';
 
     if (!favorites.length) {
-        resultsDiv.textContent = '🕳️ Keine Favoriten gespeichert.';
+        resultsDiv.textContent = '🕳️ No Favorites saved...';
         return;
     }
 
