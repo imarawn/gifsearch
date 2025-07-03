@@ -24,7 +24,7 @@ function renderFavoritesView() {
             const height = img.naturalHeight;
 
             if (width > 250 || height > 80) {
-                card.style.backgroundColor = '#004444'; // large
+                card.style.backgroundColor = '#330000'; // large
             } else {
                 card.style.backgroundColor = '#002200'; // normal
             }
