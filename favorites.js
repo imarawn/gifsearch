@@ -2,7 +2,7 @@ function renderFavoritesView() {
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = '📦 Lade Favoriten...';
 
-    const favorites = JSON.parse(localStorage.getItem('emoteFavorites') || '[]');
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 
     resultsDiv.innerHTML = '';
 
