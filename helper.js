@@ -173,7 +173,7 @@ async function autoMigrateEmotes({
         return;
     }
 
-    const username_hash = getUserHash(localStorage.getItem('emote_username')?.trim(), localStorage.getItem('emote_password')?.trim());
+    const username_hash = await getUserHash(localStorage.getItem('emote_username')?.trim(), localStorage.getItem('emote_password')?.trim());
     const secret_key = localStorage.getItem('emote_secret')?.trim();
 
     if (username_hash && secret_key) {
