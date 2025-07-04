@@ -35,6 +35,14 @@ function showHistory() {
         slug.textContent = `:${emote.search_slug}`;
         card.appendChild(slug);
 
+        const favBtn = document.createElement('button');
+        favBtn.textContent = isFavorited(emote) ? '⭐' : '☆';
+        favBtn.style.marginTop = '4px';
+        favBtn.addEventListener('click', () => {
+            handleFavorite(emote, favBtn);
+        });
+        card.appendChild(favBtn);
+
         // 🗑️ Delete Button
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = '🗑️';

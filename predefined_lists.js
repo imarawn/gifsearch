@@ -42,6 +42,14 @@ async function renderUserGifs(table_name) {
             slug.textContent = `:${emote.slug}`;
             card.appendChild(slug);
 
+            const favBtn = document.createElement('button');
+            favBtn.textContent = isFavorited(emote) ? '⭐' : '☆';
+            favBtn.style.marginTop = '4px';
+            favBtn.addEventListener('click', () => {
+                handleFavorite(emote, favBtn);
+            });
+            card.appendChild(favBtn);
+
             // ✅ Click-to-copy logic
             card.style.cursor = 'pointer';
             card.title = 'Click to copy slug';

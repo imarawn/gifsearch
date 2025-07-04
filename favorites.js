@@ -1,17 +1,40 @@
-function renderFavoritesView() {
+async function renderFavoritesView() {
     const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = '📦 Load Favorites...';
+    resultsDiv.innerHTML = '📦 Loading Favorites...';
 
-    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-    console.log(favorites);
-    resultsDiv.innerHTML = '';
+    const secret = localStorage.getItem('emote_secret')?.trim();
+    const username = localStorage.getItem('emote_username')?.trim();
+    const password = localStorage.getItem('emote_password')?.trim();
 
-    if (!favorites.length) {
+    let remoteFavorites = [];
+    let localFavorites = JSON.parse(localStorage.getItem('emoteFavorites') || '[]');
+
+    if (secret && username && password) {
+        const username_hash = await getUserHash(username, password);
+
+        const { data, error } = await supabase
+            .from('user_favorites')
+            .select('slug, url')
+            .eq('username_hash', username_hash)
+            .eq('secret_key', secret)
+
+        if (error) {
+            console.error('❌ Failed to fetch remote favorites:', error);
+        } else {
+            remoteFavorites = data || [];
+        }
+    }
+
+    const allFavorites = [...remoteFavorites, ...localFavorites];
+
+    if (!allFavorites.length) {
         resultsDiv.textContent = '🕳️ No Favorites saved.';
         return;
     }
 
-    favorites.forEach(emote => {
+    resultsDiv.innerHTML = '';
+
+    allFavorites.forEach(emote => {
         const card = document.createElement('div');
         card.className = 'emote-card';
 
@@ -23,11 +46,9 @@ function renderFavoritesView() {
             const width = img.naturalWidth;
             const height = img.naturalHeight;
 
-            if (width > 250 || height > 80) {
-                card.style.backgroundColor = '#330000'; // large
-            } else {
-                card.style.backgroundColor = '#002200'; // normal
-            }
+            card.style.backgroundColor = (width > 250 || height > 80)
+                ? '#330000'
+                : '#002200';
         };
 
         const slug = document.createElement('div');
@@ -46,7 +67,6 @@ function renderFavoritesView() {
                 }, 1000);
             });
         });
-
         resultsDiv.appendChild(card);
     });
 }
