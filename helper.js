@@ -172,11 +172,18 @@ async function autoMigrateEmotes({
         console.info('ℹ️ No emotes to migrate.');
         return;
     }
+    const username = document.getElementById('emote-username').value.trim();
+    const password = document.getElementById('emote-password').value.trim();
+    const secret = document.getElementById('emote-secret').value.trim();
+    const username_hash = await getUserHash(username, password);
 
-    const username_hash = await getUserHash(localStorage.getItem('emote_username')?.trim(), localStorage.getItem('emote_password')?.trim());
-    const secret_key = localStorage.getItem('emote_secret')?.trim();
+    if (!username || !password || !secret) {
+        localStorage.setItem(toLocalKey, JSON.stringify(oldData));
+        console.log(`✅ Migrated ${oldData.length} emotes to localStorage key "${toLocalKey}"`);
+        return;
+    }
 
-    if (username_hash && secret_key) {
+    if (username_hash && secret) {
         try {
             let inserted = 0;
 
@@ -187,7 +194,7 @@ async function autoMigrateEmotes({
                     slug: slug,
                     url: url,
                     username_hash,
-                    secret_key
+                    secret_key: secret
                 });
 
                 if (error) throw error;
@@ -202,10 +209,6 @@ async function autoMigrateEmotes({
     } else {
         console.warn('⚠️ No Supabase credentials found, using localStorage');
     }
-
-    // Fallback: localStorage
-    localStorage.setItem(toLocalKey, JSON.stringify(oldData));
-    console.log(`✅ Migrated ${oldData.length} emotes to localStorage key "${toLocalKey}"`);
 }
 
 
