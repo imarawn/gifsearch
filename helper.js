@@ -183,14 +183,12 @@ async function autoMigrateEmotes({
             for (const emote of oldData) {
                 const { slug, url } = emote;
 
-                const { error } = await supabase
-                    .from('user_favorites')
-                    .insert({
-                        slug,
-                        url,
-                        username_hash,
-                        secret_key
-                    });
+                const { error } = await supabase.from('user_favorites').insert({
+                    slug: slug,
+                    url: url,
+                    username_hash,
+                    secret_key
+                });
 
                 if (error) throw error;
                 inserted++;
