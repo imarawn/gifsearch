@@ -1,15 +1,4 @@
-function createSettingsUI() {
-    const settingsButton = document.createElement('button');
-    settingsButton.textContent = '⚙️ Settings';
-    settingsButton.style.marginLeft = '1rem';
-    settingsButton.id = 'settings-button';
-
-    const controls = document.querySelector('.controls');
-    if (controls) {
-        controls.appendChild(settingsButton);
-    }
-
-    settingsButton.addEventListener('click', () => {
+function showSettings() {
         const results = document.getElementById('results');
         if (!results) return;
         results.innerHTML = '';
@@ -52,9 +41,4 @@ function createSettingsUI() {
 
             alert('✅ Settings saved');
         });
-    });
-}
-
-window.addEventListener('load', () => {
-    createSettingsUI();
-});
+    }

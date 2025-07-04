@@ -36,9 +36,16 @@ function showHistory() {
         card.appendChild(slug);
 
         const favBtn = document.createElement('button');
-        favBtn.textContent = isFavorited(emote) ? '⭐' : '☆';
-        favBtn.style.marginTop = '4px';
-        favBtn.addEventListener('click', () => {
+        favBtn.textContent = isFavorited(emote) ? '⭐' : '☆'; // ✅ required!
+        favBtn.style.position = 'absolute';
+        favBtn.style.top = '0.5rem';
+        favBtn.style.right = '0.5rem';
+        favBtn.style.background = 'transparent';
+        favBtn.style.border = 'none';
+        favBtn.style.fontSize = '1.5rem';
+        favBtn.style.cursor = 'pointer';
+        favBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             handleFavorite(emote, favBtn);
         });
         card.appendChild(favBtn);
