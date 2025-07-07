@@ -1,38 +1,61 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GIF Search</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
-  <link rel="stylesheet" href="style.css">
+  <title>GIF Explorer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" >
 </head>
 <body>
-  <header>
-    <div class="logo" onclick="renderUserGifs('predefined_gifs')">GIF Search</div>
-    <button id="juliamemes" onclick="renderUserGifs('juliamemes')"></button>
-    <button id="nsf" onclick="renderUserGifs('nsf')"></button>
-    <button id="tsi" onclick="renderUserGifs('tsi')"></button>
-    <button id="hgr" onclick="renderUserGifs('hgr')"></button>
-    <button id="dec" onclick="renderUserGifs('dec')"></button>
-    <button id="ius" onclick="renderUserGifs('ius')"></button>
-    <div class="controls">
-      <button id="favorites-button" onclick="renderFavoritesView()">⭐ Favorites</button>
-      <button id="history-button" onclick="showHistory()">📜 History</button>
-      <input type="text" id="manual-slug-input2" placeholder="Enter slug...">
-      <button id="random-button" onclick="fetchRandomEmotes()">🎲 Random</button>
-      <button id="settings" onclick="showSettings()">⚙️</button>
+
+<header>
+  <div class="logo" onclick="renderUserGifs('predefined_gifs')">GIF Explorer</div>
+  <div class="controls">
+    <input id="manual-slug-input2" placeholder="Enter slug..." />
+    <button onclick="fetchRandomEmotes()">🎲 Random</button>
+    <button onclick="renderFavoritesView()">⭐ Favorites</button>
+    <button onclick="showHistory()">📜 History</button>
+    <button onclick="showSettings()">⚙️ Settings</button>
+  </div>
+</header>
+
+<div class="tag-filter">
+  <button onclick="renderUserGifs('juliamemes')">Julia</button>
+  <button onclick="renderUserGifs('nsf')">NSF</button>
+  <button onclick="renderUserGifs('tsi')">TSI</button>
+  <button onclick="renderUserGifs('hgr')">HGR</button>
+  <button onclick="renderUserGifs('dec')">DEC</button>
+  <button onclick="renderUserGifs('ius')">IUS</button>
+</div>
+
+<main>
+  <div class="results" id="results">
+    <!-- Emote cards go here -->
+    <!-- Example:
+    <div class="emote-card">
+      <img src="https://media.giphy.com/media/xT5LMzIK1AdZJMK2NG/giphy.gif" />
+      <div class="label">banana-loop</div>
     </div>
-  </header>
+    -->
+  </div>
+</main>
 
-  <section id="results" class="results">
-    <!-- Emotes will be inserted here -->
-  </section>
+<div id="listModal" class="modal-backdrop" style="display: none;">
+  <div class="modal">
+    <h2>Choose a list</h2>
+    <input type="text" id="listInput" placeholder="e.g. Memes, Cats" />
+    <div class="modal-buttons">
+      <button id="listCancel">Cancel</button>
+      <button id="listConfirm">Add</button>
+    </div>
+  </div>
+</div>
 
-  <footer>
-    &copy; 2025 gifsearch
-  </footer>
+
+<footer>
+  &copy; 2025 GIF Explorer
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="random.js"></script>
@@ -42,5 +65,6 @@
 <script src="settings.js"></script>
 <script src="security.js"></script>
 <script src="helper.js"></script>
+<script src="emoteCard.js"></script>
 </body>
 </html>

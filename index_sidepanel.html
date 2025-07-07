@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GIF Search</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --bg: #101010;
+      --sidebar: #1a1a1a;
+      --fg: #e0e0e0;
+      --accent: #3b82f6;
+      --hover: #2a2a2a;
+      --radius: 0.5rem;
+      --card-bg: #2a2a40;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    aside {
+      width: 220px;
+      background: var(--sidebar);
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      border-right: 1px solid #222;
+    }
+
+    aside h1 {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      color: var(--accent);
+      cursor: pointer;
+    }
+
+    aside button {
+      background: transparent;
+      border: none;
+      color: var(--fg);
+      padding: 0.6rem 0.5rem;
+      text-align: left;
+      width: 100%;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    aside button:hover {
+      background: var(--hover);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid #222;
+    }
+
+    header input[type="text"] {
+      flex-grow: 1;
+      background: #1f1f1f;
+      border: 1px solid #333;
+      color: var(--fg);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+    }
+
+    header button {
+      background: var(--hover);
+      color: var(--fg);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+
+    header button:hover {
+      background: #333;
+    }
+
+    .results {
+      padding: 2rem;
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+      overflow-y: auto;
+    }
+
+    .results img {
+      width: 100%;
+      border-radius: var(--radius);
+      transition: transform 0.2s;
+    }
+
+    .results img:hover {
+      transform: scale(1.05);
+    }
+
+    footer {
+      padding: 1rem 2rem;
+      border-top: 1px solid #222;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+<aside>
+  <h1 onclick="renderUserGifs('predefined_gifs')">GIF Search</h1>
+  <button onclick="renderUserGifs('juliamemes')">🎭 Julia Memes</button>
+  <button onclick="renderUserGifs('nsf')">🔞 NSF</button>
+  <button onclick="renderUserGifs('tsi')">👤 TSI</button>
+  <button onclick="renderUserGifs('hgr')">🔥 HGR</button>
+  <button onclick="renderUserGifs('dec')">❄️ DEC</button>
+  <button onclick="renderUserGifs('ius')">🌌 IUS</button>
+  <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid #333;">
+  <button onclick="renderFavoritesView()">⭐ Favorites</button>
+  <button onclick="showHistory()">📜 History</button>
+  <button onclick="showSettings()">⚙️ Settings</button>
+</aside>
+
+<main>
+  <header>
+    <input type="text" id="manual-slug-input2" placeholder="Enter slug...">
+    <button onclick="fetchRandomEmotes()">🎲 Random</button>
+  </header>
+
+  <section id="results" class="results">
+    <!-- Emotes will be inserted here -->
+  </section>
+
+  <footer>
+    &copy; 2025 gifsearch
+  </footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="random.js"></script>
+<script src="history.js"></script>
+<script src="predefined_lists.js"></script>
+<script src="favorites.js"></script>
+<script src="settings.js"></script>
+<script src="security.js"></script>
+<script src="helper.js"></script>
+</body>
+</html>

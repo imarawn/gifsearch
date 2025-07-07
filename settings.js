@@ -34,10 +34,15 @@ function showSettings() {
     panel2.style.marginTop = '1rem';
     panel2.style.borderRadius = '8px';
     panel2.innerHTML = `
-            <h3 style="margin-bottom:0.5rem;">💾 Save old Favorites</h3>
-            <p>If you had Favorites saved on the old Version of the Site, they will not show up anymore now. However, you can transfer them here to the new Site Version.</p>
-            <button id="transfer" style="margin-top:0.5rem;" onclick="autoMigrateEmotes()">🔻 Transfer</button>
-        `;
+  <h3 style="margin-bottom:0.5rem;">💾 Save old Favorites</h3>
+  <p>If you had Favorites saved on the old Version of the Site, you can transfer them here.</p>
+  <button id="transfer" style="margin-top:0.5rem;">🔻 Transfer</button>
+  <div id="progress-container" style="margin-top:1rem; display:none;">
+    <progress id="progress-bar" value="0" max="100" style="width:100%; height:1rem;"></progress>
+    <div id="progress-text" style="margin-top:0.5rem; text-align:center; color: var(--accent); font-weight: bold;"></div>
+  </div>
+`;
+
 
     results.appendChild(panel2);
 

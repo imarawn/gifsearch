@@ -9,14 +9,18 @@ async function renderFavoritesView() {
     let remoteFavorites = [];
     let localFavorites = JSON.parse(localStorage.getItem('emoteFavorites') || '[]');
 
+    let usingRemote = false;
+    let username_hash = null;
+
     if (secret && username && password) {
-        const username_hash = await getUserHash(username, password);
+        usingRemote = true;
+        username_hash = await getUserHash(username, password);
 
         const { data, error } = await supabase
             .from('user_favorites')
-            .select('slug, url')
+            .select('slug, url, list')
             .eq('username_hash', username_hash)
-            .eq('secret_key', secret)
+            .eq('secret_key', secret);
 
         if (error) {
             console.error('❌ Failed to fetch remote favorites:', error);
@@ -26,7 +30,6 @@ async function renderFavoritesView() {
     }
 
     const allFavorites = [...remoteFavorites, ...localFavorites];
-
     if (!allFavorites.length) {
         resultsDiv.textContent = '🕳️ No Favorites saved.';
         return;
@@ -34,39 +37,70 @@ async function renderFavoritesView() {
 
     resultsDiv.innerHTML = '';
 
+    const removeFavorite = async (emote) => {
+        if (usingRemote && username_hash) {
+            await supabase
+                .from('user_favorites')
+                .delete()
+                .eq('slug', emote.slug)
+                .eq('username_hash', username_hash)
+                .eq('secret_key', secret);
+        } else {
+            const updated = localFavorites.filter(e => e.slug !== emote.slug);
+            localStorage.setItem('emoteFavorites', JSON.stringify(updated));
+        }
+    };
+
+    const updateList = async (emote, newList) => {
+        if (usingRemote && username_hash) {
+            await supabase
+                .from('user_favorites')
+                .update({ list: newList })
+                .eq('slug', emote.slug)
+                .eq('username_hash', username_hash)
+                .eq('secret_key', secret);
+        } else {
+            const index = localFavorites.findIndex(e => e.slug === emote.slug);
+            if (index !== -1) {
+                localFavorites[index].list = newList;
+                localStorage.setItem('emoteFavorites', JSON.stringify(localFavorites));
+            }
+        }
+    };
+
     allFavorites.forEach(emote => {
-        const card = document.createElement('div');
-        card.className = 'emote-card';
-
-        const img = document.createElement('img');
-        img.src = emote.url;
-        card.appendChild(img);
-
-        img.onload = () => {
-            const width = img.naturalWidth;
-            const height = img.naturalHeight;
-
-            card.style.backgroundColor = (width > 250 || height > 80)
-                ? '#330000'
-                : '#002200';
-        };
-
-        const slug = document.createElement('div');
-        slug.className = 'emote-slug';
-        slug.textContent = `:${emote.slug}`;
-        card.appendChild(slug);
-
-        card.style.cursor = 'pointer';
-        card.title = 'Click to copy slug';
-        card.addEventListener('click', () => {
-            const textToCopy = `:${emote.slug}`;
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                card.style.outline = '2px solid var(--accent)';
-                setTimeout(() => {
-                    card.style.outline = 'none';
-                }, 1000);
-            });
+        emoteCard(emote, resultsDiv, {
+            isFavoriteView: true,
+            editableList: true,
+            onRemove: removeFavorite,
+            onUpdateList: updateList
         });
-        resultsDiv.appendChild(card);
+    });
+}
+
+function saveToFavorites(emote) {
+    showListModal(emote, async (list) => {
+        const finalEmote = { ...emote, list };
+        const secret = localStorage.getItem('emote_secret')?.trim();
+        const username = localStorage.getItem('emote_username')?.trim();
+        const password = localStorage.getItem('emote_password')?.trim();
+
+        if (secret && username && password) {
+            const username_hash = await getUserHash(username, password);
+            await supabase.from('user_favorites').insert({
+                slug: finalEmote.slug,
+                url: finalEmote.url,
+                list: finalEmote.list,
+                secret_key: secret,
+                username_hash: username_hash
+            });
+        } else {
+            const current = JSON.parse(localStorage.getItem('emoteFavorites') || '[]');
+            const exists = current.find(e => e.slug === finalEmote.slug);
+            if (!exists) {
+                localStorage.setItem('emoteFavorites', JSON.stringify([...current, finalEmote]));
+            }
+        }
+
     });
 }

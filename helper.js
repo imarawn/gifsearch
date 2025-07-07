@@ -168,10 +168,12 @@ async function autoMigrateEmotes({
                                      toLocalKey = 'emoteFavorites'
                                  } = {}) {
     const oldData = JSON.parse(localStorage.getItem(fromKey) || '[]');
+    const statusDiv = document.getElementById('transfer-status');
     if (!oldData.length) {
-        console.info('ℹ️ No emotes to migrate.');
+        statusDiv.textContent = '❌ No emotes to migrate.';
         return;
     }
+
     const username = document.getElementById('emote-username').value.trim();
     const password = document.getElementById('emote-password').value.trim();
     const secret = document.getElementById('emote-secret').value.trim();
@@ -179,7 +181,7 @@ async function autoMigrateEmotes({
 
     if (!username || !password || !secret) {
         localStorage.setItem(toLocalKey, JSON.stringify(oldData));
-        console.log(`✅ Migrated ${oldData.length} emotes to localStorage key "${toLocalKey}"`);
+        statusDiv.textContent = `✅ Migrated ${oldData.length} to local storage`;
         return;
     }
 
@@ -187,28 +189,93 @@ async function autoMigrateEmotes({
         try {
             let inserted = 0;
 
-            for (const emote of oldData) {
+            for (let i = 0; i < oldData.length; i++) {
+                const emote = oldData[i];
                 const { slug, url } = emote;
 
+                statusDiv.textContent = `Uploading ${i + 1} / ${oldData.length}`;
+
                 const { error } = await supabase.from('user_favorites').insert({
-                    slug: slug,
-                    url: url,
+                    slug,
+                    url,
                     username_hash,
                     secret_key: secret
                 });
 
-                if (error) throw error;
+                if (error) {
+                    console.warn(`⚠️ Error inserting ${slug}:`, error.message);
+                    continue;
+                }
+
                 inserted++;
             }
 
-            console.log(`✅ Migrated ${inserted} emotes to Supabase`);
-            return;
+            statusDiv.textContent = `✅ Uploaded ${inserted} emotes to Supabase`;
         } catch (e) {
-            console.warn('⚠️ Supabase sync failed, falling back to localStorage', e.message);
+            console.warn('⚠️ Supabase sync failed, fallback to localStorage', e.message);
+            statusDiv.textContent = `❌ Failed: ${e.message}`;
         }
     } else {
-        console.warn('⚠️ No Supabase credentials found, using localStorage');
+        statusDiv.textContent = '⚠️ Missing credentials';
     }
+}
+
+
+function showListModal(emote, onConfirm) {
+    const modal = document.getElementById('listModal');
+    const input = document.getElementById('listInput');
+    const cancel = document.getElementById('listCancel');
+    const confirm = document.getElementById('listConfirm');
+
+    input.value = emote.list || '';
+    modal.style.display = 'flex';
+    input.focus();
+
+    const cleanup = () => {
+        modal.style.display = 'none';
+        confirm.onclick = null;
+        cancel.onclick = null;
+    };
+
+    cancel.onclick = () => cleanup();
+
+    confirm.onclick = () => {
+        const list = input.value.trim() || 'Unsorted';
+        onConfirm(list);
+        cleanup();
+    };
+}
+
+function openImageModal(url) {
+    let modal = document.getElementById('zoomModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'zoomModal';
+        modal.style.position = 'fixed';
+        modal.style.top = 0;
+        modal.style.left = 0;
+        modal.style.width = '100vw';
+        modal.style.height = '100vh';
+        modal.style.background = 'rgba(0, 0, 0, 0.9)';
+        modal.style.display = 'flex';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+        modal.style.zIndex = 10000;
+        modal.style.cursor = 'zoom-out';
+        modal.addEventListener('click', () => modal.remove());
+
+        const img = document.createElement('img');
+        img.style.maxWidth = '90vw';
+        img.style.maxHeight = '90vh';
+        img.style.border = '2px solid white';
+        img.style.borderRadius = '10px';
+        modal.appendChild(img);
+
+        document.body.appendChild(modal);
+    }
+
+    modal.querySelector('img').src = url;
+    modal.style.display = 'flex';
 }
 
 
