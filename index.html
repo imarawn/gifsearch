@@ -11,7 +11,7 @@
 
 <header>
   <div class="logo" onclick="renderUserGifs('predefined_gifs')">GIF Explorer</div>
-  <div class="controls">
+  <div id="controls" class="controls">
     <input id="manual-slug-input2" placeholder="Enter slug..." />
     <button onclick="fetchRandomEmotes()">🎲 Random</button>
     <button onclick="renderFavoritesView()">⭐ Favorites</button>
@@ -20,7 +20,7 @@
   </div>
 </header>
 
-<div class="tag-filter">
+<div id="userGifs" class="tag-filter">
   <button onclick="renderUserGifs('juliamemes')">Julia</button>
   <button onclick="renderUserGifs('nsf')">NSF</button>
   <button onclick="renderUserGifs('tsi')">TSI</button>

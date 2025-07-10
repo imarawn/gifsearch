@@ -1,4 +1,5 @@
 async function fetchRandomEmotes() {
+    cleanupFavoritesView()
     const results = document.getElementById('results');
     results.innerHTML = '🔄 Loading...';
 

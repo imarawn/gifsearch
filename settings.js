@@ -1,4 +1,5 @@
 function showSettings() {
+    cleanupFavoritesView()
     const results = document.getElementById('results');
     if (!results) return;
     results.innerHTML = '';

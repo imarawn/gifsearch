@@ -1,4 +1,5 @@
 async function renderUserGifs(table_name) {
+    cleanupFavoritesView()
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = '';
 

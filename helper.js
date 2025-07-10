@@ -150,7 +150,7 @@ async function searchAndDisplayEmotes(slug) {
     }
 }
 
-const input = document.getElementById('manual-slug-input2');
+/*const input = document.getElementById('manual-slug-input2');
 const results = document.getElementById('results');
 
 let debounce;
@@ -161,7 +161,7 @@ input.addEventListener('input', () => {
     debounce = setTimeout(() => {
         searchAndDisplayEmotes(slug);
     }, 300);
-});
+});*/
 
 async function autoMigrateEmotes({
                                      fromKey = 'favorites',
@@ -278,4 +278,7 @@ function openImageModal(url) {
     modal.style.display = 'flex';
 }
 
-
+function cleanupFavoritesView() {
+    const oldFilter = document.getElementById('favorites-filter-container');
+    if (oldFilter) oldFilter.remove();
+}

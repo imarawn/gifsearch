@@ -173,6 +173,15 @@ main {
     cursor: pointer;
 }
 
+.dropdown {
+    padding: 0.4rem 0.9rem;
+    font-size: 0.85rem;
+    border-radius: 8px;
+    background: var(--card-bg);
+    border: none;
+    cursor: pointer;
+}
+
 .tag-filter button:hover {
     background: #444;
 }
