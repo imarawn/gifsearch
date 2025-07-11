@@ -32,6 +32,11 @@ async function renderFavoritesView(selectedList = '') {
     }
 
     const allFavorites = [...remoteFavorites, ...localFavorites];
+    const excludedLists = JSON.parse(localStorage.getItem('emote_exclude_lists') || '[]');
+
+    const filteredFavorites = allFavorites.filter(f => {
+        return !excludedLists.includes(f.list || '');
+    });
 
     if (!allFavorites.length) {
         resultsDiv.textContent = '🕳️ No Favorites saved.';
@@ -39,6 +44,7 @@ async function renderFavoritesView(selectedList = '') {
     }
 
     const lists = [...new Set(allFavorites.map(f => f.list || ''))].sort();
+    localStorage.setItem('emoteAvailableLists', JSON.stringify(lists));
 
     resultsDiv.innerHTML = '';
 
@@ -105,7 +111,7 @@ async function renderFavoritesView(selectedList = '') {
         } else if (selectedList) {
             filtered = allFavorites.filter(f => (f.list || '') === selectedList);
         } else {
-            filtered = allFavorites;
+            filtered = filteredFavorites;
         }
 
 

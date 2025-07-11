@@ -47,6 +47,43 @@ function showSettings() {
 
     results.appendChild(panel2);
 
+    // Add panel for list filters
+    const panel3 = document.createElement('div');
+    panel3.id = 'filter-panel';
+    panel3.style.padding = '1rem';
+    panel3.style.border = '1px solid #666';
+    panel3.style.background = '#222';
+    panel3.style.marginTop = '1rem';
+    panel3.style.borderRadius = '8px';
+
+    const excludedLists = JSON.parse(localStorage.getItem('emote_exclude_lists') || '[]');
+
+    const availableLists = JSON.parse(localStorage.getItem('emoteAvailableLists') || '[]'); // you must set this before
+
+    let listOptions = availableLists.map(list => {
+        const checked = excludedLists.includes(list) ? '' : 'checked';
+        return `<label style="display:block;"><input type="checkbox" class="filter-list" value="${list}" ${checked}> ${list}</label>`;
+    }).join('');
+
+    panel3.innerHTML = `
+  <h3 style="margin-bottom:0.5rem;">🚫 Hide Lists from Favorites</h3>
+  <p>Unchecked lists will not appear when clicking the Favorites tab.</p>
+  ${listOptions}
+  <button id="save-filter-settings" style="margin-top:0.5rem;">💾 Save Filters</button>
+`;
+
+    results.appendChild(panel3);
+
+    document.getElementById('save-filter-settings').addEventListener('click', () => {
+        const selected = [...document.querySelectorAll('.filter-list')]
+            .filter(input => !input.checked)
+            .map(input => input.value);
+
+        localStorage.setItem('emote_exclude_lists', JSON.stringify(selected));
+        alert('✅ List filters saved');
+    });
+
+
     document.getElementById('emote-username').value = localStorage.getItem('emote_username') || '';
     document.getElementById('emote-password').value = localStorage.getItem('emote_password') || '';
     document.getElementById('emote-secret').value = localStorage.getItem('emote_secret') || '';

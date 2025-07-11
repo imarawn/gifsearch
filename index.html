@@ -2,69 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>GIF Explorer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    const mobilePage = "index.mobile.html";
+    const desktopPage = "index.desktop.html";
+
+    // optional: cache redirect
+    const override = sessionStorage.getItem("forceView");
+    if (override) {
+      window.location.href = override === "mobile" ? mobilePage : desktopPage;
+    } else {
+      window.location.href = isMobile ? mobilePage : desktopPage;
+    }
+  </script>
 </head>
 <body>
-
-<header>
-  <div class="logo" onclick="renderUserGifs('predefined_gifs')">GIF Explorer</div>
-  <div id="controls" class="controls">
-    <input id="manual-slug-input2" placeholder="Enter slug..." />
-    <button onclick="fetchRandomEmotes()">🎲 Random</button>
-    <button onclick="renderFavoritesView()">⭐ Favorites</button>
-    <button onclick="showHistory()">📜 History</button>
-    <button onclick="showSettings()">⚙️ Settings</button>
-  </div>
-</header>
-
-<div id="userGifs" class="tag-filter">
-  <button onclick="renderUserGifs('juliamemes')">Julia</button>
-  <button onclick="renderUserGifs('nsf')">NSF</button>
-  <button onclick="renderUserGifs('tsi')">TSI</button>
-  <button onclick="renderUserGifs('hgr')">HGR</button>
-  <button onclick="renderUserGifs('dec')">DEC</button>
-  <button onclick="renderUserGifs('ius')">IUS</button>
-</div>
-
-<main>
-  <div class="results" id="results">
-    <!-- Emote cards go here -->
-    <!-- Example:
-    <div class="emote-card">
-      <img src="https://media.giphy.com/media/xT5LMzIK1AdZJMK2NG/giphy.gif" />
-      <div class="label">banana-loop</div>
-    </div>
-    -->
-  </div>
-</main>
-
-<div id="listModal" class="modal-backdrop" style="display: none;">
-  <div class="modal">
-    <h2>Choose a list</h2>
-    <input type="text" id="listInput" placeholder="e.g. Memes, Cats" />
-    <div class="modal-buttons">
-      <button id="listCancel">Cancel</button>
-      <button id="listConfirm">Add</button>
-    </div>
-  </div>
-</div>
-
-
-<footer>
-  &copy; 2025 GIF Explorer
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="random.js"></script>
-<script src="history.js"></script>
-<script src="predefined_lists.js"></script>
-<script src="favorites.js"></script>
-<script src="settings.js"></script>
-<script src="security.js"></script>
-<script src="helper.js"></script>
-<script src="emoteCard.js"></script>
+Redirecting...
 </body>
 </html>
