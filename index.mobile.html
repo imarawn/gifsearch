@@ -10,6 +10,14 @@
 <body>
 
 <header>
+    <div id="controls">
+        <button onclick="renderFavoritesView(null, 'results')">⭐</button>
+        <button onclick="showHistory()">📜</button>
+        <button onclick="fetchRandomEmotes(30)">🎲</button>
+        <button onclick="showSettings()">⚙️</button>
+    </div>
+</header>
+<div id="mobile-all-container">
     <div id="userlists">
         <button onclick="renderUserGifs('juliamemes')">Julia</button>
         <button onclick="renderUserGifs('nsf')">NSF</button>
@@ -18,18 +26,12 @@
         <button onclick="renderUserGifs('dec')">DEC</button>
         <button onclick="renderUserGifs('ius')">IUS</button>
     </div>
-    <div id="controls">
-        <button onclick="renderFavoritesView(null, 'results')">⭐</button>
-        <button onclick="showHistory()">📜</button>
-        <button onclick="fetchRandomEmotes(30)">🎲</button>
-        <button onclick="showSettings()">⚙️</button>
-    </div>
-</header>
+    <section id="results">
+        <!-- Example card, will be replaced by JS -->
+        <!-- <div class="emote-card"><img src="..." /><div class="emote-label">slug123</div></div> -->
+    </section>
+</div>
 
-<section id="results">
-    <!-- Example card, will be replaced by JS -->
-    <!-- <div class="emote-card"><img src="..." /><div class="emote-label">slug123</div></div> -->
-</section>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="random.js"></script>

@@ -29,7 +29,7 @@ header {
     top: 0;
     z-index: 10;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     height: 4rem;
 }
@@ -140,7 +140,8 @@ header {
     z-index: 2;
 }
 
-header button {
+#userlists button,
+header button{
     background: none;
     border: none;
     color: var(--accent);
@@ -148,4 +149,11 @@ header button {
     font-size: 20px;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
+}
+
+#userlists {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
 }
