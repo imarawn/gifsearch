@@ -145,7 +145,7 @@ header button {
     border: none;
     color: var(--accent);
     cursor: pointer;
-    height: 2rem;
-    width: 2rem;
-    margin: 0.5rem;
+    font-size: 2rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
