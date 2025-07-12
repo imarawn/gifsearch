@@ -1,7 +1,7 @@
-async function renderFavoritesView(selectedList = '') {
+async function renderFavoritesView(selectedList = '', pickerDiv = 'userGifs') {
     cleanupFavoritesView()
     const resultsDiv = document.getElementById('results');
-    const userGifDiv = document.getElementById('userGifs');
+    const userGifDiv = document.getElementById(pickerDiv);
     resultsDiv.innerHTML = '📦 Loading Favorites...';
 
     const secret = localStorage.getItem('emote_secret')?.trim();
