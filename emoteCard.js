@@ -85,7 +85,7 @@ function emoteCard(emote, targetElement, {
     // --- Slug ---
     const slug = document.createElement('div');
     slug.className = 'slug';
-    slug.textContent = `:${emote.slug}`;
+    slug.textContent = `:${emote.search_slug}`;
     card.appendChild(slug);
 
     // --- Editable List Input ---
@@ -108,19 +108,19 @@ function emoteCard(emote, targetElement, {
     card.style.cursor = 'pointer';
     card.title = 'Click to copy slug';
     card.addEventListener('click', () => {
-        const slugToCopy = `:${emote.slug}`;
+        const slugToCopy = `:${emote.search_slug}`;
         navigator.clipboard.writeText(slugToCopy).then(() => {
             card.classList.add('copied');
             setTimeout(() => card.classList.remove('copied'), 1000);
         });
 
         const history = JSON.parse(localStorage.getItem('emoteHistory') || '[]');
-        const alreadyIn = history.some(e => e.slug === emote.slug);
+        const alreadyIn = history.some(e => e.search_slug === emote.search_slug);
         if (!alreadyIn) {
             history.push({
                 slug: emote.slug,
                 url: emote.url,
-                search_slug: emote.search_slug || emote.slug,
+                search_slug: emote.search_slug,
                 timestamp: Date.now()
             });
             localStorage.setItem('emoteHistory', JSON.stringify(history));
@@ -137,7 +137,7 @@ function emoteCard(emote, targetElement, {
             card.remove();
 
             const fullHistory = JSON.parse(localStorage.getItem('emoteHistory') || '[]');
-            const filtered = fullHistory.filter(h => h.slug !== emote.slug);
+            const filtered = fullHistory.filter(h => h.search_slug !== emote.search_slug);
             localStorage.setItem('emoteHistory', JSON.stringify(filtered));
         });
         card.appendChild(deleteBtn);
