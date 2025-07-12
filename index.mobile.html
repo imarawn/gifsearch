@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>GIF Search</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
-    <link rel="stylesheet" href="style.css" >
+    <link rel="stylesheet" href="style.mobile.css" >
 </head>
 <body>
 
 <header>
-    <div class="tag-filter">
+    <div class="">
         <button onclick="renderUserGifs('juliamemes')">Julia</button>
         <button onclick="renderUserGifs('nsf')">NSF</button>
         <button onclick="renderUserGifs('tsi')">TSI</button>
@@ -19,7 +19,7 @@
         <button onclick="renderUserGifs('ius')">IUS</button>
     </div>
 
-    <div class="tag-filter" style="margin-top: 0.75rem;">
+    <div class="" style="margin-top: 0.75rem;">
         <button onclick="renderFavoritesView()">⭐</button>
         <button onclick="showHistory()">📜</button>
         <button onclick="fetchRandomEmotes()">🎲</button>
@@ -35,7 +35,7 @@
 </section>
 
 <footer>
-    &copy; 2025 gifsearch – Mobile UI inspired ✨
+    2025
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
