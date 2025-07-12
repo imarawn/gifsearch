@@ -109,6 +109,8 @@
         loadEmotes();
     }
 
+    let currentSlug = null;
+
     async function loadEmotes() {
         const { data, error } = await supabase
             .from('random_emotes')
@@ -124,6 +126,7 @@
         }
 
         data.forEach(emote => {
+            currentSlug = emote.search_slug;
             const row = document.createElement('div');
             row.style = 'margin-top: 2rem; display: flex; align-items: center; gap: 1rem; background: #222; padding: 1rem; border-radius: 12px; width: 100%;';
 
@@ -154,6 +157,12 @@
         if (!error) loadEmotes();
         else alert('❌ Failed to update visibility: ' + error.message);
     }
+
+    document.addEventListener('keydown', (e) => {
+        if (!currentSlug) return;
+        if (e.key === 'a') setVisibility(currentSlug, true);   // show
+        if (e.key === 's') setVisibility(currentSlug, false);  // hide
+    });
 </script>
 
 </body>
