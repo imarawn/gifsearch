@@ -1,4 +1,4 @@
-async function fetchRandomEmotes() {
+async function fetchRandomEmotes(count = 100) {
     cleanupFavoritesView()
     const results = document.getElementById('results');
     results.innerHTML = '🔄 Loading...';
@@ -7,7 +7,7 @@ async function fetchRandomEmotes() {
         .from('random_emotes')
         .select('*')
         .eq('is_visible', true)
-        .limit(100);
+        .limit(count);
 
     results.innerHTML = '';
     if (error || !data?.length) {

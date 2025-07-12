@@ -28,9 +28,6 @@ header {
     position: sticky;
     top: 0;
     z-index: 10;
-}
-
-.header-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -109,7 +106,7 @@ header {
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
     margin-bottom: 5rem;
     margin-left: auto;
-    margin-right: 1%;
+    margin-right: auto;
     height: 300px;
     width: 300px;
 }
@@ -130,15 +127,6 @@ header {
     color: var(--text);
 }
 
-footer {
-    text-align: center;
-    padding: 1rem;
-    font-size: 0.8rem;
-    color: #666;
-    background: #111;
-    border-top: 1px solid #333;
-}
-
 .fav-btn {
     position: absolute;
     top: 8px;
@@ -149,4 +137,11 @@ footer {
     color: var(--accent);
     cursor: pointer;
     z-index: 2;
+}
+
+header button {
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
 }

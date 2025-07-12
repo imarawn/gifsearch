@@ -10,7 +10,7 @@
 <body>
 
 <header>
-    <div class="">
+    <div id="userlists">
         <button onclick="renderUserGifs('juliamemes')">Julia</button>
         <button onclick="renderUserGifs('nsf')">NSF</button>
         <button onclick="renderUserGifs('tsi')">TSI</button>
@@ -18,25 +18,19 @@
         <button onclick="renderUserGifs('dec')">DEC</button>
         <button onclick="renderUserGifs('ius')">IUS</button>
     </div>
-
-    <div class="" style="margin-top: 0.75rem;">
+    <input type="text" id="manual-slug-input2" placeholder="Enter slug...">
+    <div id="controls">
         <button onclick="renderFavoritesView(null, 'results')">⭐</button>
         <button onclick="showHistory()">📜</button>
-        <button onclick="fetchRandomEmotes()">🎲</button>
+        <button onclick="fetchRandomEmotes(30)">🎲</button>
         <button onclick="showSettings()">⚙️</button>
     </div>
-
-    <input type="text" id="manual-slug-input2" placeholder="Enter slug...">
 </header>
 
 <section id="results">
     <!-- Example card, will be replaced by JS -->
     <!-- <div class="emote-card"><img src="..." /><div class="emote-label">slug123</div></div> -->
 </section>
-
-<footer>
-    2025
-</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="random.js"></script>
