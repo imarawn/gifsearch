@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Admin Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0e0e0e;
+            color: #eee;
+            padding: 2rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .card {
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 400px;
+            margin: 2rem auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border: none;
+            border-radius: 8px;
+            background: #2d2d2d;
+            color: #eee;
+        }
+
+        button {
+            padding: 0.75rem 1.25rem;
+            background: #4ade80;
+            color: #000;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4ade80;
+        }
+    </style>
+</head>
+<body>
+
+<div id="login-view" class="card">
+    <h1>Admin Login</h1>
+    <input type="email" id="email" placeholder="Email" autocomplete="username">
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password">
+    <button onclick="signIn()">🔐 Log In</button>
+    <div id="login-message"></div>
+</div>
+
+<div id="admin-view" class="card hidden">
+    <h1>Admin Panel</h1>
+    <button onclick="loadEmotes()">🔄 Load Emotes</button>
+    <div id="emote-list"></div>
+</div>
+
+<script src="helper.js"></script>
+<script>
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+            const role = session.user?.user_metadata?.role;
+            if (role === 'admin') {
+                document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('admin-view').classList.remove('hidden');
+                loadEmotes();
+            }
+        }
+    });
+
+    async function signIn() {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+        if (error) {
+            document.getElementById('login-message').textContent = '❌ Login failed: ' + error.message;
+            return;
+        }
+
+        const { user } = data;
+        const role = user?.user_metadata?.role;
+
+        if (role !== 'admin') {
+            document.getElementById('login-message').textContent = '🚫 Access denied: Not an admin';
+            await supabase.auth.signOut();
+            return;
+        }
+
+        document.getElementById('login-view').classList.add('hidden');
+        document.getElementById('admin-view').classList.remove('hidden');
+        loadEmotes();
+    }
+
+    async function loadEmotes() {
+        const { data, error } = await supabase
+            .from('random_emotes')
+            .select('search_slug, url')
+            .limit(1);
+
+        const container = document.getElementById('emote-list');
+        container.innerHTML = '';
+
+        if (error) {
+            container.innerHTML = `<p style="color:red;">❌ Failed to load emotes: ${error.message}</p>`;
+            return;
+        }
+
+        data.forEach(emote => {
+            const row = document.createElement('div');
+            row.style = 'margin-top: 2rem; display: flex; align-items: center; gap: 1rem; background: #222; padding: 1rem; border-radius: 12px; width: 100%;';
+
+            row.innerHTML = `
+        <img
+  src="${emote.url}"
+  alt="${emote.search_slug}"
+  style="width: 160px; height: auto; border-radius: 8px; transition: transform 0.3s ease; cursor: zoom-in;"
+  onmouseover="this.style.transform='scale(3)'"
+  onmouseout="this.style.transform='scale(1)'"
+/>
+        <div style="flex:1;">
+          <strong>${emote.search_slug}</strong><br>
+          <button onclick="setVisibility('${emote.search_slug}', true)">✅ Show</button>
+          <button onclick="setVisibility('${emote.search_slug}', false)">🚫 Hide</button>
+        </div>
+      `;
+            container.appendChild(row);
+        });
+    }
+
+    async function setVisibility(slug, visible) {
+        const { error } = await supabase
+            .from('emotes')
+            .update({ is_visible: visible })
+            .eq('search_slug', slug);
+
+        if (!error) loadEmotes();
+        else alert('❌ Failed to update visibility: ' + error.message);
+    }
+</script>
+
+</body>
+</html>
