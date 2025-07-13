@@ -59,7 +59,8 @@
 <div id="login-view" class="card">
     <h1>Admin Login</h1>
     <label for="email"></label><input type="email" id="email" placeholder="Email" autocomplete="username">
-    <label for="password"></label><input type="password" id="password" placeholder="Password" autocomplete="current-password">
+    <label for="password"></label><input type="password" id="password" placeholder="Password"
+                                         autocomplete="current-password">
     <button onclick="signIn()">🔐 Log In</button>
     <div id="login-message"></div>
 </div>
@@ -71,15 +72,17 @@
 </div>
 <div id="review-low-confidence" class="card">
     <h2>🧠 Low-Confidence Emotes Review</h2>
-    <button id="load-low-confidence-btn" onclick="showLowConfidenceReviewPanel()">🔍 Load Emotes with Score &lt; 0.9</button>
+    <button id="load-low-confidence-btn" onclick="showLowConfidenceReviewPanel()">🔍 Load Emotes with Score &lt; 0.9
+    </button>
     <div id="low-confidence-results" style="margin-top: 1rem;"></div>
 </div>
 <div id="key-setup" style="margin: 2rem auto; max-width: 400px;">
-    <label>Key to Keep: <input id="key-1" type="text" maxlength="1" placeholder="e.g. A" /></label><br><br>
-    <label>Key to Hide: <input id="key-2" type="text" maxlength="1" placeholder="e.g. D" /></label><br><br>
+    <label>Key to Keep: <input id="key-1" type="text" maxlength="1" placeholder="e.g. A"/></label><br><br>
+    <label>Key to Hide: <input id="key-2" type="text" maxlength="1" placeholder="e.g. D"/></label><br><br>
     <button onclick="saveKeys()">💾 Save Keys</button>
 </div>
-<button id="back-to-home" style="
+<div id="back" style="margin: 2rem auto; max-width: 400px;">
+    <button id="back-to-home" style="
     position: fixed;
     top: 1rem;
     left: 1rem;
@@ -91,13 +94,14 @@
     cursor: pointer;
     z-index: 999;
 ">
-    ⬅️ Back to Home
-</button>
+        ⬅️ Back to Home
+    </button>
+</div>
 
 <script src="helper.js"></script>
 <script>
     // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({data: {session}}) => {
         if (session) {
             const role = session.user?.user_metadata?.role;
             if (role === 'admin') {
@@ -112,14 +116,14 @@
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value.trim();
 
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        const {data, error} = await supabase.auth.signInWithPassword({email, password});
 
         if (error) {
             document.getElementById('login-message').textContent = '❌ Login failed: ' + error.message;
             return;
         }
 
-        const { user } = data;
+        const {user} = data;
         const role = user?.user_metadata?.role;
 
         if (role !== 'admin') {
@@ -136,7 +140,7 @@
     let currentSlug = null;
 
     async function loadEmotes() {
-        const { data, error } = await supabase
+        const {data, error} = await supabase
             .from('random_emotes')
             .select('search_slug, url')
             .is('nsfw_label', null)
@@ -174,7 +178,7 @@
     }
 
     async function setVisibility(slug, visible, elementToRemove = null) {
-        const { error } = await supabase
+        const {error} = await supabase
             .from('emotes')
             .update({
                 is_visible: visible,
@@ -227,7 +231,7 @@
         const slug = currentReviewSlug;
         currentReviewSlug = null;
 
-        const { error } = await supabase
+        const {error} = await supabase
             .from('emotes')
             .update({
                 is_visible: visible,
@@ -291,9 +295,9 @@
             .from('emotes')
             .select('search_slug, url, nsfw_score')
             .lt('nsfw_score', 0.9)
-            .order('nsfw_score', { ascending: true })
+            .order('nsfw_score', {ascending: true})
             .limit(100)
-            .then(({ data, error }) => {
+            .then(({data, error}) => {
                 if (error) {
                     container.innerHTML = `<p style="color:red;">❌ Failed to load: ${error.message}</p>`;
                     btn.textContent = '❌ Error';
