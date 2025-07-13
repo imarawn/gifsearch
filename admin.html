@@ -157,7 +157,12 @@
     async function setVisibility(slug, visible) {
         const { error } = await supabase
             .from('emotes')
-            .update({ is_visible: visible })
+            .update({
+                is_visible: visible,
+                nsfw_label: visible ? 'sfw' : 'nsfw',
+                llm_nsfw_reason: visible ? 'user marked as safe' : 'user marked as nsfw',
+                nsfw_checked_at: new Date().toISOString()
+            })
             .eq('search_slug', slug);
 
         if (!error) loadEmotes();
