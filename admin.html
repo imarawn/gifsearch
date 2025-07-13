@@ -69,7 +69,11 @@
     <button onclick="loadEmotes()">🔄 Load Emotes</button>
     <div id="emote-list"></div>
 </div>
-
+<div id="review-low-confidence" class="card">
+    <h2>🧠 Low-Confidence Emotes Review</h2>
+    <button id="load-low-confidence-btn" onclick="showLowConfidenceReviewPanel()">🔍 Load Emotes with Score &lt; 0.9</button>
+    <div id="low-confidence-results" style="margin-top: 1rem;"></div>
+</div>
 <div id="key-setup" style="margin: 2rem auto; max-width: 400px;">
     <label>Key to Keep: <input id="key-1" type="text" maxlength="1" placeholder="e.g. A" /></label><br><br>
     <label>Key to Hide: <input id="key-2" type="text" maxlength="1" placeholder="e.g. D" /></label><br><br>
@@ -154,20 +158,30 @@
         });
     }
 
-    async function setVisibility(slug, visible) {
+    async function setVisibility(slug, visible, elementToRemove = null) {
         const { error } = await supabase
             .from('emotes')
             .update({
                 is_visible: visible,
                 nsfw_label: visible ? 'sfw' : 'nsfw',
                 llm_nsfw_reason: visible ? 'user marked as safe' : 'user marked as nsfw',
+                nsfw_score: 1,
                 nsfw_checked_at: new Date().toISOString()
             })
             .eq('search_slug', slug);
 
-        if (!error) loadEmotes();
-        else alert('❌ Failed to update visibility: ' + error.message);
+        if (error) {
+            alert('❌ Failed to update visibility: ' + error.message);
+            return;
+        }
+
+        if (elementToRemove) {
+            elementToRemove.remove();
+        } else {
+            loadEmotes();
+        }
     }
+
 
     function saveKeys() {
         const key1 = document.getElementById('key-1').value.trim().toLowerCase();
@@ -190,6 +204,79 @@
             setVisibility(currentSlug, false);
         }
     });
+
+    function showLowConfidenceReviewPanel() {
+        document.getElementById('load-low-confidence-btn').onclick = async () => {
+            const btn = document.getElementById('load-low-confidence-btn');
+            const container = document.getElementById('low-confidence-results');
+            container.innerHTML = '';
+            btn.disabled = true;
+            btn.textContent = '⏳ Loading...';
+
+            const { data, error } = await supabase
+                .from('emotes')
+                .select('search_slug, url, nsfw_score')
+                .lt('nsfw_score', 0.9)
+                .order('nsfw_score', { ascending: true })
+
+            if (error) {
+                container.innerHTML = `<p style="color:red;">❌ Failed to load: ${error.message}</p>`;
+                btn.textContent = '❌ Error';
+                return;
+            }
+
+            if (!data.length) {
+                container.innerHTML = `<p>No low-confidence emotes found ✅</p>`;
+                btn.textContent = '🔍 Load Again';
+                btn.disabled = false;
+                return;
+            }
+
+            const grid = document.createElement('div');
+            grid.style.display = 'grid';
+            grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(150px, 1fr))';
+            grid.style.gap = '1rem';
+
+            data.forEach(({ search_slug, url, nsfw_score }) => {
+                const card = document.createElement('div');
+                card.style.background = '#111';
+                card.style.padding = '0.5rem';
+                card.style.borderRadius = '8px';
+                card.style.textAlign = 'center';
+
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = search_slug;
+                img.style.maxWidth = '100%';
+                img.style.borderRadius = '6px';
+
+                const score = document.createElement('div');
+                score.textContent = `Score: ${nsfw_score.toFixed(3)}`;
+                score.style.margin = '0.5rem 0';
+
+                const btnSFW = document.createElement('button');
+                btnSFW.textContent = '✅ SFW';
+                btnSFW.onclick = () => setVisibility(search_slug, true, card);
+
+                const btnNSFW = document.createElement('button');
+                btnNSFW.textContent = '🚫 NSFW';
+                btnNSFW.onclick = () => setVisibility(search_slug, false, card);
+
+                btnSFW.style.marginRight = '0.5rem';
+
+                card.appendChild(img);
+                card.appendChild(score);
+                card.appendChild(btnSFW);
+                card.appendChild(btnNSFW);
+                grid.appendChild(card);
+            });
+
+            container.appendChild(grid);
+            btn.textContent = '🔍 Load Again';
+            btn.disabled = false;
+        };
+    }
+
 </script>
 
 </body>
