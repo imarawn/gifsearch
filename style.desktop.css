@@ -92,10 +92,6 @@ main {
     position: relative;
 }
 
-.emote-card:hover {
-    transform: translateY(-4px);
-}
-
 .emote-card img {
     max-width: 100%;
     max-height: 120px;

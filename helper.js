@@ -22,7 +22,7 @@ async function handleFavorite(emote, button) {
             const username_hash = await getUserHash(username, password);
 
             const { error } = await supabase.from('user_favorites').insert({
-                slug: emote.slug,
+                search_slug: emote.slug,
                 url: emote.url,
                 username_hash,
                 secret_key: secret
@@ -47,7 +47,7 @@ async function handleFavorite(emote, button) {
 
 function saveLocally(emote) {
     const fav = {
-        slug: emote.slug,
+        search_slug: emote.search_slug,
         url: emote.url,
         timestamp: Date.now(),
     };
