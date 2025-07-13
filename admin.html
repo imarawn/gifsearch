@@ -218,6 +218,7 @@
                 .select('search_slug, url, nsfw_score')
                 .lt('nsfw_score', 0.9)
                 .order('nsfw_score', { ascending: true })
+                .limit(100)
 
             if (error) {
                 container.innerHTML = `<p style="color:red;">❌ Failed to load: ${error.message}</p>`;
