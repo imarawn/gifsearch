@@ -12,7 +12,10 @@ function showHistory() {
     }
 
     history.forEach(emote => {
-        emoteCard(emote, results, {
+        emoteCard({
+            ...emote,
+            slug: emote.search_slug
+        }, results, {
             isHistoryView: true
         });
     });
