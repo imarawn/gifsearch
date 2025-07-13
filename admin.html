@@ -70,6 +70,12 @@
     <div id="emote-list"></div>
 </div>
 
+<div id="key-setup" style="margin: 2rem auto; max-width: 400px;">
+    <label>Key to Keep: <input id="key-1" type="text" maxlength="1" placeholder="e.g. A" /></label><br><br>
+    <label>Key to Hide: <input id="key-2" type="text" maxlength="1" placeholder="e.g. D" /></label><br><br>
+    <button onclick="saveKeys()">💾 Save Keys</button>
+</div>
+
 <script src="helper.js"></script>
 <script>
     // Check for existing session
@@ -158,10 +164,26 @@
         else alert('❌ Failed to update visibility: ' + error.message);
     }
 
+    function saveKeys() {
+        const key1 = document.getElementById('key-1').value.trim().toLowerCase();
+        const key2 = document.getElementById('key-2').value.trim().toLowerCase();
+        localStorage.setItem('action_key_1', key1);
+        localStorage.setItem('action_key_2', key2);
+        alert(`✅ Keys saved: [${key1}] for action 1, [${key2}] for action 2`);
+    }
+
     document.addEventListener('keydown', (e) => {
+        const key = e.key.toLowerCase();
+        const key1 = localStorage.getItem('action_key_1') || 'a';
+        const key2 = localStorage.getItem('action_key_2') || 's';
+
         if (!currentSlug) return;
-        if (e.key === 'a') setVisibility(currentSlug, true);   // show
-        if (e.key === 's') setVisibility(currentSlug, false);  // hide
+
+        if (key === key1) {
+            setVisibility(currentSlug, true);
+        } else if (key === key2) {
+            setVisibility(currentSlug, false);
+        }
     });
 </script>
 
