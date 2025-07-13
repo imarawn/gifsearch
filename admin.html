@@ -79,6 +79,20 @@
     <label>Key to Hide: <input id="key-2" type="text" maxlength="1" placeholder="e.g. D" /></label><br><br>
     <button onclick="saveKeys()">💾 Save Keys</button>
 </div>
+<button id="back-to-home" style="
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    padding: 0.5rem 1rem;
+    background: #444;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    z-index: 999;
+">
+    ⬅️ Back to Home
+</button>
 
 <script src="helper.js"></script>
 <script>
@@ -294,6 +308,9 @@
     }
 
 
+    document.getElementById('back-to-home').addEventListener('click', () => {
+        window.location.href = 'index.html';
+    });
 </script>
 
 </body>

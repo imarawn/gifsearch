@@ -125,4 +125,25 @@ function showSettings() {
         }
     });
 
+    // Panel 5 – Admin Panel Link
+    const panel5 = document.createElement('div');
+    panel5.id = 'admin-panel';
+    panel5.style.padding = '1rem';
+    panel5.style.border = '1px solid #666';
+    panel5.style.background = '#222';
+    panel5.style.marginTop = '1rem';
+    panel5.style.borderRadius = '8px';
+
+    panel5.innerHTML = `
+  <h3 style="margin-bottom:0.5rem;">🛠️ Admin Panel</h3>
+  <p>Open the advanced admin interface for reviewing emotes and managing visibility.</p>
+  <button id="open-admin-panel" style="margin-top:0.5rem;">🔓 Open Admin Panel</button>
+`;
+
+    results.appendChild(panel5);
+
+    document.getElementById('open-admin-panel').addEventListener('click', () => {
+        window.open('admin.html', '_blank');
+    });
+
 }
