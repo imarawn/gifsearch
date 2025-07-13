@@ -206,78 +206,93 @@
         }
     });
 
+    let lowConfidenceQueue = [];
+    let currentReviewSlug = null;
+
+    async function handleReviewDecision(visible) {
+        const slug = currentReviewSlug;
+        currentReviewSlug = null;
+
+        const { error } = await supabase
+            .from('emotes')
+            .update({
+                is_visible: visible,
+                nsfw_label: visible ? 'sfw' : 'nsfw',
+                llm_nsfw_reason: visible ? 'user marked as safe' : 'user marked as nsfw',
+                nsfw_checked_at: new Date().toISOString(),
+                nsfw_score: 1
+            })
+            .eq('search_slug', slug);
+
+        if (error) {
+            alert('❌ Failed to update visibility: ' + error.message);
+            return;
+        }
+
+        showNextLowConfidenceEmote();
+    }
+
+    function showNextLowConfidenceEmote() {
+        const container = document.getElementById('low-confidence-results');
+        container.innerHTML = '';
+        if (!lowConfidenceQueue.length) {
+            container.innerHTML = `<p>No more emotes to review ✅</p>`;
+            return;
+        }
+
+        const emote = lowConfidenceQueue.shift();
+        currentReviewSlug = emote.search_slug;
+
+        const row = document.createElement('div');
+        row.style = 'margin-top: 2rem; display: flex; align-items: center; gap: 1rem; background: #222; padding: 1rem; border-radius: 12px; width: 100%;';
+
+        row.innerHTML = `
+        <img
+            src="${emote.url}"
+            alt="${emote.search_slug}"
+            style="width: 160px; height: auto; border-radius: 8px; transition: transform 0.3s ease; cursor: zoom-in;"
+            onmouseover="this.style.transform='scale(3)'"
+            onmouseout="this.style.transform='scale(1)'"
+        />
+        <div style="flex:1;">
+            <strong>${emote.search_slug}</strong><br>
+            <em>Score: ${emote.nsfw_score.toFixed(3)}</em><br>
+            <button onclick="handleReviewDecision(true)">✅ Show</button>
+            <button onclick="handleReviewDecision(false)">🚫 Hide</button>
+        </div>
+    `;
+
+        container.appendChild(row);
+    }
+
     function showLowConfidenceReviewPanel() {
-        document.getElementById('load-low-confidence-btn').onclick = async () => {
-            const btn = document.getElementById('load-low-confidence-btn');
-            const container = document.getElementById('low-confidence-results');
-            container.innerHTML = '';
-            btn.disabled = true;
-            btn.textContent = '⏳ Loading...';
+        const btn = document.getElementById('load-low-confidence-btn');
+        const container = document.getElementById('low-confidence-results');
 
-            const { data, error } = await supabase
-                .from('emotes')
-                .select('search_slug, url, nsfw_score')
-                .lt('nsfw_score', 0.9)
-                .order('nsfw_score', { ascending: true })
-                .limit(100)
+        btn.disabled = true;
+        btn.textContent = '⏳ Loading...';
+        container.innerHTML = '';
 
-            if (error) {
-                container.innerHTML = `<p style="color:red;">❌ Failed to load: ${error.message}</p>`;
-                btn.textContent = '❌ Error';
-                return;
-            }
+        supabase
+            .from('emotes')
+            .select('search_slug, url, nsfw_score')
+            .lt('nsfw_score', 0.9)
+            .order('nsfw_score', { ascending: true })
+            .limit(20)
+            .then(({ data, error }) => {
+                if (error) {
+                    container.innerHTML = `<p style="color:red;">❌ Failed to load: ${error.message}</p>`;
+                    btn.textContent = '❌ Error';
+                    return;
+                }
 
-            if (!data.length) {
-                container.innerHTML = `<p>No low-confidence emotes found ✅</p>`;
+                lowConfidenceQueue = data;
                 btn.textContent = '🔍 Load Again';
                 btn.disabled = false;
-                return;
-            }
-
-            const grid = document.createElement('div');
-            grid.style.display = 'grid';
-            grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(150px, 1fr))';
-            grid.style.gap = '1rem';
-
-            data.forEach(({ search_slug, url, nsfw_score }) => {
-                const card = document.createElement('div');
-                card.style.background = '#111';
-                card.style.padding = '0.5rem';
-                card.style.borderRadius = '8px';
-                card.style.textAlign = 'center';
-
-                const img = document.createElement('img');
-                img.src = url;
-                img.alt = search_slug;
-                img.style.maxWidth = '100%';
-                img.style.borderRadius = '6px';
-
-                const score = document.createElement('div');
-                score.textContent = `Score: ${nsfw_score.toFixed(3)}`;
-                score.style.margin = '0.5rem 0';
-
-                const btnSFW = document.createElement('button');
-                btnSFW.textContent = '✅ SFW';
-                btnSFW.onclick = () => setVisibility(search_slug, true, card);
-
-                const btnNSFW = document.createElement('button');
-                btnNSFW.textContent = '🚫 NSFW';
-                btnNSFW.onclick = () => setVisibility(search_slug, false, card);
-
-                btnSFW.style.marginRight = '0.5rem';
-
-                card.appendChild(img);
-                card.appendChild(score);
-                card.appendChild(btnSFW);
-                card.appendChild(btnNSFW);
-                grid.appendChild(card);
+                showNextLowConfidenceEmote();
             });
-
-            container.appendChild(grid);
-            btn.textContent = '🔍 Load Again';
-            btn.disabled = false;
-        };
     }
+
 
 </script>
 
