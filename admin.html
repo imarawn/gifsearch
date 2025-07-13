@@ -125,7 +125,8 @@
         const { data, error } = await supabase
             .from('random_emotes')
             .select('search_slug, url')
-            .limit(1);
+            .is('nsfw_label', null)
+            .limit(1)
 
         const container = document.getElementById('emote-list');
         container.innerHTML = '';
