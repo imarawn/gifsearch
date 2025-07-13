@@ -32,7 +32,7 @@ function emoteCard(emote, targetElement, {
                     if (secret && username && password) {
                         const username_hash = await getUserHash(username, password);
                         await supabase.from('user_favorites').insert({
-                            slug: finalEmote.slug,
+                            search_slug: finalEmote.search_slug,
                             url: finalEmote.url,
                             list: finalEmote.list,
                             secret_key: secret,
