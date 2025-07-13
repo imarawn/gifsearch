@@ -14,7 +14,7 @@ function showHistory() {
     history.forEach(emote => {
         emoteCard({
             ...emote,
-            slug: emote.search_slug
+            search_slug: emote.slug
         }, results, {
             isHistoryView: true
         });
