@@ -157,3 +157,32 @@ header button{
     margin-bottom: 1rem;
     margin-top: 1rem;
 }
+
+.setting-button {
+    padding: 0.75rem 1.25rem;
+    background: #4ade80;
+    color: #000;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 0.5rem;
+    transition: background 0.3s ease;
+}
+
+.danger-button {
+    padding: 0.75rem 1.25rem;
+    background: #600;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 0.5rem;
+    transition: background 0.3s ease;
+}
+.danger-button:hover {
+    background: #a00;
+}
