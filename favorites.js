@@ -20,9 +20,8 @@ async function renderFavoritesView(selectedList = '', pickerDiv = 'userGifs') {
 
         const { data, error } = await supabase
             .from('user_favorites')
-            .select('slug, url, list')
+            .select('search_slug, url, list')
             .eq('username_hash', username_hash)
-            .eq('secret_key', secret);
 
         if (error) {
             console.error('❌ Failed to fetch remote favorites:', error);
@@ -73,7 +72,7 @@ async function renderFavoritesView(selectedList = '', pickerDiv = 'userGifs') {
             await supabase
                 .from('user_favorites')
                 .delete()
-                .eq('slug', emote.slug)
+                .eq('search_slug', emote.search_slug)
                 .eq('username_hash', username_hash)
                 .eq('secret_key', secret);
         } else {
@@ -88,7 +87,7 @@ async function renderFavoritesView(selectedList = '', pickerDiv = 'userGifs') {
             await supabase
                 .from('user_favorites')
                 .update({ list: newList })
-                .eq('slug', emote.slug)
+                .eq('search_slug', emote.search_slug)
                 .eq('username_hash', username_hash)
                 .eq('secret_key', secret);
         } else {
@@ -152,7 +151,7 @@ function saveToFavorites(emote) {
         if (secret && username && password) {
             const username_hash = await getUserHash(username, password);
             await supabase.from('user_favorites').insert({
-                slug: finalEmote.slug,
+                search_slug: finalEmote.search_slug,
                 url: finalEmote.url,
                 list: finalEmote.list,
                 secret_key: secret,
