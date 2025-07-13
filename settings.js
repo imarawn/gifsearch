@@ -99,4 +99,30 @@ function showSettings() {
 
         alert('✅ Settings saved');
     });
+
+    // Panel 4 – Clear History
+    const panel4 = document.createElement('div');
+    panel4.id = 'clear-history-panel';
+    panel4.style.padding = '1rem';
+    panel4.style.border = '1px solid #666';
+    panel4.style.background = '#222';
+    panel4.style.marginTop = '1rem';
+    panel4.style.borderRadius = '8px';
+
+    panel4.innerHTML = `
+  <h3 style="margin-bottom:0.5rem;">🧹 Clear History</h3>
+  <p>This will permanently delete your entire emote usage history.</p>
+  <button id="clear-history-btn" style="margin-top:0.5rem; background:#600; color:#fff;">🗑️ Delete History</button>
+`;
+
+    results.appendChild(panel4);
+
+    document.getElementById('clear-history-btn').addEventListener('click', () => {
+        const confirmClear = confirm('⚠️ Are you sure you want to delete ALL emote history?');
+        if (confirmClear) {
+            localStorage.removeItem('emoteHistory');
+            alert('✅ History deleted');
+        }
+    });
+
 }
