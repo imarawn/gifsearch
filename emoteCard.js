@@ -109,6 +109,7 @@ function emoteCard(emote, targetElement, {
     card.title = 'Click to copy slug';
     card.addEventListener('click', () => {
         const slugToCopy = `:${emote.search_slug}`;
+        console.log(slugToCopy);
         navigator.clipboard.writeText(slugToCopy).then(() => {
             card.classList.add('copied');
             setTimeout(() => card.classList.remove('copied'), 1000);
@@ -134,6 +135,7 @@ function emoteCard(emote, targetElement, {
         deleteBtn.title = 'Remove from history';
         deleteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
+            console.log('🧹 Delete button clicked for', emote);
             card.remove();
 
             const fullHistory = JSON.parse(localStorage.getItem('emoteHistory') || '[]');
