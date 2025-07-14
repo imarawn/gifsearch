@@ -84,7 +84,12 @@
             max-height: 150px;
             object-fit: contain;
             border-radius: 8px;
-            transition: transform 0.3s ease;
+        }
+
+        .ai-panel img:hover {
+            transform: none !important;
+            z-index: auto !important;
+            position: static !important;
         }
 
         .ai-description-text {
@@ -99,6 +104,46 @@
             z-index: 10;
             position: relative;
         }
+
+        .flip-card {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            min-height: 180px;
+            transition: transform 0.6s ease;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            min-height: 180px;
+            padding: 1rem;
+            box-sizing: border-box;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            background: #2a2a2a;
+            color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
     </style>
 </head>
 <body>
@@ -151,7 +196,7 @@
         const preview = document.getElementById('ai-description-preview');
         preview.innerHTML = '⏳ Loading...';
 
-        const { data, error } = await supabase
+        const {data, error} = await supabase
             .from('view_ai_described_emotes')
             .select('search_slug, url, description')
             .limit(1);
@@ -163,27 +208,32 @@
 
         const emote = data[0];
 
-        const imageCard = document.createElement('div');
-        imageCard.className = 'ai-card';
-        imageCard.style.width = '300px';
-        imageCard.innerHTML = `<img src="${emote.url}" alt="${emote.search_slug}" />`;
+        const flipCard = document.createElement('div');
+        flipCard.className = 'flip-card';
+        flipCard.onclick = () => flipCard.classList.toggle('flipped');
 
-        const descriptionCard = document.createElement('div');
-        descriptionCard.className = 'ai-card';
-        descriptionCard.style.maxWidth = '400px';
-        descriptionCard.innerHTML = `<p class="ai-description-text">"${emote.description}"</p>`;
+        flipCard.innerHTML = `
+        <div class="flip-card-inner">
+            <div class="flip-card-front">
+                <p class="ai-description-text">"${emote.description}"</p>
+            </div>
+            <div class="flip-card-back">
+                <img src="${emote.url}" alt="${emote.search_slug}" style="max-height: 150px;" />
+            </div>
+        </div>
+    `;
 
         preview.innerHTML = '';
-        preview.appendChild(imageCard);
-        preview.appendChild(descriptionCard);
+        preview.appendChild(flipCard);
     }
+
 
     // Emote Review Logic
     async function loadEmotes() {
         const container = document.getElementById('emote-list');
         container.innerHTML = '⏳ Loading...';
 
-        const { data, error } = await supabase
+        const {data, error} = await supabase
             .from('random_emotes')
             .select('search_slug, url')
             .is('nsfw_label', null)
@@ -213,7 +263,7 @@
     }
 
     async function setVisibility(slug, visible) {
-        const { error } = await supabase
+        const {error} = await supabase
             .from('emotes')
             .update({
                 is_visible: visible,
@@ -241,9 +291,9 @@
             .from('emotes')
             .select('search_slug, url, nsfw_score')
             .lt('nsfw_score', 0.9)
-            .order('nsfw_score', { ascending: true })
+            .order('nsfw_score', {ascending: true})
             .limit(100)
-            .then(({ data, error }) => {
+            .then(({data, error}) => {
                 if (error) {
                     container.innerHTML = `<p style="color:red;">❌ Failed to load: ${error.message}</p>`;
                     btn.textContent = '❌ Error';
@@ -288,7 +338,7 @@
         const slug = currentReviewSlug;
         currentReviewSlug = null;
 
-        const { error } = await supabase
+        const {error} = await supabase
             .from('emotes')
             .update({
                 is_visible: visible,
