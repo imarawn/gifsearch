@@ -228,7 +228,7 @@
         container.innerHTML = '⏳ Loading...';
 
         const {data, error} = await supabase
-            .from('random_emotes')
+            .from('review')
             .select('search_slug, url')
             .is('nsfw_label', null)
             .limit(1);
