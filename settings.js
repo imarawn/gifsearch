@@ -115,7 +115,7 @@ function showSettings() {
     results.appendChild(panel5);
 
     document.getElementById('open-admin-panel').addEventListener('click', () => {
-        window.open('admin.html', '_blank');
+        window.location.href = 'admin.html'
     });
 
     // 🔧 Helper: get panel style as string
