@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title>Admin Login</title>
+    <title>Admin Panel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="helper.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -17,13 +18,29 @@
             display: none;
         }
 
+        .panel-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
         .card {
             background: #1a1a1a;
             padding: 2rem;
             border-radius: 12px;
-            max-width: 400px;
-            margin: 2rem auto;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+            flex: 1;
+            min-width: 350px;
+            max-width: 500px;
+            max-height: 500px;
+        }
+
+        .card img {
+            max-width: 100%;
+            max-height: 150px;
+            transition: transform 0.3s ease;
         }
 
         input {
@@ -48,126 +65,154 @@
             width: 100%;
         }
 
-        h1 {
-            text-align: center;
+        h1, h2 {
             color: #4ade80;
+        }
+
+        .ai-panel {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+
+        .ai-card img {
+            max-width: 100%;
+            max-height: 150px;
+            object-fit: contain;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .ai-description-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #ddd;
+            font-style: italic;
+        }
+
+        img:hover {
+            transform: scale(2.5);
+            z-index: 10;
+            position: relative;
         }
     </style>
 </head>
 <body>
 
-<div id="login-view" class="card">
-    <h1>Admin Login</h1>
-    <label for="email"></label><input type="email" id="email" placeholder="Email" autocomplete="username">
-    <label for="password"></label><input type="password" id="password" placeholder="Password"
-                                         autocomplete="current-password">
-    <button onclick="signIn()">🔐 Log In</button>
-    <div id="login-message"></div>
+<div class="panel-wrapper">
+
+    <div id="admin-view" class="card">
+        <h2>GIF Review</h2>
+        <div id="emote-list"></div>
+    </div>
+
+    <div id="review-low-confidence" class="card">
+        <h2>🧠 Low-Confidence Review</h2>
+        <div id="low-confidence-results" style="margin-top: 1rem;"></div>
+        <button id="load-low-confidence-btn" onclick="showLowConfidenceReviewPanel()">
+            🔍 Load Score < 0.9
+        </button>
+    </div>
+
+    <div id="ai-description-panel" class="card">
+        <h2>🤖 AI Description</h2>
+        <div id="ai-description-preview" class="ai-panel"></div>
+        <button id="load-ai-description">➡️ Load Another</button>
+    </div>
+
+    <div class="card">
+        <h2>🎛️ Key Setup</h2>
+        <label>Key to Keep: <input id="key-1" type="text" maxlength="1" placeholder="e.g. A"/></label><br><br>
+        <label>Key to Hide: <input id="key-2" type="text" maxlength="1" placeholder="e.g. D"/></label><br><br>
+        <button onclick="saveKeys()">💾 Save Keys</button>
+    </div>
+
+    <div class="card">
+        <h2>🏠 Return to Main View</h2>
+        <button onclick="window.location.href = 'index.html'">⬅️ Back to Home</button>
+    </div>
 </div>
 
-<div id="admin-view" class="card hidden">
-    <h1>Admin Panel</h1>
-    <button onclick="loadEmotes()">🔄 Load Emotes</button>
-    <div id="emote-list"></div>
-</div>
-<div id="review-low-confidence" class="card">
-    <h2>🧠 Low-Confidence Emotes Review</h2>
-    <button id="load-low-confidence-btn" onclick="showLowConfidenceReviewPanel()">🔍 Load Emotes with Score &lt; 0.9
-    </button>
-    <div id="low-confidence-results" style="margin-top: 1rem;"></div>
-</div>
-<div id="key-setup" style="margin: 2rem auto; max-width: 400px;">
-    <label>Key to Keep: <input id="key-1" type="text" maxlength="1" placeholder="e.g. A"/></label><br><br>
-    <label>Key to Hide: <input id="key-2" type="text" maxlength="1" placeholder="e.g. D"/></label><br><br>
-    <button onclick="saveKeys()">💾 Save Keys</button>
-</div>
-<div class="card">
-    <h2>🏠 Return to Main View</h2>
-    <p>Click below to return to the main emote browser interface.</p>
-    <button onclick="window.location.href = 'index.html'">⬅️ Back to Home</button>
-</div>
-
-<script src="helper.js"></script>
 <script>
-    // Check for existing session
-    supabase.auth.getSession().then(({data: {session}}) => {
-        if (session) {
-            const role = session.user?.user_metadata?.role;
-            if (role === 'admin') {
-                document.getElementById('login-view').classList.add('hidden');
-                document.getElementById('admin-view').classList.remove('hidden');
-                loadEmotes();
-            }
-        }
-    });
+    let currentSlug = null;
+    let lowConfidenceQueue = [];
+    let currentReviewSlug = null;
 
-    async function signIn() {
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
+    // AI Description Logic
+    document.getElementById('load-ai-description').addEventListener('click', loadRandomAIDescription);
+    loadRandomAIDescription();
 
-        const {data, error} = await supabase.auth.signInWithPassword({email, password});
+    async function loadRandomAIDescription() {
+        const preview = document.getElementById('ai-description-preview');
+        preview.innerHTML = '⏳ Loading...';
 
-        if (error) {
-            document.getElementById('login-message').textContent = '❌ Login failed: ' + error.message;
+        const { data, error } = await supabase
+            .from('view_ai_described_emotes')
+            .select('search_slug, url, description')
+            .limit(1);
+
+        if (error || !data?.length) {
+            preview.innerHTML = `<p style="color:red;">❌ Failed to load emote: ${error?.message || 'No data found'}</p>`;
             return;
         }
 
-        const {user} = data;
-        const role = user?.user_metadata?.role;
+        const emote = data[0];
 
-        if (role !== 'admin') {
-            document.getElementById('login-message').textContent = '🚫 Access denied: Not an admin';
-            await supabase.auth.signOut();
-            return;
-        }
+        const imageCard = document.createElement('div');
+        imageCard.className = 'ai-card';
+        imageCard.style.width = '300px';
+        imageCard.innerHTML = `<img src="${emote.url}" alt="${emote.search_slug}" />`;
 
-        document.getElementById('login-view').classList.add('hidden');
-        document.getElementById('admin-view').classList.remove('hidden');
-        loadEmotes();
+        const descriptionCard = document.createElement('div');
+        descriptionCard.className = 'ai-card';
+        descriptionCard.style.maxWidth = '400px';
+        descriptionCard.innerHTML = `<p class="ai-description-text">"${emote.description}"</p>`;
+
+        preview.innerHTML = '';
+        preview.appendChild(imageCard);
+        preview.appendChild(descriptionCard);
     }
 
-    let currentSlug = null;
-
+    // Emote Review Logic
     async function loadEmotes() {
-        const {data, error} = await supabase
+        const container = document.getElementById('emote-list');
+        container.innerHTML = '⏳ Loading...';
+
+        const { data, error } = await supabase
             .from('random_emotes')
             .select('search_slug, url')
             .is('nsfw_label', null)
-            .limit(1)
-
-        const container = document.getElementById('emote-list');
-        container.innerHTML = '';
+            .limit(1);
 
         if (error) {
-            container.innerHTML = `<p style="color:red;">❌ Failed to load emotes: ${error.message}</p>`;
+            container.innerHTML = `<p style="color:red;">❌ Failed to load: ${error.message}</p>`;
             return;
         }
 
+        container.innerHTML = '';
         data.forEach(emote => {
             currentSlug = emote.search_slug;
-            const row = document.createElement('div');
-            row.style = 'margin-top: 2rem; display: flex; align-items: center; gap: 1rem; background: #222; padding: 1rem; border-radius: 12px; width: 100%;';
 
+            const row = document.createElement('div');
+            row.style = 'margin-top: 2rem; display: flex; align-items: center; gap: 1rem; background: #222; padding: 1rem; border-radius: 12px;';
             row.innerHTML = `
-        <img
-  src="${emote.url}"
-  alt="${emote.search_slug}"
-  style="width: 160px; height: auto; border-radius: 8px; transition: transform 0.3s ease; cursor: zoom-in;"
-  onmouseover="this.style.transform='scale(3)'"
-  onmouseout="this.style.transform='scale(1)'"
-/>
-        <div style="flex:1;">
-          <strong>${emote.search_slug}</strong><br>
-          <button onclick="setVisibility('${emote.search_slug}', true)">✅ Show</button>
-          <button onclick="setVisibility('${emote.search_slug}', false)">🚫 Hide</button>
-        </div>
-      `;
+                <img src="${emote.url}" alt="${emote.search_slug}" style="width: 160px; border-radius: 8px;" />
+                <div>
+                    <strong>${emote.search_slug}</strong><br>
+                    <button onclick="setVisibility('${emote.search_slug}', true)">✅ Show</button>
+                    <button onclick="setVisibility('${emote.search_slug}', false)">🚫 Hide</button>
+                </div>
+            `;
             container.appendChild(row);
         });
     }
 
-    async function setVisibility(slug, visible, elementToRemove = null) {
-        const {error} = await supabase
+    async function setVisibility(slug, visible) {
+        const { error } = await supabase
             .from('emotes')
             .update({
                 is_visible: visible,
@@ -178,49 +223,71 @@
             })
             .eq('search_slug', slug);
 
-        if (error) {
-            alert('❌ Failed to update visibility: ' + error.message);
+        if (error) alert('❌ Failed to update: ' + error.message);
+        else loadEmotes();
+    }
+
+    // Low Confidence Panel
+    function showLowConfidenceReviewPanel() {
+        const btn = document.getElementById('load-low-confidence-btn');
+        const container = document.getElementById('low-confidence-results');
+
+        btn.disabled = true;
+        btn.textContent = '⏳ Loading...';
+        container.innerHTML = '';
+
+        supabase
+            .from('emotes')
+            .select('search_slug, url, nsfw_score')
+            .lt('nsfw_score', 0.9)
+            .order('nsfw_score', { ascending: true })
+            .limit(100)
+            .then(({ data, error }) => {
+                if (error) {
+                    container.innerHTML = `<p style="color:red;">❌ Failed to load: ${error.message}</p>`;
+                    btn.textContent = '❌ Error';
+                    return;
+                }
+
+                lowConfidenceQueue = data;
+                btn.textContent = '🔍 Load Again';
+                btn.disabled = false;
+                showNextLowConfidenceEmote();
+            });
+    }
+
+    function showNextLowConfidenceEmote() {
+        const container = document.getElementById('low-confidence-results');
+        container.innerHTML = '';
+
+        if (!lowConfidenceQueue.length) {
+            container.innerHTML = `<p>No more emotes to review ✅</p>`;
             return;
         }
 
-        if (elementToRemove) {
-            elementToRemove.remove();
-        } else {
-            loadEmotes();
-        }
+        const emote = lowConfidenceQueue.shift();
+        currentReviewSlug = emote.search_slug;
+
+        const row = document.createElement('div');
+        row.style = 'margin-top: 2rem; display: flex; align-items: center; gap: 1rem; background: #222; padding: 1rem; border-radius: 12px;';
+        row.innerHTML = `
+            <img src="${emote.url}" alt="${emote.search_slug}" style="width: 160px; border-radius: 8px;" />
+            <div>
+                <strong>${emote.search_slug}</strong><br>
+                <em>Score: ${emote.nsfw_score.toFixed(3)}</em><br>
+                <button onclick="handleReviewDecision(true)">✅ Show</button>
+                <button onclick="handleReviewDecision(false)">🚫 Hide</button>
+            </div>
+        `;
+
+        container.appendChild(row);
     }
-
-
-    function saveKeys() {
-        const key1 = document.getElementById('key-1').value.trim().toLowerCase();
-        const key2 = document.getElementById('key-2').value.trim().toLowerCase();
-        localStorage.setItem('action_key_1', key1);
-        localStorage.setItem('action_key_2', key2);
-        alert(`✅ Keys saved: [${key1}] for action 1, [${key2}] for action 2`);
-    }
-
-    document.addEventListener('keydown', (e) => {
-        const key = e.key.toLowerCase();
-        const key1 = localStorage.getItem('action_key_1') || 'a';
-        const key2 = localStorage.getItem('action_key_2') || 's';
-
-        if (!currentSlug) return;
-
-        if (key === key1) {
-            setVisibility(currentSlug, true);
-        } else if (key === key2) {
-            setVisibility(currentSlug, false);
-        }
-    });
-
-    let lowConfidenceQueue = [];
-    let currentReviewSlug = null;
 
     async function handleReviewDecision(visible) {
         const slug = currentReviewSlug;
         currentReviewSlug = null;
 
-        const {error} = await supabase
+        const { error } = await supabase
             .from('emotes')
             .update({
                 is_visible: visible,
@@ -239,72 +306,28 @@
         showNextLowConfidenceEmote();
     }
 
-    function showNextLowConfidenceEmote() {
-        const container = document.getElementById('low-confidence-results');
-        container.innerHTML = '';
-        if (!lowConfidenceQueue.length) {
-            container.innerHTML = `<p>No more emotes to review ✅</p>`;
-            return;
+    function saveKeys() {
+        const key1 = document.getElementById('key-1').value.trim().toLowerCase();
+        const key2 = document.getElementById('key-2').value.trim().toLowerCase();
+        localStorage.setItem('action_key_1', key1);
+        localStorage.setItem('action_key_2', key2);
+        alert(`✅ Keys saved: [${key1}] for action 1, [${key2}] for action 2`);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        const key = e.key.toLowerCase();
+        const key1 = localStorage.getItem('action_key_1') || 'a';
+        const key2 = localStorage.getItem('action_key_2') || 'd';
+
+        if (key === key1) {
+            setVisibility(window.currentSlug, true)
+        } else if (key === key2) {
+            setVisibility(window.currentSlug, false)
         }
-
-        const emote = lowConfidenceQueue.shift();
-        currentReviewSlug = emote.search_slug;
-
-        const row = document.createElement('div');
-        row.style = 'margin-top: 2rem; display: flex; align-items: center; gap: 1rem; background: #222; padding: 1rem; border-radius: 12px; width: 100%;';
-
-        row.innerHTML = `
-        <img
-            src="${emote.url}"
-            alt="${emote.search_slug}"
-            style="width: 160px; height: auto; border-radius: 8px; transition: transform 0.3s ease; cursor: zoom-in;"
-            onmouseover="this.style.transform='scale(3)'"
-            onmouseout="this.style.transform='scale(1)'"
-        />
-        <div style="flex:1;">
-            <strong>${emote.search_slug}</strong><br>
-            <em>Score: ${emote.nsfw_score.toFixed(3)}</em><br>
-            <button onclick="handleReviewDecision(true)">✅ Show</button>
-            <button onclick="handleReviewDecision(false)">🚫 Hide</button>
-        </div>
-    `;
-
-        container.appendChild(row);
-    }
-
-    function showLowConfidenceReviewPanel() {
-        const btn = document.getElementById('load-low-confidence-btn');
-        const container = document.getElementById('low-confidence-results');
-
-        btn.disabled = true;
-        btn.textContent = '⏳ Loading...';
-        container.innerHTML = '';
-
-        supabase
-            .from('emotes')
-            .select('search_slug, url, nsfw_score')
-            .lt('nsfw_score', 0.9)
-            .order('nsfw_score', {ascending: true})
-            .limit(100)
-            .then(({data, error}) => {
-                if (error) {
-                    container.innerHTML = `<p style="color:red;">❌ Failed to load: ${error.message}</p>`;
-                    btn.textContent = '❌ Error';
-                    return;
-                }
-
-                lowConfidenceQueue = data;
-                btn.textContent = '🔍 Load Again';
-                btn.disabled = false;
-                showNextLowConfidenceEmote();
-            });
-    }
-
-
-    document.getElementById('back-to-home').addEventListener('click', () => {
-        window.location.href = 'index.html';
     });
+    loadEmotes();
 </script>
+
 
 </body>
 </html>
