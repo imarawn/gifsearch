@@ -23,7 +23,6 @@ supabase.channel('realtime:emotes')
         schema: 'public',
         table: 'emotes'
     }, payload => {
-        console.log('🔄 Change detected:', payload);
         fetchCount();
     })
     .subscribe();
