@@ -6,7 +6,7 @@ async function renderUserGifs(table_name) {
     try {
         const { data: gifs, error } = await supabase
             .from(table_name)
-            .select('slug, url');
+            .select('search_slug, url');
 
         if (error) {
             console.error('Error fetching GIFs:', error);
