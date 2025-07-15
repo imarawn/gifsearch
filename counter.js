@@ -9,7 +9,7 @@ async function fetchCount() {
         console.error('Count error:', error);
         el.textContent = '❌ Error loading count';
     } else {
-        el.textContent = `🧠 ${count} LLM-categorized GIFs`;
+        el.textContent = `👀 ${count} Categorized GIFs`;
     }
 }
 
