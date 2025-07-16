@@ -95,6 +95,10 @@ function emoteCard(emote, targetElement, {
         listInput.type = 'text';
         listInput.value = emote.list || 'Unsorted';
         listInput.placeholder = 'List';
+
+        listInput.addEventListener('click', e => e.stopPropagation());
+        listInput.addEventListener('focus', e => e.stopPropagation());
+
         listInput.addEventListener('change', (e) => {
             const newList = e.target.value.trim();
             if (typeof onUpdateList === 'function') {
@@ -103,6 +107,7 @@ function emoteCard(emote, targetElement, {
         });
         card.appendChild(listInput);
     }
+
 
     // --- Click to copy slug + add to history ---
     card.style.cursor = 'pointer';
