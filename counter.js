@@ -25,8 +25,14 @@ async function fetchCount() {
         .select('*', { count: 'exact', head: true })
         .not('llm_nsfw_reason', 'ilike', 'user marked as%');
 
+    // 5. Count Gifs that are for review
+    const { count: reviewCount, error: reviewError } = await supabase
+        .from('emotes')
+        .select('*', { count: 'exact', head: true })
+        .lt('nsfw_score', 0.95)
+
     // ❌ Handle any errors
-    if (totalError || reasonError || sfwError || aiError) {
+    if (totalError || reasonError || sfwError || aiError || reviewError) {
         console.error('❌ Error loading counts:', {
             totalError,
             reasonError,
@@ -43,6 +49,7 @@ async function fetchCount() {
     <span style="color:green">${sfwCount} visible</span>,
     <span style="color:red">${reasonCount - sfwCount} hidden.</span>
     <span style="color:orange">${aiCount} by AI, ${reasonCount - aiCount} by User.</span>
+    <span style="color:orchid">${reviewCount} for review.</span>
   `;
 }
 
