@@ -416,7 +416,6 @@
             .from('emotes')
             .update({
                 nsfw_label: visible ? 'sfw' : 'nsfw',
-                llm_nsfw_reason: visible ? 'user marked as safe' : 'user marked as nsfw',
                 nsfw_checked_at: new Date().toISOString(),
                 nsfw_score: 1
             })
