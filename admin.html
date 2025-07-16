@@ -411,19 +411,33 @@
     async function handleReviewDecision(visible) {
         const slug = currentReviewSlug;
         currentReviewSlug = null;
-
-        const {error} = await supabase
-            .from('emotes')
-            .update({
-                nsfw_label: visible ? 'sfw' : 'nsfw',
-                nsfw_checked_at: new Date().toISOString(),
-                nsfw_score: 1
-            })
-            .eq('search_slug', slug);
-
-        if (error) {
-            alert('❌ Failed to update visibility: ' + error.message);
-            return;
+        if (visible) {
+            const {error} = await supabase
+                .from('emotes')
+                .update({
+                    nsfw_label: 'sfw',
+                    nsfw_checked_at: new Date().toISOString(),
+                    nsfw_score: 1
+                })
+                .eq('search_slug', slug);
+            if (error) {
+                alert('❌ Failed to update visibility: ' + error.message);
+                return;
+            }
+        } else {
+            const {error} = await supabase
+                .from('emotes')
+                .update({
+                    nsfw_label: 'nsfw',
+                    llm_nsfw_reason: 'user marked as nsfw',
+                    nsfw_checked_at: new Date().toISOString(),
+                    nsfw_score: 1
+                })
+                .eq('search_slug', slug);
+            if (error) {
+                alert('❌ Failed to update visibility: ' + error.message);
+                return;
+            }
         }
 
         showNextLowConfidenceEmote();
