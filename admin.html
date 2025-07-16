@@ -159,7 +159,7 @@
             width: 100%;
             max-width: 400px;
             color: #eee;
-            box-shadow: 0 0 25px rgba(0,0,0,0.5);
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
             gap: 1rem;
@@ -208,6 +208,12 @@
     </div>
 
     <div class="card">
+        <h2>🧬 Duplicate Hashes</h2>
+        <button onclick="loadDuplicateHashes()">🔄 Load Duplicates</button>
+        <div id="duplicate-hash-results" style="margin-top: 1rem; max-height: 350px; overflow-y: auto;"></div>
+    </div>
+
+    <div class="card">
         <h2>🎛️ Key Setup</h2>
         <label>Key to Keep: <input id="key-1" type="text" maxlength="1" placeholder="e.g. a"/></label><br><br>
         <label>Key to Hide: <input id="key-2" type="text" maxlength="1" placeholder="e.g. s"/></label><br><br>
@@ -220,8 +226,8 @@
 <div id="login-modal" class="modal">
     <div class="modal-content">
         <h2>🔐 Admin Login</h2>
-        <input id="login-email" type="email" placeholder="Email" /><br/>
-        <input id="login-password" type="password" placeholder="Password" /><br/>
+        <input id="login-email" type="email" placeholder="Email"/><br/>
+        <input id="login-password" type="password" placeholder="Password"/><br/>
         <button onclick="login()">Login</button>
         <p id="login-error" style="color: red; margin-top: 0.5rem;"></p>
     </div>
@@ -231,7 +237,7 @@
     checkAuth();
 
     async function checkAuth() {
-        const { data: { user } } = await supabase.auth.getUser();
+        const {data: {user}} = await supabase.auth.getUser();
 
         if (!user) {
             document.getElementById('login-modal').style.display = 'flex';
@@ -245,7 +251,7 @@
         const password = document.getElementById('login-password').value.trim();
         const errorDisplay = document.getElementById('login-error');
 
-        const { error } = await supabase.auth.signInWithPassword({
+        const {error} = await supabase.auth.signInWithPassword({
             email,
             password
         });
@@ -497,7 +503,7 @@
         const container = document.getElementById('reason-stats');
         container.innerHTML = '⏳ Loading...';
 
-        const { data, error } = await supabase.rpc('get_reason_stats');
+        const {data, error} = await supabase.rpc('get_reason_stats');
 
         if (error) {
             container.innerHTML = `<p style="color:red;">❌ Failed to load: ${error.message}</p>`;
@@ -505,10 +511,59 @@
         }
 
         container.innerHTML = '<ul style="list-style: none; padding-left: 0;">' +
-            data.map(({ llm_nsfw_reason, count }) =>
+            data.map(({llm_nsfw_reason, count}) =>
                 `<li><strong>${llm_nsfw_reason || '(empty)'}</strong>: ${count}</li>`
             ).join('') +
             '</ul>';
+    }
+
+    async function loadDuplicateHashes() {
+        const container = document.getElementById('duplicate-hash-results');
+        container.innerHTML = '⏳ Loading...';
+
+        const {data, error} = await supabase.rpc('get_duplicate_hashes');
+
+        if (error) {
+            container.innerHTML = `<p style="color:red;">❌ Failed to load duplicates: ${error.message}</p>`;
+            return;
+        }
+
+        if (!data.length) {
+            container.innerHTML = '<p>No duplicates found ✅</p>';
+            return;
+        }
+
+        const fragment = document.createDocumentFragment();
+
+        data.forEach(({ image_hash, slugs, urls, visible_flags, count }) => {
+            const block = document.createElement('div');
+            block.style = 'margin-bottom: 2rem; padding: 1rem; background: #222; border-radius: 8px;';
+
+            const title = document.createElement('div');
+            title.innerHTML = `<strong>Hash:</strong> ${image_hash} <br> <strong>Count:</strong> ${count}`;
+            block.appendChild(title);
+
+            const list = document.createElement('div');
+            list.style = 'display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;';
+
+            urls.forEach((url, i) => {
+                const slug = slugs[i];
+                const isVisible = visible_flags[i];
+                const color = isVisible ? '#4ade80' : '#f43f5e'; // green or red
+
+                const item = document.createElement('div');
+                item.style = 'width: 80px; text-align: center; font-size: 0.75rem;';
+                item.innerHTML = `
+            <img src="${url}" alt="${slug}" style="width: 100%; border-radius: 4px;" />
+            <div style="color: ${color}">:${slug}</div>
+        `;
+                list.appendChild(item);
+            });
+
+            block.appendChild(list);
+            container.appendChild(block);
+        });
+        container.appendChild(fragment);
     }
 
 
