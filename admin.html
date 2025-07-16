@@ -202,6 +202,12 @@
     </div>
 
     <div class="card">
+        <h2>📊 Reason Stats</h2>
+        <button onclick="loadReasonStats()">🔄 Load Reasons</button>
+        <div id="reason-stats" style="margin-top: 1rem; max-height: 350px; overflow-y: auto;"></div>
+    </div>
+
+    <div class="card">
         <h2>🎛️ Key Setup</h2>
         <label>Key to Keep: <input id="key-1" type="text" maxlength="1" placeholder="e.g. A"/></label><br><br>
         <label>Key to Hide: <input id="key-2" type="text" maxlength="1" placeholder="e.g. D"/></label><br><br>
@@ -442,16 +448,52 @@
         const key2 = localStorage.getItem('action_key_2') || 'd';
         const key3 = localStorage.getItem('action_key_3') || ' ';
 
+        if (!window.currentSlug) return; // Only allow keyboard actions in GIF Review panel
+
         if (key === key1) {
-            setVisibility(window.currentSlug, true)
+            setVisibility(window.currentSlug, true);
         } else if (key === key2) {
-            setVisibility(window.currentSlug, false)
+            setVisibility(window.currentSlug, false);
         } else if (key === key3) {
-            e.preventDefault()
+            e.preventDefault();
             loadRandomAIDescription();
         }
     });
-    loadEmotes();
+
+    function loadKeys() {
+        const key1 = localStorage.getItem('action_key_1') || '';
+        const key2 = localStorage.getItem('action_key_2') || '';
+        const key3 = localStorage.getItem('action_key_3') || '';
+
+        document.getElementById('key-1').value = key1;
+        document.getElementById('key-2').value = key2;
+        document.getElementById('key-3').value = key3;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadKeys();
+        loadEmotes();
+    });
+
+    async function loadReasonStats() {
+        const container = document.getElementById('reason-stats');
+        container.innerHTML = '⏳ Loading...';
+
+        const { data, error } = await supabase.rpc('get_reason_stats');
+
+        if (error) {
+            container.innerHTML = `<p style="color:red;">❌ Failed to load: ${error.message}</p>`;
+            return;
+        }
+
+        container.innerHTML = '<ul style="list-style: none; padding-left: 0;">' +
+            data.map(({ llm_nsfw_reason, count }) =>
+                `<li><strong>${llm_nsfw_reason || '(empty)'}</strong>: ${count}</li>`
+            ).join('') +
+            '</ul>';
+    }
+
+
 </script>
 <script src="counter.js"></script>
 
