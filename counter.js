@@ -5,30 +5,31 @@ async function fetchCount() {
     // 1. Get total count
     const { count: totalCount, error: totalError } = await supabase
         .from('emotes')
-        .select('*', { count: 'exact', head: true });
+        .select('', { count: 'exact', head: true })
+        .eq('is_visible', true);
 
     // 2. Count with llm_nsfw_reason IS NOT NULL
     const { count: reasonCount, error: reasonError } = await supabase
         .from('emotes')
-        .select('*', { count: 'exact', head: true })
+        .select('', { count: 'exact', head: true })
         .not('llm_nsfw_reason', 'is', null);
 
     // 3. Count SFW-labeled
     const { count: sfwCount, error: sfwError } = await supabase
         .from('emotes')
-        .select('*', { count: 'exact', head: true })
+        .select('', { count: 'exact', head: true })
         .eq('nsfw_label', 'sfw');
 
     // 4. Count AI-labeled (llm_nsfw_reason NOT LIKE 'user marked as%')
     const { count: aiCount, error: aiError } = await supabase
         .from('emotes')
-        .select('*', { count: 'exact', head: true })
+        .select('', { count: 'exact', head: true })
         .not('llm_nsfw_reason', 'ilike', 'user marked as%');
 
     // 5. Count Gifs that are for review
     const { count: reviewCount, error: reviewError } = await supabase
         .from('emotes')
-        .select('*', { count: 'exact', head: true })
+        .select('', { count: 'exact', head: true })
         .lt('nsfw_score', 0.95)
 
     // ❌ Handle any errors
