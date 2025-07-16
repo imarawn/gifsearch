@@ -321,7 +321,7 @@
 
         container.innerHTML = '';
         data.forEach(emote => {
-            currentSlug = emote.search_slug;
+            window.currentSlug = emote.search_slug;
 
             const row = document.createElement('div');
             row.style = 'margin-top: 2rem; display: flex; align-items: center; gap: 1rem; background: #222; padding: 1rem; border-radius: 12px;';
@@ -459,11 +459,11 @@
         const key2 = localStorage.getItem('action_key_2') || 'd';
         const key3 = localStorage.getItem('action_key_3') || ' ';
 
-        if (!window.currentSlug) return; // Only allow keyboard actions in GIF Review panel
-
         if (key === key1) {
+            console.log(window.currentSlug);
             setVisibility(window.currentSlug, true);
         } else if (key === key2) {
+            console.log(window.currentSlug);
             setVisibility(window.currentSlug, false);
         } else if (key === key3) {
             e.preventDefault();
