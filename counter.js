@@ -40,8 +40,8 @@ async function fetchCount() {
     // ✅ Inject into DOM
     el.innerHTML = `
     👀 <span style="color:#888">${reasonCount}/${totalCount}</span> Checked GIFs.
-    <span style="color:green">${sfwCount} marked as SFW</span>,
-    <span style="color:red">${reasonCount - sfwCount} marked as NSFW.</span>
+    <span style="color:green">${sfwCount} visible</span>,
+    <span style="color:red">${reasonCount - sfwCount} hidden.</span>
     <span style="color:orange">${aiCount} by AI, ${reasonCount - aiCount} by User.</span>
   `;
 }
