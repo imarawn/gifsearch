@@ -209,8 +209,9 @@
 
     <div class="card">
         <h2>🎛️ Key Setup</h2>
-        <label>Key to Keep: <input id="key-1" type="text" maxlength="1" placeholder="e.g. A"/></label><br><br>
-        <label>Key to Hide: <input id="key-2" type="text" maxlength="1" placeholder="e.g. D"/></label><br><br>
+        <label>Key to Keep: <input id="key-1" type="text" maxlength="1" placeholder="e.g. a"/></label><br><br>
+        <label>Key to Hide: <input id="key-2" type="text" maxlength="1" placeholder="e.g. s"/></label><br><br>
+        <label>Key to Skip Emote: <input id="key-4" type="text" maxlength="1" placeholder="e.g. d"/></label><br>
         <label>Key to Load new AI: <input id="key-3" type="text" maxlength="1" placeholder="e.g. SpaceBar"/></label><br><br>
         <button onclick="saveKeys()">💾 Save Keys</button>
     </div>
@@ -448,38 +449,43 @@
         const key1 = document.getElementById('key-1').value.trim().toLowerCase();
         const key2 = document.getElementById('key-2').value.trim().toLowerCase();
         const key3 = document.getElementById('key-3').value.trim().toLowerCase();
+        const key4 = document.getElementById('key-4').value.trim().toLowerCase();
         localStorage.setItem('action_key_1', key1);
         localStorage.setItem('action_key_2', key2);
         localStorage.setItem('action_key_3', key3);
+        localStorage.setItem('action_key_4', key4);
         alert(`✅ Keys saved: [${key1}] for Keep, [${key2}] for Hide, [${key3}] for Load next AI`);
     }
 
     document.addEventListener('keydown', (e) => {
         const key = e.key.toLowerCase();
-        const key1 = localStorage.getItem('action_key_1') || 'a';
-        const key2 = localStorage.getItem('action_key_2') || 'd';
-        const key3 = localStorage.getItem('action_key_3') || ' ';
+        const key1 = localStorage.getItem('action_key_1');
+        const key2 = localStorage.getItem('action_key_2');
+        const key3 = localStorage.getItem('action_key_3');
+        const key4 = localStorage.getItem('action_key_4');
 
         if (key === key1) {
-            console.log(window.currentSlug);
             setVisibility(window.currentSlug, true);
         } else if (key === key2) {
-            console.log(window.currentSlug);
             setVisibility(window.currentSlug, false);
         } else if (key === key3) {
             e.preventDefault();
             loadRandomAIDescription();
+        } else if (key === key4) {
+            loadEmotes();
         }
     });
 
     function loadKeys() {
-        const key1 = localStorage.getItem('action_key_1') || '';
-        const key2 = localStorage.getItem('action_key_2') || '';
-        const key3 = localStorage.getItem('action_key_3') || '';
+        const key1 = localStorage.getItem('action_key_1') || 'a';
+        const key2 = localStorage.getItem('action_key_2') || 's';
+        const key3 = localStorage.getItem('action_key_3') || ' ';
+        const key4 = localStorage.getItem('action_key_4') || 'd';
 
         document.getElementById('key-1').value = key1;
         document.getElementById('key-2').value = key2;
         document.getElementById('key-3').value = key3;
+        document.getElementById('key-4').value = key4;
     }
 
     document.addEventListener('DOMContentLoaded', () => {
