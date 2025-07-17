@@ -28,6 +28,9 @@ async function renderFavoritesView(selectedList = '', pickerDiv = 'userGifs') {
         } else {
             remoteFavorites = data || [];
         }
+        console.log('🔑 username_hash:', username_hash);
+        console.log('🔐 secret_key:', secret);
+        console.log('📦 fetched remoteFavorites:', remoteFavorites);
     }
 
     const allFavorites = [...remoteFavorites, ...localFavorites];
