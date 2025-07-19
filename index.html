@@ -92,8 +92,13 @@
 <div id="intro-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
   <div class="bg-zinc-800 rounded-lg shadow-lg p-6 max-w-lg w-full text-sm text-zinc-200 space-y-4">
     <h2 class="text-lg font-bold text-white">Welcome to GIFx 🎉</h2>
-    <p>This site lets you explore, favorite, and share curated GIFs, including user-generated content. AI is used to classify and describe GIFs (e.g., SFW/NSFW).</p>
-    <p>By continuing, you agree that a random anonymous user ID will be generated and stored locally. This is used to store your favorites and associate reports you may send.</p>
+    <p><strong>Welcome to GIFx!</strong> This site is designed to be a fun and simple way to explore random and curated GIFs — with no login required.</p>
+    <p>To enable basic functionality like favorites and reports, we generate a random anonymous ID for your browser. This keeps the site lightweight and private — without needing accounts or emails.</p>
+    <p>To Browse through random GIFs, click the 🔀-Button at them bottom to get started.</p>
+    <p>If you see a GIF you like, you can click the ⭐️-Button to add it to your Favorites.</p>
+    <p>If you want to directly use it on the Site, click the 📋-Button to copy the Name to your Clipboard, ready to paste it in the CB Chat.</p>
+    <p>If you come across an explicit or inappropriate GIF in a list that’s meant to be safe, please use the ⚠️-Button. Your feedback helps keep things clean.</p>
+    <p><strong>Note:</strong> If this feature gets abused, I may need to switch to a login system to prevent misuse — which would make things a bit more annoying for everyone. So please use the tools responsibly 💚</p>
     <button id="close-modal" class="w-full bg-brand text-black py-2 rounded hover:brightness-110 transition">I Understand</button>
   </div>
 </div>
@@ -169,7 +174,6 @@
   }
 
   const userId = localStorage.getItem('user_id');
-console.log(userId);
   if (isValidUuid(userId)) {
     renderUserLists(userId);
   } else {
