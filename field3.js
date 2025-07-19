@@ -3,7 +3,8 @@ export function showGifDetails(url, slug) {
     field3.innerHTML = '';
 
     const encoded = btoa(encodeURIComponent(JSON.stringify({ url, slug })));
-    const shareUrl = `${window.location.origin}/share.html?d=${encoded}`;
+    const basePath = window.location.pathname.replace(/\/[^\/]*$/, '/');
+    const shareUrl = `${basePath}share.html?d=${encoded}`;
 
     field3.innerHTML = `
     <div class="flex flex-col items-center text-center space-y-4">
