@@ -38,6 +38,10 @@
   <div class="flex-1 max-w-md mx-auto">
     <label for="slug-input"></label><input id="slug-input" type="text" placeholder="Search for a slug..." class="w-full px-4 py-2 rounded-full bg-zinc-800 text-sm text-white placeholder-zinc-400 border border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand text-left" />
   </div>
+  <button onclick="navigator.clipboard.writeText(localStorage.getItem('user_id')).then(() => alert('Copied!')).catch(err => alert('Failed to copy'))">
+    📋 ID
+  </button>
+
 </header>
 
 <!-- Main Content -->
