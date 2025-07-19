@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Share GIF</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+</head>
+<body class="bg-zinc-900 text-white min-h-screen flex items-center justify-center p-4">
+<div id="gif-container" class="text-center space-y-4">
+  <img id="gif" src="" alt="GIF" class="max-w-full max-h-[60vh] mx-auto rounded shadow-lg">
+  <div id="slug" class="text-lg font-semibold"></div>
+  <div class="text-zinc-400 text-sm">Right-click to save or copy the image</div>
+</div>
+
+<script>
+  function decodeParam(param) {
+    try {
+      return decodeURIComponent(atob(param));
+    } catch (e) {
+      return null;
+    }
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const encoded = params.get('d');
+  if (encoded) {
+    const decoded = decodeParam(encoded);
+    try {
+      const { url, slug } = JSON.parse(decoded);
+      document.getElementById('gif').src = url;
+      document.getElementById('slug').textContent = slug;
+    } catch (e) {
+      document.getElementById('gif-container').innerHTML = `<p class="text-red-500">Invalid share link</p>`;
+    }
+  } else {
+    document.getElementById('gif-container').innerHTML = `<p class="text-zinc-400">No data provided</p>`;
+  }
+</script>
+</body>
+</html>

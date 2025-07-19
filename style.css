@@ -31,3 +31,9 @@
     transition: width;
 }
 
+input#footerToggle:checked + .block {
+    background-color: #1db954; /* Tailwind brand color */
+}
+input#footerToggle:checked + .block + .dot {
+    transform: translateX(100%);
+}

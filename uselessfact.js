@@ -10,8 +10,8 @@ export async function getUselessFact() {
 
         field3.innerHTML = `
       <div class="text-sm text-white space-y-2">
-        <p class="font-medium">🧠 Fact of the day:</p>
-        <p class="text-zinc-300">${data.text}</p>
+        <p class="text-xl font-bold">🧠 Fact of the day:</p>
+        <p class="text-zinc-300 text-lg">${data.text}</p>
       </div>
     `;
     } catch (error) {
