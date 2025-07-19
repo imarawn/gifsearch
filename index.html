@@ -84,9 +84,13 @@
 </div>
 
 <!-- Spotify-style Footer -->
-<footer class="w-full bg-zinc-900 border-t border-zinc-800 px-6 py-4 flex items-center justify-center text-xs text-zinc-400">
+<footer id="footer" class="w-full border-t border-zinc-800 px-6 py-4 flex items-center justify-center text-xs text-zinc-400 relative overflow-hidden">
+  <div class="relative z-10 flex items-center w-full justify-center">
     <button class="text-2xl hover:text-white transition" onclick="loadPredefinedGifs('random_emotes')">🔀</button>
+    <!-- Add other footer buttons/info here if needed -->
+  </div>
 </footer>
+
 
 <!-- Animation Script -->
 <script type="module">
@@ -118,6 +122,17 @@
       }
     });
   });
+
+  const gifDisplay = document.getElementById('gif-display');
+
+  gifDisplay.addEventListener('scroll', () => {
+    const scrollTop = gifDisplay.scrollTop;
+    const scrollHeight = gifDisplay.scrollHeight - gifDisplay.clientHeight;
+    const scrollPercent = (scrollTop / scrollHeight) * 100;
+    footer.style.setProperty('--scroll-progress', `${scrollPercent}%`);
+  });
+
+
   window.loadPredefinedGifs = loadPredefinedGifs;
   loadPredefinedGifs('predefined_gifs')
   getUselessFact();

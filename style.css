@@ -18,3 +18,16 @@
 .gif-card:hover::after {
     opacity: 1;
 }
+
+#footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #1db954;
+    z-index: 0;
+    width: var(--scroll-progress, 0%);
+    transition: width;
+}
+
