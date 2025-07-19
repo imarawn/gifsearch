@@ -98,6 +98,14 @@
   </div>
 </footer>
 
+<div id="intro-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
+  <div class="bg-zinc-800 rounded-lg shadow-lg p-6 max-w-lg w-full text-sm text-zinc-200 space-y-4">
+    <h2 class="text-lg font-bold text-white">Welcome to GIFx 🎉</h2>
+    <p>This site lets you explore, favorite, and share curated GIFs, including user-generated content. AI is used to classify and describe GIFs (e.g., SFW/NSFW).</p>
+    <p>By continuing, you agree that a random anonymous user ID will be generated and stored locally. This is used to store your favorites and associate reports you may send.</p>
+    <button id="close-modal" class="w-full bg-brand text-black py-2 rounded hover:brightness-110 transition">I Understand</button>
+  </div>
+</div>
 
 <!-- Animation Script -->
 <script type="module">
@@ -149,6 +157,21 @@
   window.loadPredefinedGifs = loadPredefinedGifs;
   loadPredefinedGifs('predefined_gifs')
   getUselessFact();
+
+  const introModal = document.getElementById('intro-modal');
+  const closeModal = document.getElementById('close-modal');
+
+  if (!localStorage.getItem('user_id')) {
+    introModal.classList.remove('hidden');
+  }
+
+  closeModal?.addEventListener('click', () => {
+    introModal.classList.add('hidden');
+    if (!localStorage.getItem('user_id')) {
+      const id = crypto.randomUUID();
+      localStorage.setItem('user_id', id);
+    }
+  });
 
 </script>
 </body>

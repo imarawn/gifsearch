@@ -28,8 +28,13 @@ function createGifCard({ slug, url }) {
     copyButton.innerText = '📋';
     copyButton.onclick = () => navigator.clipboard.writeText(`:${slug}`);
 
+    const reportButton = document.createElement('button');
+    reportButton.className = 'text-white text-lg hover:text-brand transition';
+    reportButton.innerText = '⚠️';
+
     buttonContainer.appendChild(starButton);
     buttonContainer.appendChild(copyButton);
+    buttonContainer.appendChild(reportButton);
 
     const slugLabel = document.createElement('span');
     slugLabel.className = 'absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm font-medium';
