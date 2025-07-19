@@ -51,16 +51,7 @@
   <div class="grid grid-cols-4 gap-4 flex-1 h-[calc(100vh-160px)] max-h-[calc(100vh-160px)]">
     <div class="bg-zinc-800 p-4 overflow-y-auto rounded-lg space-y-4">
       <div class="flex items-center gap-3 p-2 rounded-lg bg-zinc-700 hover:bg-zinc-600 cursor-pointer">
-        <img src="https://media.giphy.com/media/Ju7l5y9osyymQ/giphy.gif" class="w-10 h-10 rounded object-cover" alt="preview">
-        <span class="text-sm font-medium">Funny Memes</span>
-      </div>
-      <div class="flex items-center gap-3 p-2 rounded-lg bg-zinc-700 hover:bg-zinc-600 cursor-pointer">
-        <img src="https://media.giphy.com/media/l0HlNQ03J5JxX6lva/giphy.gif" class="w-10 h-10 rounded object-cover" alt="preview">
-        <span class="text-sm font-medium">Animals</span>
-      </div>
-      <div class="flex items-center gap-3 p-2 rounded-lg bg-zinc-700 hover:bg-zinc-600 cursor-pointer">
-        <img src="https://media.giphy.com/media/xT9IgIc0lryrxvqVGM/giphy.gif" class="w-10 h-10 rounded object-cover" alt="preview">
-        <span class="text-sm font-medium">Fails</span>
+        Loading...
       </div>
     </div>
     <div class="scroll-smooth col-span-2 bg-zinc-700 p-4 overflow-y-auto rounded-lg space-y-2" id="gif-display">
@@ -111,6 +102,7 @@
 <script type="module">
   import {loadPredefinedGifs} from "./loadUserLists.js";
   import {getUselessFact} from "./uselessfact.js";
+  import {renderUserLists} from "./field1.js";
 
   const toggleBtn = document.getElementById('toggleUserlists');
   const userlistButtons = [
@@ -172,7 +164,17 @@
       localStorage.setItem('user_id', id);
     }
   });
+  function isValidUuid(str) {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(str);
+  }
 
+  const userId = localStorage.getItem('user_id');
+console.log(userId);
+  if (isValidUuid(userId)) {
+    renderUserLists(userId);
+  } else {
+    console.warn('⚠️ Invalid or missing user_id:', userId);
+  }
 </script>
 </body>
 </html>

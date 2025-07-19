@@ -14,7 +14,8 @@ export async function loadPredefinedGifs(list) {
 
     const formatted = data.map(gif => ({
         slug: gif.search_slug,
-        url: gif.url
+        url: gif.url,
+        list: list
     }));
 
     populateGifDisplay(formatted);
