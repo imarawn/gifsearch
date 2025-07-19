@@ -1,3 +1,12 @@
+:root {
+    --brand: #0099ff
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}
+
+
 .gif-card {
     position: relative;
     transition: background-color 0.3s ease;
@@ -25,14 +34,14 @@
     top: 0;
     left: 0;
     height: 100%;
-    background-color: #1db954;
+    background-color: var(--brand);
     z-index: 0;
     width: var(--scroll-progress, 0%);
     transition: width;
 }
 
 input#footerToggle:checked + .block {
-    background-color: #1db954; /* Tailwind brand color */
+    background-color: var(--brand);
 }
 input#footerToggle:checked + .block + .dot {
     transform: translateX(100%);
