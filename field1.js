@@ -1,4 +1,5 @@
 import { supabase } from './supabaseclient.js';
+import {loadFavoritesFromList} from "./renderfavorites.js";
 
 async function loadUserLists(userId) {
     const { data, error } = await supabase.rpc('get_user_lists', { p_id: userId });

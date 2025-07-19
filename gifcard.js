@@ -1,7 +1,7 @@
 import {showGifDetails} from "./field3.js";
 import {supabase} from "./supabaseclient.js";
 
-function createGifCard({ slug, url, list }) {
+export function createGifCard({ slug, url, list }) {
     const card = document.createElement('div');
     card.className = 'gif-card relative p-2 rounded h-[96px] flex items-center gap-4 cursor-pointer bg-zinc-800 transition-colors';
 
