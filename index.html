@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GIF Explorer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#1db954',
+            dark: '#191414'
+          },
+          fontFamily: {
+            display: ['Inter', 'sans-serif'],
+          },
+          transitionProperty: {
+            'scale-opacity': 'transform, opacity'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-dark text-white font-display min-h-screen flex flex-col">
+
+<!-- Spotify-style Header -->
+<header class="w-full fixed top-0 left-0 z-50 bg-zinc-900/90 backdrop-blur-md px-8 py-4 flex items-center shadow-lg">
+  <h1 class="text-2xl font-black text-brand tracking-wide select-none">GIF<span class="lowercase">x</span></h1>
+  <div class="flex-1 max-w-md mx-auto">
+    <input id="slug-input" type="text" placeholder="Search for a slug..." class="w-full px-4 py-2 rounded-full bg-zinc-800 text-sm text-white placeholder-zinc-400 border border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand text-left" />
+  </div>
+  <div class="flex gap-2 text-sm">
+    <button class="nav-glow" onclick="loadPredefinedGifs('random_emotes')">Random</button>
+    <button class="nav-glow" onclick="renderFavoritesView()">Favorites</button>
+    <button class="nav-glow" onclick="showHistory()">History</button>
+    <button class="nav-glow" onclick="showSettings()">Settings</button>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="flex-1 pt-[80px] px-4 flex flex-col justify-between overflow-hidden">
+  <div class="grid grid-cols-4 gap-4 flex-1 h-[calc(100vh-160px)] max-h-[calc(100vh-160px)]">
+    <div class="bg-zinc-800 p-4 overflow-y-auto rounded-lg space-y-4">
+      <div class="flex items-center gap-3 p-2 rounded-lg bg-zinc-700 hover:bg-zinc-600 cursor-pointer">
+        <img src="https://media.giphy.com/media/Ju7l5y9osyymQ/giphy.gif" class="w-10 h-10 rounded object-cover" alt="preview">
+        <span class="text-sm font-medium">Funny Memes</span>
+      </div>
+      <div class="flex items-center gap-3 p-2 rounded-lg bg-zinc-700 hover:bg-zinc-600 cursor-pointer">
+        <img src="https://media.giphy.com/media/l0HlNQ03J5JxX6lva/giphy.gif" class="w-10 h-10 rounded object-cover" alt="preview">
+        <span class="text-sm font-medium">Animals</span>
+      </div>
+      <div class="flex items-center gap-3 p-2 rounded-lg bg-zinc-700 hover:bg-zinc-600 cursor-pointer">
+        <img src="https://media.giphy.com/media/xT9IgIc0lryrxvqVGM/giphy.gif" class="w-10 h-10 rounded object-cover" alt="preview">
+        <span class="text-sm font-medium">Fails</span>
+      </div>
+    </div>
+    <div class="scroll-smooth col-span-2 bg-zinc-700 p-4 overflow-y-auto rounded-lg space-y-2" id="gif-display">
+      <!-- Dynamically Populated -->
+    </div>
+    <div class="bg-zinc-800 p-4 overflow-y-auto rounded-lg">Feld 3</div>
+  </div>
+</main>
+
+<!-- Floating Userlists Button -->
+<div class="fixed bottom-6 right-6 flex flex-col items-end space-y-3 z-50" id="userlist-container">
+  <button id="list-julia" class="hidden bg-brand w-14 h-14 rounded-full shadow-lg text-[0.65rem] font-bold flex items-center justify-center transform translate-y-4 opacity-0 transition-all duration-300" onclick="loadPredefinedGifs('juliamemes')">JUL</button>
+  <button id="list-nsf" class="hidden bg-brand w-14 h-14 rounded-full shadow-lg text-[0.65rem] font-bold flex items-center justify-center transform translate-y-4 opacity-0 transition-all duration-300" onclick="loadPredefinedGifs('nsf')">NSF</button>
+  <button id="list-tsi" class="hidden bg-brand w-14 h-14 rounded-full shadow-lg text-[0.65rem] font-bold flex items-center justify-center transform translate-y-4 opacity-0 transition-all duration-300" onclick="loadPredefinedGifs('tsi')">TSI</button>
+  <button id="list-hgr" class="hidden bg-brand w-14 h-14 rounded-full shadow-lg text-[0.65rem] font-bold flex items-center justify-center transform translate-y-4 opacity-0 transition-all duration-300" onclick="loadPredefinedGifs('hgr')">HGR</button>
+  <button id="list-dec" class="hidden bg-brand w-14 h-14 rounded-full shadow-lg text-[0.65rem] font-bold flex items-center justify-center transform translate-y-4 opacity-0 transition-all duration-300" onclick="loadPredefinedGifs('dec')">DEC</button>
+  <button id="list-ius" class="hidden bg-brand w-14 h-14 rounded-full shadow-lg text-[0.65rem] font-bold flex items-center justify-center transform translate-y-4 opacity-0 transition-all duration-300" onclick="loadPredefinedGifs('ius')">IUS</button>
+  <button id="toggleUserlists" class="bg-brand hover:brightness-110 text-black font-bold w-14 h-14 rounded-full shadow-xl text-xl flex items-center justify-center transition-all">
+    📂
+  </button>
+</div>
+
+<!-- Spotify-style Footer -->
+<footer class="w-full bg-zinc-900 border-t border-zinc-800 px-6 py-4 flex items-center justify-between text-xs text-zinc-400">
+  <div class="flex items-center gap-3">
+    <img src="https://media.giphy.com/media/Ju7l5y9osyymQ/giphy.gif" class="w-10 h-10 rounded object-cover" alt="preview">
+    <div>
+      <div class="text-white font-semibold text-sm leading-tight">slug123</div>
+      <div class="text-zinc-400 text-xs">GIF Preview</div>
+    </div>
+  </div>
+  <div class="flex items-center gap-6">
+    <button class="hover:text-white transition">⏮</button>
+    <button class="text-2xl hover:text-white transition" onclick="loadPredefinedGifs('random_emotes')">🔀</button>
+    <button class="hover:text-white transition">⏭</button>
+  </div>
+  <div class="w-1/3 hidden md:block">
+    <div class="h-1 bg-zinc-700 rounded-full">
+      <div class="w-1/4 h-1 bg-brand rounded-full"></div>
+    </div>
+  </div>
+</footer>
+
+<!-- Animation Script -->
+<script type="module">
+  import {loadPredefinedGifs} from "./loadUserLists.js";
+
+  const toggleBtn = document.getElementById('toggleUserlists');
+  const userlistButtons = [
+    'list-julia', 'list-nsf', 'list-tsi', 'list-hgr', 'list-dec', 'list-ius'
+  ].map(id => document.getElementById(id));
+
+  let isOpen = false;
+
+  toggleBtn.addEventListener('click', () => {
+    isOpen = !isOpen;
+    userlistButtons.forEach((btn, i) => {
+      if (isOpen) {
+        setTimeout(() => {
+          btn.classList.remove('hidden');
+          btn.classList.remove('opacity-0', 'translate-y-4');
+          btn.classList.add('opacity-100', 'translate-y-0');
+        }, i * 50);
+      } else {
+        setTimeout(() => {
+          btn.classList.add('opacity-0', 'translate-y-4');
+          btn.classList.remove('opacity-100', 'translate-y-0');
+          setTimeout(() => btn.classList.add('hidden'), 200);
+        }, (userlistButtons.length - i) * 50);
+      }
+    });
+  });
+  window.loadPredefinedGifs = loadPredefinedGifs;
+  loadPredefinedGifs('predefined_gifs')
+
+</script>
+
+<!-- Custom Styles -->
+<style>
+  .nav-glow {
+    @apply px-3 py-1 rounded-full bg-zinc-800 hover:bg-brand hover:text-black font-medium transition-all shadow;
+  }
+</style>
+
+</body>
+</html>
