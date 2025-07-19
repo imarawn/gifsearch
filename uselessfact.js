@@ -10,7 +10,7 @@ export async function getUselessFact() {
 
         field3.innerHTML = `
       <div class="text-sm text-white space-y-2">
-        <p class="font-medium">🧠 Fun Fact:</p>
+        <p class="font-medium">🧠 Fact of the day:</p>
         <p class="text-zinc-300">${data.text}</p>
         <a href="${data.permalink}" target="_blank" class="text-brand text-xs underline">Source</a>
       </div>
