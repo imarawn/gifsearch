@@ -5,25 +5,49 @@
   <title>Shared GIF</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#1db954',
+            dark: '#191414',
+          },
+          fontFamily: {
+            display: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
 </head>
-<body class="bg-dark text-white flex items-center justify-center min-h-screen">
-<div id="content" class="text-center p-4"></div>
+<body class="bg-dark text-white font-display flex items-center justify-center min-h-screen p-4">
+<div id="content" class="text-center max-w-xl w-full space-y-6 bg-zinc-900 p-6 rounded-2xl shadow-2xl border border-zinc-800">
+  <!-- Content will be injected here -->
+</div>
 
 <script>
   const params = new URLSearchParams(window.location.search);
   const encoded = params.get('d');
 
+  const content = document.getElementById('content');
+
   if (!encoded) {
-    document.getElementById('content').innerText = 'Invalid share link.';
+    content.innerHTML = '<p class="text-red-400 text-lg font-medium">Invalid share link.</p>';
   } else {
     try {
       const decoded = JSON.parse(decodeURIComponent(atob(encoded)));
-      document.getElementById('content').innerHTML = `
-          <img src="${decoded.url}" alt="shared gif" class="max-w-[90%] max-h-[60vh] rounded shadow-lg mx-auto" />
-          <div class="mt-4 text-white text-lg font-bold">${decoded.slug}</div>
+
+      content.innerHTML = `
+          <h1 class="text-brand text-xl font-bold tracking-wide">Shared GIF</h1>
+          <img src="${decoded.url}" alt="shared gif" class="block mx-auto max-w-full max-h-[60vh] rounded-lg shadow-md transition-transform duration-300 hover:scale-105" />
+          <div class="text-white text-base font-semibold mt-2 bg-zinc-800 rounded px-4 py-2 inline-block">${decoded.slug}</div>
+          <a href="index.html"class="inline-block mt-4 bg-brand text-black font-bold px-6 py-2 rounded-full shadow hover:brightness-110 transition">
+            Back to Main Page
+          </a>
         `;
     } catch (e) {
-      document.getElementById('content').innerText = 'Could not parse shared data.';
+      content.innerHTML = '<p class="text-red-400 text-lg font-medium">Could not parse shared data.</p>';
     }
   }
 </script>
