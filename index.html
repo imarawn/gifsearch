@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <style>
+    .nav-glow {
+      @apply px-3 py-1 rounded-full bg-zinc-800 hover:bg-brand hover:text-black font-medium transition-all shadow;
+    }
+  </style>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>GIF Explorer</title>
@@ -31,13 +36,13 @@
 <header class="w-full fixed top-0 left-0 z-50 bg-zinc-900/90 backdrop-blur-md px-8 py-4 flex items-center shadow-lg">
   <h1 class="text-2xl font-black text-brand tracking-wide select-none">GIF<span class="lowercase">x</span></h1>
   <div class="flex-1 max-w-md mx-auto">
-    <input id="slug-input" type="text" placeholder="Search for a slug..." class="w-full px-4 py-2 rounded-full bg-zinc-800 text-sm text-white placeholder-zinc-400 border border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand text-left" />
+    <label for="slug-input"></label><input id="slug-input" type="text" placeholder="Search for a slug..." class="w-full px-4 py-2 rounded-full bg-zinc-800 text-sm text-white placeholder-zinc-400 border border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand text-left" />
   </div>
   <div class="flex gap-2 text-sm">
     <button class="nav-glow" onclick="loadPredefinedGifs('random_emotes')">Random</button>
-    <button class="nav-glow" onclick="renderFavoritesView()">Favorites</button>
-    <button class="nav-glow" onclick="showHistory()">History</button>
-    <button class="nav-glow" onclick="showSettings()">Settings</button>
+    <button class="nav-glow" onclick="">Favorites</button>
+    <button class="nav-glow" onclick="">History</button>
+    <button class="nav-glow" onclick="">Settings</button>
   </div>
 </header>
 
@@ -86,6 +91,7 @@
 <!-- Animation Script -->
 <script type="module">
   import {loadPredefinedGifs} from "./loadUserLists.js";
+  import {getUselessFact} from "./uselessfact.js";
 
   const toggleBtn = document.getElementById('toggleUserlists');
   const userlistButtons = [
@@ -114,15 +120,8 @@
   });
   window.loadPredefinedGifs = loadPredefinedGifs;
   loadPredefinedGifs('predefined_gifs')
+  getUselessFact();
 
 </script>
-
-<!-- Custom Styles -->
-<style>
-  .nav-glow {
-    @apply px-3 py-1 rounded-full bg-zinc-800 hover:bg-brand hover:text-black font-medium transition-all shadow;
-  }
-</style>
-
 </body>
 </html>
