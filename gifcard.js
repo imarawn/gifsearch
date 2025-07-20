@@ -61,7 +61,7 @@ export function createGifCard({ slug, url, list }) {
 
     buttonContainer.appendChild(starButton);
     buttonContainer.appendChild(copyButton);
-    if(list === 'random_emotes') buttonContainer.appendChild(reportButton);
+    if(list === 'random_emotes' || list === 'random_emotes_nsfw') buttonContainer.appendChild(reportButton);
 
     const slugLabel = document.createElement('span');
     slugLabel.className = 'absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm font-medium';

@@ -75,7 +75,7 @@
 <!-- Spotify-style Footer -->
 <footer id="footer" class="w-full border-t border-zinc-800 px-6 py-4 flex items-center justify-center text-xs text-zinc-400 relative overflow-hidden">
   <div class="relative z-10 flex items-center w-full justify-center">
-    <button class="text-2xl hover:text-white transition" onclick="loadPredefinedGifs(getSelectedList())">🔀</button>
+    <button class="text-2xl hover:text-white transition" onclick="loadRandom(getSelectedList())">🔀</button>
     <label class="flex items-center cursor-pointer mx-4">
       <div class="relative">
         <input type="checkbox" id="footerToggle" class="sr-only" />
@@ -106,6 +106,7 @@
   import {loadPredefinedGifs} from "./loadUserLists.js";
   import {getUselessFact} from "./uselessfact.js";
   import {renderUserLists} from "./field1.js";
+  import {loadRandom} from "./loadUserLists.js";
 
   const toggleBtn = document.getElementById('toggleUserlists');
   const userlistButtons = [
@@ -150,6 +151,7 @@
 
   window.getSelectedList = getSelectedList;
   window.loadPredefinedGifs = loadPredefinedGifs;
+  window.loadRandom = loadRandom;
   loadPredefinedGifs('predefined_gifs')
   getUselessFact();
 
